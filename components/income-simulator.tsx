@@ -107,6 +107,7 @@ export function IncomeSimulator() {
       <div className="text-center space-y-1">
         <h1 className="text-2xl font-bold text-foreground">年収シミュレーター</h1>
         <p className="text-sm text-muted-foreground">親に怒られない年収を30秒で判定</p>
+        <p className="text-xs text-primary font-semibold">🆕 2025年改正対応（103万→160万円）</p>
       </div>
 
       {/* Income Input Area */}
