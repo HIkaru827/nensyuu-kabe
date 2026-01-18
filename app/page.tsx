@@ -1,0 +1,9 @@
+import { IncomeSimulator } from "@/components/income-simulator"
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-background flex items-center justify-center p-4">
+      <IncomeSimulator />
+    </main>
+  )
+}
