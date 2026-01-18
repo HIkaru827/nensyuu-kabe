@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { AlertTriangle, CheckCircle, AlertCircle, TrendingUp, Clock, Info } from "lucide-react"
 import { simulateIncome, type StudentType, type ParentIncomeLevel } from "@/lib/income-simulator"
+import { JobAdSlot, AdSlot } from "@/components/ad-slot"
 
 interface ThresholdInfo {
   amount: number
@@ -407,6 +408,16 @@ export function IncomeSimulator() {
           </Button>
         )}
       </div>
+
+      {/* Advertisement - Job Listings */}
+      <JobAdSlot title="💼 あなたにぴったりのバイトを探す" />
+
+      {/* Advertisement - General */}
+      <AdSlot 
+        position="result-bottom" 
+        size="medium"
+        title="PR"
+      />
 
       {/* Footer */}
       <footer className="text-center space-y-1 pt-2">
