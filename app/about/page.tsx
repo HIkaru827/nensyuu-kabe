@@ -3,7 +3,10 @@ import { Target, Users, TrendingUp, Shield } from "lucide-react"
 
 export const metadata = {
   title: "運営者情報 | 年収の壁シミュレーター",
-  description: "年収の壁シミュレーターの運営者情報です。",
+  description: "年収の壁シミュレーターの運営者情報。学生やアルバイト従事者が年収の壁を正しく理解し、最適な働き方を選択できるよう支援します。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/about",
+  },
 }
 
 export default function AboutPage() {
@@ -124,4 +127,5 @@ export default function AboutPage() {
     </main>
   )
 }
+
 

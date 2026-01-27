@@ -2,16 +2,40 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Calculator, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 
 export const metadata = {
-  title: "学生バイトの税金対策｜勤労学生控除で所得税を0円に | 年収の壁シミュレーター",
+  title: "学生バイトの税金対策｜勤労学生控除で所得税を0円に",
   description: "勤労学生控除を使えば、年収130万円まで所得税が0円に。申請方法と注意点を詳しく解説します。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin",
+  },
+  openGraph: {
+    type: "article",
+    publishedTime: "2026-01-18T00:00:00Z",
+    authors: ["年収の壁シミュレーター"],
+    tags: ["学生バイト", "勤労学生控除", "税金対策", "節税"],
+  },
 }
 
 export default function GakuseiZeikinPage() {
+  const breadcrumbItems = [
+    { name: "ホーム", url: "https://nenshuu-kabe.com" },
+    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+    { name: "学生バイトの税金対策", url: "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin" },
+  ]
+
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <article className="max-w-3xl mx-auto space-y-8">
+    <>
+      <ArticleStructuredData
+        title="学生バイトの税金対策｜勤労学生控除で所得税を0円に"
+        description="勤労学生控除を使えば、年収130万円まで所得税が0円に。申請方法と注意点を詳しく解説します。"
+        datePublished="2026-01-18T00:00:00Z"
+        url="https://nenshuu-kabe.com/blog/gakusei-baito-zeikin"
+      />
+      <BreadcrumbStructuredData items={breadcrumbItems} />
+      <main className="min-h-screen bg-background py-12 px-4">
+        <article className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-4">
           <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" />
@@ -154,8 +178,10 @@ export default function GakuseiZeikinPage() {
             ← ブログ一覧に戻る
           </Link>
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+    </>
   )
 }
+
 

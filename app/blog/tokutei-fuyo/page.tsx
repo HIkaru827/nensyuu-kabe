@@ -2,16 +2,40 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Calculator, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 
 export const metadata = {
-  title: "特定扶養親族とは？19〜22歳の昼間学生が知るべき優遇措置 | 年収の壁シミュレーター",
+  title: "特定扶養親族とは？19〜22歳の昼間学生が知るべき優遇措置",
   description: "19〜22歳の大学生・専門学生は「特定扶養親族」として、150万円まで親の控除が維持される可能性があります。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/blog/tokutei-fuyo",
+  },
+  openGraph: {
+    type: "article",
+    publishedTime: "2026-01-18T00:00:00Z",
+    authors: ["年収の壁シミュレーター"],
+    tags: ["特定扶養親族", "扶養控除", "大学生", "学生"],
+  },
 }
 
 export default function TokuteiFuyoPage() {
+  const breadcrumbItems = [
+    { name: "ホーム", url: "https://nenshuu-kabe.com" },
+    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+    { name: "特定扶養親族とは？", url: "https://nenshuu-kabe.com/blog/tokutei-fuyo" },
+  ]
+
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <article className="max-w-3xl mx-auto space-y-8">
+    <>
+      <ArticleStructuredData
+        title="特定扶養親族とは？19〜22歳の昼間学生が知るべき優遇措置"
+        description="19〜22歳の大学生・専門学生は「特定扶養親族」として、150万円まで親の控除が維持される可能性があります。"
+        datePublished="2026-01-18T00:00:00Z"
+        url="https://nenshuu-kabe.com/blog/tokutei-fuyo"
+      />
+      <BreadcrumbStructuredData items={breadcrumbItems} />
+      <main className="min-h-screen bg-background py-12 px-4">
+        <article className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-4">
           <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" />
@@ -184,8 +208,10 @@ export default function TokuteiFuyoPage() {
             ← ブログ一覧に戻る
           </Link>
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+    </>
   )
 }
+
 

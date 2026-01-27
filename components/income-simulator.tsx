@@ -386,39 +386,109 @@ export function IncomeSimulator() {
       <div className="space-y-3">
         {income >= 130 && income < 160 && (
           <>
-            <Button className="w-full h-12 text-base font-semibold gap-2" size="lg">
-              <TrendingUp className="w-5 h-5" />
-              160万円を目指す → 高時給バイトを見る
+            <Button 
+              className="w-full h-12 text-base font-semibold gap-2" 
+              size="lg"
+              asChild
+            >
+              <a 
+                href={process.env.NEXT_PUBLIC_A8_HIGH_WAGE || "#"}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                <TrendingUp className="w-5 h-5" />
+                160万円を目指す → 高時給バイトを見る
+              </a>
             </Button>
-            <Button variant="outline" className="w-full h-12 text-base font-semibold gap-2 bg-background" size="lg">
-              <Clock className="w-5 h-5" />
-              130万円以下に抑える → シフト調整
+            <Button 
+              variant="outline" 
+              className="w-full h-12 text-base font-semibold gap-2 bg-background" 
+              size="lg"
+              asChild
+            >
+              <a 
+                href={process.env.NEXT_PUBLIC_A8_FLEXIBLE || "#"}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                <Clock className="w-5 h-5" />
+                130万円以下に抑える → シフト調整
+              </a>
             </Button>
           </>
         )}
         {income < 130 && (
-          <Button className="w-full h-12 text-base font-semibold gap-2" size="lg">
-            <TrendingUp className="w-5 h-5" />
-            このペースで続ける → おすすめバイト
+          <Button 
+            className="w-full h-12 text-base font-semibold gap-2" 
+            size="lg"
+            asChild
+          >
+            <a 
+              href={process.env.NEXT_PUBLIC_A8_RECOMMENDED || "#"}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <TrendingUp className="w-5 h-5" />
+              このペースで続ける → おすすめバイト
+            </a>
           </Button>
         )}
         {income >= 160 && (
-          <Button className="w-full h-12 text-base font-semibold gap-2" size="lg">
-            <TrendingUp className="w-5 h-5" />
-            さらに稼ぐ → キャリアアップ求人
+          <Button 
+            className="w-full h-12 text-base font-semibold gap-2" 
+            size="lg"
+            asChild
+          >
+            <a 
+              href={process.env.NEXT_PUBLIC_A8_CAREER || "#"}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <TrendingUp className="w-5 h-5" />
+              さらに稼ぐ → キャリアアップ求人
+            </a>
           </Button>
         )}
       </div>
 
       {/* Advertisement - Job Listings */}
-      <JobAdSlot title="💼 あなたにぴったりのバイトを探す" />
+      <JobAdSlot 
+        title="💼 あなたにぴったりのバイトを探す"
+        jobs={[
+          {
+            name: "タウンワーク",
+            url: process.env.NEXT_PUBLIC_A8_TOWNWORK || "#",
+            description: "豊富な求人数",
+            tag: "人気"
+          },
+          {
+            name: "マッハバイト",
+            url: process.env.NEXT_PUBLIC_A8_MACHBAITO || "#",
+            description: "最大1万円祝い金",
+            tag: "祝い金"
+          },
+          {
+            name: "バイトル",
+            url: process.env.NEXT_PUBLIC_A8_BAITORU || "#",
+            description: "動画でバイト検索"
+          },
+          {
+            name: "アルバイトEX",
+            url: process.env.NEXT_PUBLIC_A8_ARBEIT_EX || "#",
+            description: "一括検索で効率的"
+          }
+        ].filter(job => job.url !== "#")} // URLが設定されていないものは除外
+      />
 
       {/* Advertisement - General */}
-      <AdSlot 
-        position="result-bottom" 
-        size="medium"
-        title="PR"
-      />
+      {process.env.NEXT_PUBLIC_A8_BANNER && (
+        <AdSlot 
+          position="result-bottom" 
+          size="medium"
+          title="PR"
+          adCode={process.env.NEXT_PUBLIC_A8_BANNER}
+        />
+      )}
 
       {/* Footer */}
       <footer className="text-center space-y-1 pt-2">

@@ -4,7 +4,15 @@ import { ArrowRight, Calendar } from "lucide-react"
 
 export const metadata = {
   title: "ブログ | 年収の壁シミュレーター",
-  description: "年収の壁、税金、社会保険について詳しく解説する記事一覧です。",
+  description: "年収の壁、税金、社会保険について詳しく解説する記事一覧です。2025年改正対応の最新情報を提供。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/blog",
+  },
+  openGraph: {
+    title: "ブログ | 年収の壁シミュレーター",
+    description: "年収の壁、税金、社会保険について詳しく解説する記事一覧です。",
+    type: "website",
+  },
 }
 
 const blogPosts = [

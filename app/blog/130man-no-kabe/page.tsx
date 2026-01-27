@@ -2,16 +2,40 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Calculator, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 
 export const metadata = {
-  title: "130万円の壁が最も危険な理由｜働き損を防ぐ方法 | 年収の壁シミュレーター",
+  title: "130万円の壁が最も危険な理由｜働き損を防ぐ方法",
   description: "130万円の壁を超えると社会保険料が発生し、手取りが大きく減ります。働き損ゾーンを回避する方法を解説。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/blog/130man-no-kabe",
+  },
+  openGraph: {
+    type: "article",
+    publishedTime: "2026-01-18T00:00:00Z",
+    authors: ["年収の壁シミュレーター"],
+    tags: ["130万円の壁", "社会保険", "働き損", "年収の壁"],
+  },
 }
 
 export default function Blog130ManPage() {
+  const breadcrumbItems = [
+    { name: "ホーム", url: "https://nenshuu-kabe.com" },
+    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+    { name: "130万円の壁が最も危険な理由", url: "https://nenshuu-kabe.com/blog/130man-no-kabe" },
+  ]
+
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <article className="max-w-3xl mx-auto space-y-8">
+    <>
+      <ArticleStructuredData
+        title="130万円の壁が最も危険な理由｜働き損を防ぐ方法"
+        description="130万円の壁を超えると社会保険料が発生し、手取りが大きく減ります。働き損ゾーンを回避する方法を解説。"
+        datePublished="2026-01-18T00:00:00Z"
+        url="https://nenshuu-kabe.com/blog/130man-no-kabe"
+      />
+      <BreadcrumbStructuredData items={breadcrumbItems} />
+      <main className="min-h-screen bg-background py-12 px-4">
+        <article className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-4">
           <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" />
@@ -170,8 +194,10 @@ export default function Blog130ManPage() {
             ← ブログ一覧に戻る
           </Link>
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+    </>
   )
 }
+
 

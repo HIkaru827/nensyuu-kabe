@@ -3,7 +3,10 @@ import { Mail, MessageSquare } from "lucide-react"
 
 export const metadata = {
   title: "お問い合わせ | 年収の壁シミュレーター",
-  description: "年収の壁シミュレーターへのお問い合わせページです。",
+  description: "年収の壁シミュレーターへのお問い合わせページ。ご質問・ご要望・不具合報告など、お気軽にお問い合わせください。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/contact",
+  },
 }
 
 export default function ContactPage() {
@@ -107,4 +110,5 @@ export default function ContactPage() {
     </main>
   )
 }
+
 

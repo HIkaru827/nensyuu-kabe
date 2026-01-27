@@ -2,16 +2,43 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Calculator } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 
 export const metadata = {
-  title: "【2025年改正】160万円の壁とは？103万円から変更された新基準を解説 | 年収の壁シミュレーター",
+  title: "【2025年改正】160万円の壁とは？103万円から変更された新基準を解説",
   description: "2025年税制改正で103万円の壁が160万円に！所得税の発生ラインと親の扶養控除への影響を最新情報で解説します。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/blog/103man-no-kabe",
+  },
+  openGraph: {
+    type: "article",
+    publishedTime: "2026-01-18T00:00:00Z",
+    modifiedTime: "2026-01-18T00:00:00Z",
+    authors: ["年収の壁シミュレーター"],
+    tags: ["年収の壁", "103万円の壁", "160万円の壁", "税制改正", "2025年"],
+  },
 }
 
 export default function Blog103ManPage() {
+  const breadcrumbItems = [
+    { name: "ホーム", url: "https://nenshuu-kabe.com" },
+    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+    { name: "【2025年改正】160万円の壁とは？", url: "https://nenshuu-kabe.com/blog/103man-no-kabe" },
+  ]
+
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <article className="max-w-3xl mx-auto space-y-8">
+    <>
+      <ArticleStructuredData
+        title="【2025年改正】160万円の壁とは？103万円から変更された新基準を解説"
+        description="2025年税制改正で103万円の壁が160万円に！所得税の発生ラインと親の扶養控除への影響を最新情報で解説します。"
+        datePublished="2026-01-18T00:00:00Z"
+        dateModified="2026-01-18T00:00:00Z"
+        url="https://nenshuu-kabe.com/blog/103man-no-kabe"
+        imageUrl="https://nenshuu-kabe.com/placeholder-logo.png"
+      />
+      <BreadcrumbStructuredData items={breadcrumbItems} />
+      <main className="min-h-screen bg-background py-12 px-4">
+        <article className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-4">
           <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" />
@@ -176,8 +203,9 @@ export default function Blog103ManPage() {
             シミュレーターに戻る
           </Link>
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+    </>
   )
 }
 
