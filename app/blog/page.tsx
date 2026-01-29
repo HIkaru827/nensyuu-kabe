@@ -22,20 +22,23 @@ const blogPosts = [
     description: "2025年税制改正で103万円の壁が160万円に！所得税の発生ラインと親の扶養控除への影響を最新情報で解説。",
     date: "2026年1月18日",
     category: "🆕 2025年改正",
+    badge: "✨ わかりやすく改善",
   },
   {
-    slug: "130man-no-kabe",
-    title: "130万円の壁が最も危険な理由｜働き損を防ぐ方法",
-    description: "130万円の壁を超えると社会保険料が発生し、手取りが大きく減ります。働き損ゾーンを回避する方法を解説。",
-    date: "2026年1月18日",
-    category: "注意点",
+    slug: "130man-no-kabe-v2",
+    title: "【超危険】130万円の壁で働き損！手取りが減る理由をわかりやすく解説",
+    description: "130万円を超えると年間20万円の社会保険料が発生！なぜ働き損になるのか、具体例とともにわかりやすく解説します。",
+    date: "2026年1月29日",
+    category: "⚠️ 最重要",
+    badge: "🆕 新記事",
   },
   {
     slug: "gakusei-baito-zeikin",
-    title: "学生バイトの税金対策｜勤労学生控除で所得税を0円に",
-    description: "勤労学生控除を使えば、年収130万円まで所得税が0円に。申請方法と注意点を詳しく解説します。",
-    date: "2026年1月18日",
-    category: "節税",
+    title: "【2025年最新】学生バイトの税金対策｜勤労学生控除で年収188万円まで！",
+    description: "2025年改正で大きく変更！勤労学生控除を使えば年収188万円まで親の扶養維持。申請方法と注意点をわかりやすく解説。",
+    date: "2026年1月29日",
+    category: "🎓 学生向け",
+    badge: "✨ わかりやすく改善",
   },
   {
     slug: "tokutei-fuyo",
@@ -69,10 +72,15 @@ export default function BlogPage() {
             <Link key={post.slug} href={`/blog/${post.slug}`}>
               <Card className="hover:border-primary transition-colors cursor-pointer">
                 <CardHeader>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2 flex-wrap">
                     <span className="bg-primary/10 text-primary px-2 py-1 rounded">
                       {post.category}
                     </span>
+                    {"badge" in post && (
+                      <span className="bg-green-100 text-green-600 px-2 py-1 rounded font-semibold">
+                        {post.badge}
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {post.date}
