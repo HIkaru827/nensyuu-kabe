@@ -11,7 +11,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   metadataBase: new URL('https://nenshuu-kabe.com'),
   title: {
-    default: "親に怒られない年収を30秒で判定 | 年収の壁シミュレーター",
+    default: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
     template: "%s | 年収の壁シミュレーター",
   },
   description: "扶養控除・社会保険の壁をシンプルに判定するシミュレーター。2025年改正対応！103万→160万円の壁を無料でチェック。",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ja_JP",
     url: "https://nenshuu-kabe.com",
-    title: "親に怒られない年収を30秒で判定 | 年収の壁シミュレーター",
+    title: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
     description: "扶養控除・社会保険の壁をシンプルに判定。2025年改正対応！103万→160万円の壁を無料でチェック。",
     siteName: "年収の壁シミュレーター",
     images: [

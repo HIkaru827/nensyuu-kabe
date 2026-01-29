@@ -9,7 +9,7 @@ export function SiteFooter() {
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">年収の壁シミュレーター</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              学生・アルバイト向けの年収シミュレーター。税金や社会保険の影響を30秒で判定します。
+              学生・アルバイト向けの年収シミュレーター。税金や社会保険の影響をすぐに判定します。
             </p>
           </div>
 
