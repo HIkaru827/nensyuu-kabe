@@ -9,7 +9,8 @@ import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { AlertTriangle, CheckCircle, AlertCircle, TrendingUp, Clock, Info } from "lucide-react"
+import { AlertTriangle, CheckCircle, AlertCircle, TrendingUp, Clock, Info, BookOpen, ArrowRight } from "lucide-react"
+import Link from "next/link"
 import { simulateIncome, type StudentType, type ParentIncomeLevel } from "@/lib/income-simulator"
 import { JobAdSlot, AdSlot } from "@/components/ad-slot"
 
@@ -450,6 +451,87 @@ export function IncomeSimulator() {
           </Button>
         )}
       </div>
+
+      {/* Related Blog Articles */}
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+        <CardContent className="pt-5 pb-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-blue-600" />
+            <h3 className="text-base font-bold text-foreground">📚 もっと詳しく知る</h3>
+          </div>
+          
+          <div className="space-y-2">
+            {/* 130万円前後の人向け */}
+            {income >= 120 && income <= 160 && (
+              <Link href="/blog/130man-no-kabe-v2">
+                <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
+                  <CardContent className="pt-3 pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-primary mb-1">⚠️ 必読</p>
+                        <p className="text-sm font-bold text-foreground">130万円の壁で働き損を防ぐ方法</p>
+                        <p className="text-xs text-muted-foreground mt-1">社会保険料で手取りが減る理由</p>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
+            
+            {/* 160万円前後の人向け */}
+            {income >= 150 && income <= 170 && (
+              <Link href="/blog/103man-no-kabe">
+                <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
+                  <CardContent className="pt-3 pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-green-600 mb-1">✨ 朗報</p>
+                        <p className="text-sm font-bold text-foreground">160万円の壁とは？2025年改正を解説</p>
+                        <p className="text-xs text-muted-foreground mt-1">103万円から大きく変更！</p>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
+            
+            {/* 学生向け */}
+            {attribute !== "freeter" && (
+              <Link href="/blog/gakusei-baito-zeikin">
+                <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
+                  <CardContent className="pt-3 pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-blue-600 mb-1">🎓 学生向け</p>
+                        <p className="text-sm font-bold text-foreground">学生バイトの税金対策</p>
+                        <p className="text-xs text-muted-foreground mt-1">勤労学生控除で年収188万円まで</p>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
+            
+            {/* すべての人向け：ブログトップへ */}
+            <Link href="/blog">
+              <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
+                <CardContent className="pt-3 pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-foreground">その他の記事を見る</p>
+                      <p className="text-xs text-muted-foreground mt-1">社会保険の壁、特定扶養親族など</p>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Advertisement - Job Listings */}
       <JobAdSlot 

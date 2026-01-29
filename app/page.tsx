@@ -1,4 +1,5 @@
 import { IncomeSimulator } from "@/components/income-simulator"
+import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { WebsiteStructuredData, WebApplicationStructuredData, OrganizationStructuredData } from "@/components/structured-data"
 
@@ -16,7 +17,8 @@ export default function Home() {
       <WebsiteStructuredData />
       <WebApplicationStructuredData />
       <OrganizationStructuredData />
-      <main className="min-h-screen bg-background flex items-center justify-center p-4">
+      <SiteHeader />
+      <main className="min-h-screen bg-background flex items-center justify-center p-4 pt-20">
         <IncomeSimulator />
       </main>
       <SiteFooter />

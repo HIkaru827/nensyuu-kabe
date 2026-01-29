@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight, Calendar } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 
 export const metadata = {
   title: "ブログ | 年収の壁シミュレーター",
@@ -58,14 +60,16 @@ const blogPosts = [
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">ブログ</h1>
-          <p className="text-sm text-muted-foreground">
-            年収の壁、税金、社会保険について詳しく解説
-          </p>
-        </div>
+    <>
+      <SiteHeader />
+      <main className="min-h-screen bg-background py-12 px-4">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold text-foreground">ブログ</h1>
+            <p className="text-sm text-muted-foreground">
+              年収の壁、税金、社会保険について詳しく解説
+            </p>
+          </div>
 
         <div className="grid gap-6">
           {blogPosts.map((post) => (
@@ -108,6 +112,8 @@ export default function BlogPage() {
         </div>
       </div>
     </main>
+    <SiteFooter />
+    </>
   )
 }
 

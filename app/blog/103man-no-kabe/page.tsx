@@ -2,6 +2,8 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Calculator } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { 
   TldrBox, 
@@ -47,6 +49,7 @@ export default function Blog103ManPage() {
         imageUrl="https://nenshuu-kabe.com/placeholder-logo.png"
       />
       <BreadcrumbStructuredData items={breadcrumbItems} />
+      <SiteHeader />
       <main className="min-h-screen bg-background py-12 px-4">
         <article className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-4">
@@ -342,6 +345,7 @@ export default function Blog103ManPage() {
         </div>
         </article>
       </main>
+      <SiteFooter />
     </>
   )
 }
