@@ -335,12 +335,51 @@ export function IncomeSimulator() {
                       </div>
                     )}
                     {simulationResult.selfBurdenBreakdown.socialInsurance > 0 && (
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-muted-foreground">└ 社会保険料</span>
-                        <span className="text-muted-foreground">
-                          約 {simulationResult.selfBurdenBreakdown.socialInsurance.toLocaleString()}円
-                        </span>
-                      </div>
+                      <>
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="text-muted-foreground">└ 社会保険料</span>
+                          <span className="text-muted-foreground">
+                            約 {simulationResult.selfBurdenBreakdown.socialInsurance.toLocaleString()}円
+                          </span>
+                        </div>
+                        {/* 社会保険料の内訳 */}
+                        {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown && (
+                          <div className="ml-3 space-y-0.5">
+                            {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.healthInsurance > 0 && (
+                              <div className="flex justify-between items-center text-xs">
+                                <span className="text-muted-foreground/80">　└ 健康保険料</span>
+                                <span className="text-muted-foreground/80">
+                                  約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.healthInsurance.toLocaleString()}円
+                                </span>
+                              </div>
+                            )}
+                            {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.pensionInsurance > 0 && (
+                              <div className="flex justify-between items-center text-xs">
+                                <span className="text-muted-foreground/80">　└ 厚生年金保険料</span>
+                                <span className="text-muted-foreground/80">
+                                  約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.pensionInsurance.toLocaleString()}円
+                                </span>
+                              </div>
+                            )}
+                            {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.employmentInsurance > 0 && (
+                              <div className="flex justify-between items-center text-xs">
+                                <span className="text-muted-foreground/80">　└ 雇用保険料</span>
+                                <span className="text-muted-foreground/80">
+                                  約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.employmentInsurance.toLocaleString()}円
+                                </span>
+                              </div>
+                            )}
+                            {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.nursingInsurance > 0 && (
+                              <div className="flex justify-between items-center text-xs">
+                                <span className="text-muted-foreground/80">　└ 介護保険料</span>
+                                <span className="text-muted-foreground/80">
+                                  約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.nursingInsurance.toLocaleString()}円
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

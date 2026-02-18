@@ -43,13 +43,25 @@ export interface SimulationParams {
 }
 
 /**
+ * 社会保険料の内訳
+ */
+export interface SocialInsuranceBreakdown {
+  healthInsurance: number;      // 健康保険料（円）
+  pensionInsurance: number;     // 厚生年金保険料（円）
+  employmentInsurance: number;  // 雇用保険料（円）
+  nursingInsurance: number;     // 介護保険料（円・40歳以上のみ）
+  total: number;                // 社会保険料合計（円）
+}
+
+/**
  * 本人の負担内訳
  */
 export interface SelfBurdenBreakdown {
-  incomeTax: number;       // 所得税（円）
-  residentTax: number;     // 住民税（円）
-  socialInsurance: number; // 社会保険料（円）
-  total: number;           // 合計（円）
+  incomeTax: number;                           // 所得税（円）
+  residentTax: number;                         // 住民税（円）
+  socialInsurance: number;                     // 社会保険料合計（円）
+  socialInsuranceBreakdown?: SocialInsuranceBreakdown; // 社会保険料の内訳
+  total: number;                               // 合計（円）
 }
 
 /**
@@ -248,9 +260,56 @@ function calculateSelfBurden(annualIncome: number, zone: IncomeZone): number | u
 }
 
 /**
+ * 社会保険料の内訳を計算（概算）
+ * 
+ * @param annualIncome - 年収（円）
+ * @param age - 年齢
+ * @returns 社会保険料の内訳（130万円以下の場合は undefined）
+ */
+function calculateSocialInsuranceBreakdown(annualIncome: number, age: number): SocialInsuranceBreakdown | undefined {
+  // 130万円以下は社会保険料が発生しない
+  if (annualIncome <= 1_300_000) {
+    return undefined;
+  }
+
+  // 標準報酬月額を概算（月収ベース）
+  const monthlyIncome = annualIncome / 12;
+
+  // 健康保険料：約10%（本人負担は約5%）
+  // 協会けんぽの全国平均を仮定
+  const healthInsuranceRate = 0.05; // 本人負担分
+  const healthInsurance = Math.round(annualIncome * healthInsuranceRate);
+
+  // 厚生年金保険料：18.3%（本人負担は9.15%）
+  const pensionInsuranceRate = 0.0915; // 本人負担分
+  const pensionInsurance = Math.round(annualIncome * pensionInsuranceRate);
+
+  // 雇用保険料：0.6%（本人負担）
+  const employmentInsuranceRate = 0.006;
+  const employmentInsurance = Math.round(annualIncome * employmentInsuranceRate);
+
+  // 介護保険料：40歳以上のみ、約1.8%（本人負担は約0.9%）
+  let nursingInsurance = 0;
+  if (age >= 40) {
+    const nursingInsuranceRate = 0.009; // 本人負担分
+    nursingInsurance = Math.round(annualIncome * nursingInsuranceRate);
+  }
+
+  const total = healthInsurance + pensionInsurance + employmentInsurance + nursingInsurance;
+
+  return {
+    healthInsurance,
+    pensionInsurance,
+    employmentInsurance,
+    nursingInsurance,
+    total,
+  };
+}
+
+/**
  * 本人の負担内訳を計算（概算・2025年度税制改正対応）
  */
-function calculateSelfBurdenBreakdown(annualIncome: number): SelfBurdenBreakdown | undefined {
+function calculateSelfBurdenBreakdown(annualIncome: number, age: number): SelfBurdenBreakdown | undefined {
   // 年収100万円以下は負担なし
   if (annualIncome <= 1_000_000) {
     return undefined;
@@ -263,6 +322,7 @@ function calculateSelfBurdenBreakdown(annualIncome: number): SelfBurdenBreakdown
   let incomeTax = 0;
   let residentTax = 0;
   let socialInsurance = 0;
+  let socialInsuranceBreakdown: SocialInsuranceBreakdown | undefined = undefined;
 
   // 所得税の計算（基礎控除48万円）
   const INCOME_TAX_BASIC_DEDUCTION = 480_000;
@@ -285,9 +345,10 @@ function calculateSelfBurdenBreakdown(annualIncome: number): SelfBurdenBreakdown
 
   // 社会保険料の計算（130万円超で発生）
   if (annualIncome > 1_300_000) {
-    // 概算：年収の約15%（健康保険+厚生年金）
-    // 実際は標準報酬月額により異なる
-    socialInsurance = Math.round(annualIncome * 0.15);
+    socialInsuranceBreakdown = calculateSocialInsuranceBreakdown(annualIncome, age);
+    if (socialInsuranceBreakdown) {
+      socialInsurance = socialInsuranceBreakdown.total;
+    }
   }
 
   const total = incomeTax + residentTax + socialInsurance;
@@ -301,6 +362,7 @@ function calculateSelfBurdenBreakdown(annualIncome: number): SelfBurdenBreakdown
     incomeTax,
     residentTax,
     socialInsurance,
+    socialInsuranceBreakdown,
     total,
   };
 }
@@ -506,7 +568,7 @@ export function simulateIncome(params: SimulationParams): SimulationResult {
   const estimatedSelfLoss = calculateSelfBurden(annualIncome, zone);
   
   // 本人の負担内訳計算
-  const selfBurdenBreakdown = calculateSelfBurdenBreakdown(annualIncome);
+  const selfBurdenBreakdown = calculateSelfBurdenBreakdown(annualIncome, age);
 
   // 基本情報取得
   const { label, color } = getZoneInfo(zone);
