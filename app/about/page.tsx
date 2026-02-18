@@ -48,7 +48,9 @@ export default function AboutPage() {
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">お問い合わせ</h2>
               <p className="text-sm text-muted-foreground">
-                contact@nenshuu-kabe.com<br />
+                <a href="mailto:lcose.dev@gmail.com" className="text-primary hover:underline">
+                  lcose.dev@gmail.com
+                </a><br />
                 <a href="/contact" className="text-primary hover:underline">お問い合わせページ</a>
               </p>
             </section>

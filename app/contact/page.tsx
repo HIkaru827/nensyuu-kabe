@@ -49,9 +49,12 @@ export default function ContactPage() {
                     お問い合わせは以下のメールアドレスまでお願いいたします：
                   </p>
                   <div className="bg-muted p-4 rounded-lg">
-                    <p className="text-base font-mono text-foreground">
-                      contact@nenshuu-kabe.com
-                    </p>
+                    <a 
+                      href="mailto:lcose.dev@gmail.com" 
+                      className="text-base font-mono text-primary hover:underline"
+                    >
+                      lcose.dev@gmail.com
+                    </a>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     ※ 件名に「お問い合わせ」とご記入ください
