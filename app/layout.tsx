@@ -92,7 +92,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID
-  const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-2931164651880564"
+  const adsenseClient = "ca-pub-2931164651880564"
 
   return (
     <html lang="ja">
