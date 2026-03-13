@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/site-footer"
 
 export const metadata = {
   title: "ブログ | 年収の壁シミュレーター",
-  description: "年収の壁、税金、社会保険について詳しく解説する記事一覧です。2025年改正対応の最新情報を提供。",
+  description: "年収の壁、税金、社会保険について詳しく解説する記事一覧です。令和7年度改正対応の最新情報を提供。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog",
   },
@@ -20,10 +20,10 @@ export const metadata = {
 const blogPosts = [
   {
     slug: "103man-no-kabe",
-    title: "【2025年改正】160万円の壁とは？103万円から変更された新基準",
-    description: "2025年税制改正で103万円の壁が160万円に！所得税の発生ラインと親の扶養控除への影響を最新情報で解説。",
+    title: "【令和7年度改正】160万円の壁とは？103万円から変更された新基準",
+    description: "令和7年度税制改正で103万円の壁が160万円に。所得税の発生ラインと扶養判定の目安を解説。",
     date: "2026年1月18日",
-    category: "🆕 2025年改正",
+    category: "🆕 令和7年度改正",
     badge: "✨ わかりやすく改善",
   },
   {
@@ -36,8 +36,8 @@ const blogPosts = [
   },
   {
     slug: "gakusei-baito-zeikin",
-    title: "【2025年最新】学生バイトの税金対策｜勤労学生控除で年収188万円まで！",
-    description: "2025年改正で大きく変更！勤労学生控除を使えば年収188万円まで親の扶養維持。申請方法と注意点をわかりやすく解説。",
+    title: "【令和7年度対応】学生バイトの税金対策｜160万円の壁と親の控除影響",
+    description: "所得税160万円ライン、扶養判定123万円目安、特定親族特別控除（19〜22歳・〜188万円）のポイントを解説。",
     date: "2026年1月29日",
     category: "🎓 学生向け",
     badge: "✨ わかりやすく改善",
@@ -116,4 +116,3 @@ export default function BlogPage() {
     </>
   )
 }
-

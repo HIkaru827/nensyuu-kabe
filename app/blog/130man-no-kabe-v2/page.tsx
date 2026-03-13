@@ -54,7 +54,7 @@ export default function Blog130ManV2Page() {
             <li><strong>130万円を超えると社会保険料が年間約20万円発生</strong></li>
             <li><strong>年収140万円でも手取りは120万円以下より少ない</strong>（働き損）</li>
             <li><strong>130万円以内に抑えるか、160万円以上を目指すべき</strong></li>
-            <li>社会保険の壁は2025年税制改正でも変更なし</li>
+            <li>社会保険の壁は令和7年度税制改正でも変更なし</li>
           </ul>
         </TldrBox>
 
@@ -189,10 +189,10 @@ export default function Blog130ManV2Page() {
               />
             </section>
 
-            {/* セクション6：2025年改正との関係 */}
+            {/* セクション6：令和7年度改正との関係 */}
             <section className="space-y-4">
               <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                2025年税制改正との関係
+                令和7年度税制改正との関係
               </h2>
               <Card className="bg-blue-50 border-blue-200">
                 <CardContent className="pt-4">
@@ -252,7 +252,7 @@ export default function Blog130ManV2Page() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>2025年改正でも変更なし</strong>：社会保険の壁（130万円）は据え置き</span>
+                      <span className="text-foreground"><strong>令和7年度改正でも変更なし</strong>：社会保険の壁（130万円）は据え置き</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -262,7 +262,7 @@ export default function Blog130ManV2Page() {
             <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
               <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
               <p className="text-sm text-muted-foreground">
-                本記事は2025年度の制度に基づいた概算です。最終的な判断は勤務先・社会保険事務所でご確認ください。
+                本記事は令和7年度税制改正（2025年分以後適用）時点の制度に基づいた概算です。最終的な判断は勤務先・社会保険事務所でご確認ください。
               </p>
             </div>
           </CardContent>
@@ -293,4 +293,5 @@ export default function Blog130ManV2Page() {
     </main>
   )
 }
+
 

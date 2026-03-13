@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from "@/components/google-analytics"
+import { GoogleAdSenseScript } from "@/components/google-adsense"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
     default: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
     template: "%s | 年収の壁シミュレーター",
   },
-  description: "扶養控除・社会保険の壁をシンプルに判定するシミュレーター。2025年改正対応！103万→160万円の壁を無料でチェック。",
-  keywords: ["年収の壁", "103万円の壁", "160万円の壁", "130万円の壁", "扶養控除", "社会保険", "学生バイト", "アルバイト", "税金シミュレーター", "2025年改正"],
+  description: "扶養控除・社会保険の壁をシンプルに判定するシミュレーター。令和7年度改正対応で103万→160万円の壁を無料チェック。",
+  keywords: ["年収の壁", "103万円の壁", "160万円の壁", "130万円の壁", "扶養控除", "社会保険", "学生バイト", "アルバイト", "税金シミュレーター", "令和7年度改正"],
   authors: [{ name: "年収の壁シミュレーター" }],
   creator: "年収の壁シミュレーター",
   publisher: "年収の壁シミュレーター",
@@ -29,11 +30,11 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     url: "https://nenshuu-kabe.com",
     title: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
-    description: "扶養控除・社会保険の壁をシンプルに判定。2025年改正対応！103万→160万円の壁を無料でチェック。",
+    description: "扶養控除・社会保険の壁をシンプルに判定。令和7年度改正対応で103万→160万円の壁を無料チェック。",
     siteName: "年収の壁シミュレーター",
     images: [
       {
-        url: "/placeholder-logo.png", // TODO: OG画像を作成してください（推奨サイズ: 1200x630px）
+        url: "/site-share-card.svg",
         width: 1200,
         height: 630,
         alt: "年収の壁シミュレーター",
@@ -43,9 +44,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "親に怒られない年収を30秒で判定",
-    description: "扶養控除・社会保険の壁をシンプルに判定。2025年改正対応！",
-    images: ["/placeholder-logo.png"], // TODO: Twitter Card用の画像を設定してください
-    creator: "@yourtwitter", // TODO: Twitterアカウントがあれば設定してください
+    description: "扶養控除・社会保険の壁をシンプルに判定。令和7年度改正対応！",
+    images: ["/site-share-card.svg"],
   },
   robots: {
     index: true,
@@ -84,8 +84,6 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 }
 
 export default function RootLayout({
@@ -94,6 +92,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID
+  const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-2931164651880564"
 
   return (
     <html lang="ja">
@@ -101,6 +100,7 @@ export default function RootLayout({
         {children}
         <Analytics />
         {gaId && <GoogleAnalytics gaId={gaId} />}
+        <GoogleAdSenseScript client={adsenseClient} />
       </body>
     </html>
   )

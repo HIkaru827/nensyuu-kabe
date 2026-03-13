@@ -17,6 +17,11 @@ interface AdSlotProps {
    * 広告のタイトル（任意）
    */
   title?: string
+
+  /**
+   * 広告タグ（HTML文字列）
+   */
+  adCode?: string
 }
 
 /**
@@ -25,7 +30,7 @@ interface AdSlotProps {
  * A8.net等のアフィリエイト広告を配置するためのプレースホルダー
  * 実際の広告タグは、このコンポーネント内に配置してください
  */
-export function AdSlot({ position, size = "medium", title }: AdSlotProps) {
+export function AdSlot({ position, size = "medium", title, adCode }: AdSlotProps) {
   // サイズに応じた高さを設定
   const heightClass = 
     size === "small" ? "min-h-[100px]" :
@@ -45,17 +50,20 @@ export function AdSlot({ position, size = "medium", title }: AdSlotProps) {
               <div dangerouslySetInnerHTML={{ __html: adCode }} />
             */}
             
-            {/* プレースホルダー表示（本番では削除） */}
-            <div className="opacity-50">
-              <p className="text-sm font-medium text-muted-foreground">広告枠</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {position} - {size}
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">
-                ここにA8.netまたはGoogle AdSenseの<br />
-                広告タグを配置してください
-              </p>
-            </div>
+            {adCode ? (
+              <div dangerouslySetInnerHTML={{ __html: adCode }} />
+            ) : (
+              <div className="opacity-50">
+                <p className="text-sm font-medium text-muted-foreground">広告枠</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {position} - {size}
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  ここにA8.netまたはGoogle AdSenseの<br />
+                  広告タグを配置してください
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -149,5 +157,3 @@ export function JobAdSlot({
     </div>
   )
 }
-
-

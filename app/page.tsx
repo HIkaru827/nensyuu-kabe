@@ -5,7 +5,7 @@ import { WebsiteStructuredData, WebApplicationStructuredData, OrganizationStruct
 
 export const metadata = {
   title: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
-  description: "2025年税制改正対応！年収の壁（103万円→160万円）をシミュレーション。学生バイト・アルバイトの税金や社会保険料、親への影響をすぐに判定。",
+  description: "令和7年度税制改正対応！年収の壁（103万円→160万円）をシミュレーション。学生バイト・アルバイトの税金や社会保険料、親への影響をすぐに判定。",
   alternates: {
     canonical: "https://nenshuu-kabe.com",
   },
@@ -18,7 +18,7 @@ export default function Home() {
       <WebApplicationStructuredData />
       <OrganizationStructuredData />
       <SiteHeader />
-      <main className="min-h-screen bg-background flex items-center justify-center p-4 pt-20">
+      <main className="min-h-screen bg-background p-4 pt-20 pb-10">
         <IncomeSimulator />
       </main>
       <SiteFooter />

@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
+import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
   title: "利用規約 | 年収の壁シミュレーター",
@@ -7,13 +8,7 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">利用規約</h1>
-          <p className="text-sm text-muted-foreground">最終更新日：2026年1月18日</p>
-        </div>
-
+    <ContentPageShell title="利用規約" description="最終更新日：2026年1月18日">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-3">
@@ -102,16 +97,10 @@ export default function TermsPage() {
             </section>
           </CardContent>
         </Card>
-
-        <div className="text-center pt-6">
-          <a href="/" className="text-primary hover:underline text-sm">
-            ← シミュレーターに戻る
-          </a>
-        </div>
-      </div>
-    </main>
+    </ContentPageShell>
   )
 }
+
 
 
 

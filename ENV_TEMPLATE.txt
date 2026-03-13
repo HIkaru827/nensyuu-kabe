@@ -6,6 +6,10 @@
 # Google Analytics（既存）
 NEXT_PUBLIC_GA_ID=G-FKSP61MD9N
 
+# Google AdSense（Bottom_baner）
+NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-2931164651880564
+NEXT_PUBLIC_ADSENSE_BOTTOM_SLOT=5787776891
+
 # ========================================
 # A8.net アフィリエイト広告設定
 # ========================================
@@ -51,9 +55,10 @@ NEXT_PUBLIC_A8_ARBEIT_EX="https://px.a8.net/svt/ejp?..."
 # 1. A8.netで各バイト求人サービスと提携する
 # 2. 広告リンクを取得する（テキストリンク推奨）
 # 3. 上記の ... の部分を実際のURLに置き換える
-# 4. 開発サーバーを再起動する（pnpm dev）
+# 4. 開発サーバーを再起動する（npm run dev）
 #
 # 詳細は A8NET_SETUP.md を参照してください
+
 
 
 

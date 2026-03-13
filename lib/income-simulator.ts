@@ -1,6 +1,6 @@
 /**
  * 学生向け 年収の壁シミュレーター
- * 2025年度税制をもとにした概算ロジック
+ * 令和7年度税制改正（2025年分以後）をもとにした概算ロジック
  * 
  * 注意：
  * - すべての計算は概算です
@@ -29,7 +29,7 @@ export enum IncomeZone {
   SAFE_TAX = "SAFE_TAX",           // 110〜130万円
   DANGER_SOCIAL = "DANGER_SOCIAL", // 130〜160万円
   ADJUST_ZONE = "ADJUST_ZONE",     // 160〜188万円
-  INDEPENDENT = "INDEPENDENT",     // 188万円以上
+  INDEPENDENT = "INDEPENDENT",     // 188万円超
 }
 
 /**
@@ -79,29 +79,31 @@ export interface SimulationResult {
   advice: string[];                 // 行動提案
 }
 
-// ===== 定数定義（2025年度税制改正対応・概算） =====
+// ===== 定数定義（令和7年度税制改正対応・概算） =====
 
 /**
  * 年収の壁（円）
  * 
- * 【2025年3月税制改正の主な変更点】
+ * 【令和7年度税制改正の主な変更点】
  * - 所得税の壁：103万円 → 160万円
- * - 給与所得控除：55万円 → 123万円
- * - 扶養控除の基準：123万円 → 188万円
+ * - 給与所得控除（最低保障）：55万円 → 65万円
+ * - 基礎控除（低所得帯）：48万円 → 95万円
+ * - 扶養控除の所得要件：48万円 → 58万円（給与収入換算で約123万円）
+ * - 19〜22歳は「特定親族特別控除」が創設（給与収入換算で約188万円まで段階適用）
  * - 社会保険の壁（106万円・130万円）：変更なし
  */
 export const INCOME_THRESHOLDS = {
   /** 住民税が発生し始める目安 */
   RESIDENT_TAX_START: 1_100_000,
   
-  /** 所得税が発生し始める目安（2025年改正：旧103万円→新160万円） */
+  /** 所得税が発生し始める目安（令和7年度改正：旧103万円→新160万円） */
   INCOME_TAX_START: 1_600_000,
   
-  /** 親の扶養控除が満額で維持される上限（2025年改正：旧123万円→新188万円） */
-  DEPENDENT_FULL: 1_880_000,
+  /** 親の扶養控除（控除対象扶養親族）が維持される上限（給与収入換算） */
+  DEPENDENT_FULL: 1_230_000,
   
-  /** 特定扶養親族（19〜22歳・昼間学生）の実質安全圏（2025年改正） */
-  SPECIAL_DEPENDENT_SAFE: 2_010_000,
+  /** 特定親族特別控除が適用される上限（給与収入換算） */
+  SPECIAL_DEPENDENT_MAX: 1_880_000,
   
   /** 社会保険の被扶養者上限目安（変更なし） */
   SOCIAL_INSURANCE_LIMIT: 1_300_000,
@@ -109,19 +111,19 @@ export const INCOME_THRESHOLDS = {
   /** 社会保険料を払っても手取りが増え始めるライン */
   FULL_TAX_START: 1_600_000,
   
-  /** 完全に扶養外 */
-  FULLY_INDEPENDENT: 2_010_000,
+  /** 親控除が完全に使えない目安（給与収入換算） */
+  FULLY_INDEPENDENT: 1_880_000,
 } as const;
 
 /**
- * ゾーン境界値（2025年税制改正対応）
+ * ゾーン境界値（令和7年度税制改正対応）
  */
 const ZONE_BOUNDARIES = {
   SAFE_LOW_MAX: 1_000_000,        // 〜100万円：完全安全
   SAFE_RESIDENT_MAX: 1_100_000,   // 〜110万円：住民税のみ
   SAFE_TAX_MAX: 1_300_000,        // 〜130万円：所得税なし（改正後）、社会保険の壁
   DANGER_SOCIAL_MAX: 1_600_000,   // 〜160万円：社会保険料発生、働き損ゾーン
-  ADJUST_ZONE_MAX: 2_010_000,     // 〜201万円：扶養から外れつつある（改正後）
+  ADJUST_ZONE_MAX: 1_880_000,     // 〜188万円：特定親族特別控除が段階適用され得る
 } as const;
 
 /**
@@ -212,32 +214,22 @@ function calculateParentLoss(
   const special = isSpecialDependent(age, studentType);
   const estimates = PARENT_LOSS_ESTIMATES[parentIncomeLevel];
 
-  // 重要：188万円以下は特定扶養でも通常扶養でも親の控除満額維持（2025年改正）
+  // 通常の扶養控除（控除対象扶養親族）は給与収入約123万円以下で維持
   if (annualIncome <= INCOME_THRESHOLDS.DEPENDENT_FULL) {
-    return undefined; // 親への影響なし（完全セーフ）
+    return undefined; // 親への影響なし
   }
 
   // 特定扶養親族（19〜22歳・昼間学生）の場合
   if (special) {
-    // 188万円超〜201万円：特定扶養控除は維持される
-    if (annualIncome <= INCOME_THRESHOLDS.SPECIAL_DEPENDENT_SAFE) {
-      // この範囲では特定扶養控除（63万円 or 45万円）が維持される
-      return undefined; // 実質的に影響なし
-    }
-    // 201万円超：段階的に控除が減る
-    if (annualIncome <= INCOME_THRESHOLDS.FULLY_INDEPENDENT + 500_000) {
+    // 給与収入123万円超〜188万円以下：特定親族特別控除が段階適用（親控除が減る）
+    if (annualIncome <= INCOME_THRESHOLDS.SPECIAL_DEPENDENT_MAX) {
       return estimates.partial;
     }
-    // それ以上：完全に扶養外
+    // 188万円超：特定親族特別控除の対象外
     return estimates.full;
   }
 
-  // 通常の扶養親族の場合（夜間学生・フリーター等）
-  // 188万円超〜201万円：段階的に控除が減る
-  if (annualIncome <= INCOME_THRESHOLDS.SPECIAL_DEPENDENT_SAFE) {
-    return estimates.partial;
-  }
-  // それ以上：完全に扶養外
+  // 通常の扶養親族の場合（特定親族特別控除の対象外）
   return estimates.full;
 }
 
@@ -307,7 +299,7 @@ function calculateSocialInsuranceBreakdown(annualIncome: number, age: number): S
 }
 
 /**
- * 本人の負担内訳を計算（概算・2025年度税制改正対応）
+ * 本人の負担内訳を計算（概算・令和7年度税制改正対応）
  */
 function calculateSelfBurdenBreakdown(annualIncome: number, age: number): SelfBurdenBreakdown | undefined {
   // 年収100万円以下は負担なし
@@ -315,8 +307,8 @@ function calculateSelfBurdenBreakdown(annualIncome: number, age: number): SelfBu
     return undefined;
   }
 
-  // 給与所得控除（2025年改正：55万円 → 123万円）
-  const SALARY_DEDUCTION = 1_230_000;
+  // 給与所得控除（令和7年分以降：最低保障65万円）
+  const SALARY_DEDUCTION = 650_000;
   const income = annualIncome - SALARY_DEDUCTION;
 
   let incomeTax = 0;
@@ -324,8 +316,8 @@ function calculateSelfBurdenBreakdown(annualIncome: number, age: number): SelfBu
   let socialInsurance = 0;
   let socialInsuranceBreakdown: SocialInsuranceBreakdown | undefined = undefined;
 
-  // 所得税の計算（基礎控除48万円）
-  const INCOME_TAX_BASIC_DEDUCTION = 480_000;
+  // 所得税の計算（基礎控除：低所得帯は95万円）
+  const INCOME_TAX_BASIC_DEDUCTION = 950_000;
   const taxableIncomeForIncomeTax = Math.max(0, income - INCOME_TAX_BASIC_DEDUCTION);
   if (taxableIncomeForIncomeTax > 0) {
     // 所得税率5% + 復興特別所得税2.1%
@@ -421,27 +413,27 @@ function generateDescription(
   studentType: StudentType,
   parentLoss?: number
 ): string {
-  const baseNotice = "※ 本結果は2025年度税制改正（103万円→160万円）をもとにした概算です。最終的な判断は自治体・税務署等でご確認ください。";
+  const baseNotice = "※ 本結果は令和7年度税制改正（2025年分以後適用）をもとにした概算です。最終的な判断は自治体・税務署等でご確認ください。";
   const special = isSpecialDependent(age, studentType);
 
   let main = "";
 
   switch (zone) {
     case IncomeZone.SAFE_LOW:
-      main = "この年収帯では、住民税・所得税ともに課税されない可能性が高く、親の扶養控除も満額で維持されます。親の税金への影響は一切ありません。";
+      main = "この年収帯では、住民税・所得税ともに課税されない可能性が高く、親の扶養控除も維持される可能性が高いです。親の税金への影響は小さいと見込まれます。";
       break;
     case IncomeZone.SAFE_RESIDENT:
-      main = "住民税が発生し始める可能性がありますが、所得税は160万円まで発生しません（2025年改正）。親の扶養控除は満額で維持されます（188万円まで）。";
+      main = "住民税が発生し始める可能性がありますが、所得税は160万円まで発生しません（令和7年度税制改正）。親の扶養控除判定は給与収入約123万円が目安です。";
       if (special) {
         main += "あなたは特定扶養親族（19〜22歳の昼間学生）に該当するため、親の控除額は一般の扶養親族より大きくなります。";
       }
       break;
     case IncomeZone.SAFE_TAX:
       if (special) {
-        main = "2025年税制改正により、160万円まで所得税は発生しません。あなたは特定扶養親族（19〜22歳の昼間学生）に該当するため、201万円までは特定扶養控除が維持される見込みです。";
+        main = "令和7年度税制改正により、160万円まで所得税は発生しません。あなたは特定親族（19〜22歳）に該当し得るため、給与収入123万円超〜188万円以下では親に特定親族特別控除が段階適用されます。";
         main += "ただし、130万円を超えると社会保険の扶養から外れる可能性があります（社会保険の壁は改正されていません）。";
       } else {
-        main = "2025年税制改正により160万円まで所得税は発生しませんが、130万円を超えると社会保険の扶養から外れる可能性があります。188万円までは親の扶養控除が維持されます。";
+        main = "令和7年度税制改正により160万円まで所得税は発生しませんが、130万円を超えると社会保険の扶養から外れる可能性があります。親の扶養控除判定は給与収入約123万円が目安です。";
       }
       if (parentLoss) {
         main += `親の税負担が年間約${Math.floor(parentLoss / 10_000)}万円増える見込みです。`;
@@ -457,13 +449,13 @@ function generateDescription(
       main += "130万円以下に抑えるか、160万円以上を目指すことを強く推奨します。";
       break;
     case IncomeZone.ADJUST_ZONE:
-      main = "完全に扶養を外れる手前のゾーンです。所得税も160万円超から発生し始めます（2025年改正）。社会保険料や税金の負担が本格化します。";
+      main = "扶養・控除の調整が必要なゾーンです。所得税も160万円超から発生し始めます（令和7年度税制改正）。社会保険料や税金の負担が本格化します。";
       if (parentLoss) {
         main += `親の扶養控除も失われつつあり、親の税負担が年間約${Math.floor(parentLoss / 10_000)}万円増える可能性があります。`;
       } else if (special) {
-        main += "特定扶養親族のため201万円までは親の控除が維持されますが、それ以降は親への影響も出始めます。";
+        main += "特定親族特別控除は給与収入188万円以下まで段階適用されます。188万円超では親への影響が大きくなります。";
       } else {
-        main += "188万円を超えると親の扶養控除が段階的に減っていきます。";
+        main += "通常の扶養控除判定は給与収入約123万円が目安です。";
       }
       break;
     case IncomeZone.INDEPENDENT:
@@ -495,28 +487,28 @@ function generateAdvice(
       advice.push("親の扶養控除も満額で維持されています");
       break;
     case IncomeZone.SAFE_RESIDENT:
-      advice.push("2025年改正で160万円まで所得税は発生しません");
-      advice.push("親の扶養控除も満額維持（188万円まで）・親目線でも完全セーフ");
+      advice.push("令和7年度改正で160万円まで所得税は発生しません");
+      advice.push("親の扶養控除判定は給与収入約123万円が目安です");
       break;
     case IncomeZone.SAFE_TAX:
       if (special) {
         if (annualIncome <= INCOME_THRESHOLDS.DEPENDENT_FULL) {
-          // 188万円以下
-          advice.push("親の扶養控除は満額維持（改正で188万円まで拡大）");
-          advice.push("所得税も160万円まで発生しません（2025年改正）");
+          // 123万円以下
+          advice.push("親の扶養控除の対象になりやすい収入帯です（目安: 123万円以下）");
+          advice.push("所得税も160万円まで発生しません（令和7年度改正）");
         } else {
-          // 188万円超〜201万円
-          advice.push("特定扶養控除は201万円まで維持できる見込みです");
+          // 123万円超〜188万円
+          advice.push("特定親族特別控除は188万円以下まで段階適用されます");
           advice.push("ただし130万円超は社会保険の扶養から外れます");
         }
       } else {
         if (annualIncome <= INCOME_THRESHOLDS.DEPENDENT_FULL) {
-          // 188万円以下
-          advice.push("親の扶養控除は満額維持（改正で188万円まで拡大）");
-          advice.push("所得税も160万円まで発生しません（2025年改正）");
+          // 123万円以下
+          advice.push("親の扶養控除の対象になりやすい収入帯です（目安: 123万円以下）");
+          advice.push("所得税も160万円まで発生しません（令和7年度改正）");
         } else {
-          // 188万円超〜130万円
-          advice.push("188万円を超えると親の扶養控除が段階的に減ります");
+          // 123万円超
+          advice.push("123万円を超えると親の扶養控除対象から外れる可能性が高いです");
           advice.push("130万円を超えると社会保険の扶養から外れます");
         }
       }
@@ -526,7 +518,7 @@ function generateAdvice(
       advice.push("もしくは思い切って160万円以上を目指すことを検討してください");
       break;
     case IncomeZone.ADJUST_ZONE:
-      advice.push("188万円以上稼げば手取りは安定して増えていきます");
+      advice.push("188万円を超えると親の控除は適用外になるため、手取り計画を再確認しましょう");
       advice.push("中途半端な収入より、しっかり働くか抑えるか判断しましょう");
       break;
     case IncomeZone.INDEPENDENT:
@@ -592,4 +584,3 @@ export function simulateIncome(params: SimulationParams): SimulationResult {
     advice,
   };
 }
-

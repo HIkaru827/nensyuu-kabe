@@ -17,8 +17,8 @@ import {
 } from "@/components/blog-components"
 
 export const metadata = {
-  title: "【2025年改正】160万円の壁とは？103万円から変更された新基準を解説",
-  description: "2025年税制改正で103万円の壁が160万円に！所得税の発生ラインと親の扶養控除への影響を最新情報で解説します。",
+  title: "【令和7年度改正】160万円の壁とは？103万円から変更された新基準を解説",
+  description: "令和7年度税制改正で103万円の壁が160万円に。所得税の発生ラインと扶養判定の目安を解説します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/103man-no-kabe",
   },
@@ -27,7 +27,7 @@ export const metadata = {
     publishedTime: "2026-01-18T00:00:00Z",
     modifiedTime: "2026-01-18T00:00:00Z",
     authors: ["年収の壁シミュレーター"],
-    tags: ["年収の壁", "103万円の壁", "160万円の壁", "税制改正", "2025年"],
+    tags: ["年収の壁", "103万円の壁", "160万円の壁", "税制改正", "令和7年度"],
   },
 }
 
@@ -35,14 +35,14 @@ export default function Blog103ManPage() {
   const breadcrumbItems = [
     { name: "ホーム", url: "https://nenshuu-kabe.com" },
     { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
-    { name: "【2025年改正】160万円の壁とは？", url: "https://nenshuu-kabe.com/blog/103man-no-kabe" },
+    { name: "【令和7年度改正】160万円の壁とは？", url: "https://nenshuu-kabe.com/blog/103man-no-kabe" },
   ]
 
   return (
     <>
       <ArticleStructuredData
-        title="【2025年改正】160万円の壁とは？103万円から変更された新基準を解説"
-        description="2025年税制改正で103万円の壁が160万円に！所得税の発生ラインと親の扶養控除への影響を最新情報で解説します。"
+        title="【令和7年度改正】160万円の壁とは？103万円から変更された新基準を解説"
+        description="令和7年度税制改正で103万円の壁が160万円に。所得税の発生ラインと扶養判定の目安を解説します。"
         datePublished="2026-01-18T00:00:00Z"
         dateModified="2026-01-18T00:00:00Z"
         url="https://nenshuu-kabe.com/blog/103man-no-kabe"
@@ -58,7 +58,7 @@ export default function Blog103ManPage() {
             ブログ一覧に戻る
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-            【2025年改正】160万円の壁とは？<br />103万円から変更された新基準を解説
+            【令和7年度改正】160万円の壁とは？<br />103万円から変更された新基準を解説
           </h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
             <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full font-semibold">✨ 朗報</span>
@@ -72,7 +72,7 @@ export default function Blog103ManPage() {
         <TargetAudienceBox 
           audiences={[
             "103万円の壁を気にしていた学生・アルバイト",
-            "2025年の税制改正について知りたい人",
+            "令和7年度税制改正について知りたい人",
             "親の扶養に入っている人",
             "シフトを増やせるか知りたい人"
           ]}
@@ -81,9 +81,9 @@ export default function Blog103ManPage() {
         {/* TL;DR */}
         <TldrBox>
           <ul className="list-disc list-inside space-y-2">
-            <li><strong>103万円の壁が160万円に引き上げ！</strong>（2025年改正）</li>
+            <li><strong>103万円の壁が160万円に引き上げ！</strong>（令和7年度改正）</li>
             <li><strong>年収160万円まで所得税が発生しない</strong></li>
-            <li><strong>扶養控除の基準も緩和</strong>：約188万円まで適用可能</li>
+            <li><strong>扶養控除判定は約123万円が目安</strong>（19〜22歳は〜188万円で特定親族特別控除が段階適用）</li>
             <li>⚠️ ただし社会保険の壁（130万円）は変更なし</li>
           </ul>
         </TldrBox>
@@ -93,17 +93,17 @@ export default function Blog103ManPage() {
             {/* セクション1：160万円の壁とは */}
             <section className="space-y-4">
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
-                <p className="text-sm font-semibold text-blue-900 mb-2">🆕 2025年税制改正で大きく変更！</p>
+                <p className="text-sm font-semibold text-blue-900 mb-2">🆕 令和7年度税制改正で大きく変更！</p>
                 <p className="text-sm text-blue-800">
-                  2025年3月の税制改正により、所得税が発生するラインが<strong>103万円から160万円に引き上げられました</strong>。
+                  令和7年度税制改正により、所得税が発生するラインが<strong>103万円から160万円に引き上げられました</strong>。
                 </p>
               </div>
 
               <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                160万円の壁とは（2025年改正版）
+                160万円の壁とは（令和7年度改正版）
               </h2>
               <p className="text-muted-foreground leading-relaxed text-base">
-                2025年の税制改正により、学生やアルバイトをしている人が所得税を払わずに済む年収のラインが<strong className="text-foreground">103万円から160万円に引き上げられました</strong>。これは給与所得控除の大幅引き上げによるものです。
+                令和7年度税制改正により、学生やアルバイトをしている人が所得税を払わずに済む年収のラインが<strong className="text-foreground">103万円から160万円に引き上げられました</strong>。これは給与所得控除の大幅引き上げによるものです。
               </p>
 
               <GoodCaseBox title="つまり、こういうこと！">
@@ -120,23 +120,23 @@ export default function Blog103ManPage() {
                 なぜ160万円になったのか？
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                所得税は「年収 - 各種控除」で計算された<strong>課税所得</strong>に対してかかります。2025年の改正で、この控除額が大幅に増えました。
+                所得税は「年収 - 各種控除」で計算された<strong>課税所得</strong>に対してかかります。令和7年度の改正で、この控除額が見直されました。
               </p>
 
               <ComparisonTable 
                 headers={["項目", "改正前（〜2024年）", "改正後（2025年〜）"]}
                 rows={[
-                  { label: "給与所得控除", values: ["55万円", "123万円"] },
-                  { label: "基礎控除", values: ["48万円", "48万円"] },
-                  { label: "合計控除", values: ["103万円", "171万円"], highlight: true },
+                  { label: "給与所得控除", values: ["55万円", "65万円"] },
+                  { label: "基礎控除", values: ["48万円", "95万円（低所得帯）"] },
+                  { label: "合計控除", values: ["103万円", "160万円"], highlight: true },
                   { label: "実質的な壁", values: ["103万円", "約160万円"], highlight: true },
                 ]}
               />
 
               <TipBox>
-                <p className="mb-2"><strong>給与所得控除が55万円→123万円に！</strong></p>
+                <p className="mb-2"><strong>給与所得控除55万円→65万円、基礎控除48万円→95万円に！</strong></p>
                 <p className="text-sm">
-                  この大幅な引き上げにより、年収171万円までは理論上所得税がかかりません。ただし、住民税の非課税限度額との関係で、実質的には約160万円が目安になります。
+                  改正後は年収160万円まで所得税がかからない設計になりました。住民税や社会保険は別基準なので、合わせて確認が必要です。
                 </p>
               </TipBox>
 
@@ -159,7 +159,7 @@ export default function Blog103ManPage() {
                   },
                   {
                     title: "親の扶養控除への影響",
-                    description: "2025年の改正により、扶養控除の基準も緩和されました。188万円（学生は201万円）までは扶養控除が適用されます。"
+                    description: "親の扶養控除判定は給与収入約123万円が目安です。19〜22歳は新設の特定親族特別控除が123万円超〜188万円で段階適用されます。"
                   }
                 ]}
               />
@@ -168,7 +168,7 @@ export default function Blog103ManPage() {
                 <GoodCaseBox title="年収170万円の場合">
                   <p className="mb-2"><strong>年収：170万円</strong></p>
                   <p className="text-sm mb-2">所得税：（170万円 - 160万円）× 5% × 1.021 = <strong className="text-emerald-600">約5,100円</strong></p>
-                  <p className="text-sm">親の扶養控除：<strong className="text-emerald-600">維持</strong>（188万円以下のため）</p>
+                  <p className="text-sm">親の扶養控除：<strong className="text-emerald-600">要確認</strong>（123万円超のため、年齢要件次第）</p>
                 </GoodCaseBox>
 
                 <BadCaseBox title="年収200万円の場合">
@@ -189,7 +189,7 @@ export default function Blog103ManPage() {
                 headers={["項目", "改正前（〜2024年）", "改正後（2025年〜）"]}
                 rows={[
                   { label: "所得税が発生するライン", values: ["103万円", "160万円"], highlight: true },
-                  { label: "扶養控除が維持される上限", values: ["123万円", "約188万円"], highlight: true },
+                  { label: "親の控除に関する目安", values: ["123万円", "123万円（19〜22歳は188万円まで段階控除）"], highlight: true },
                   { label: "社会保険の壁", values: ["130万円", "130万円（変更なし）"] },
                 ]}
               />
@@ -203,7 +203,7 @@ export default function Blog103ManPage() {
                     </h3>
                     <ul className="space-y-2 text-sm text-emerald-800">
                       <li>• 所得税の壁：103万円 → 160万円</li>
-                      <li>• 扶養控除の壁：123万円 → 188万円</li>
+                      <li>• 19〜22歳向けに特定親族特別控除が新設（〜188万円）</li>
                       <li>• 働ける範囲が大幅に拡大！</li>
                     </ul>
                   </CardContent>
@@ -266,7 +266,7 @@ export default function Blog103ManPage() {
                 },
                 {
                   question: "親の扶養から外れるのはいくらから？",
-                  answer: "一般的には188万円、19〜22歳の学生（特定扶養親族）の場合は201万円が目安です。これ以下であれば親の扶養控除が維持されます。"
+                  answer: "一般的には給与収入約123万円が扶養控除判定の目安です。19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用されます。"
                 },
                 {
                   question: "2024年までに稼いだ分はどうなるの？",
@@ -285,7 +285,7 @@ export default function Blog103ManPage() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>103万円の壁が160万円に引き上げ</strong>（2025年改正）</span>
+                      <span className="text-foreground"><strong>103万円の壁が160万円に引き上げ</strong>（令和7年度改正）</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
@@ -293,7 +293,7 @@ export default function Blog103ManPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>扶養控除も緩和</strong>：約188万円まで適用</span>
+                      <span className="text-foreground"><strong>扶養控除判定は約123万円が目安</strong>（19〜22歳は188万円まで段階控除）</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-red-600 shrink-0 font-bold">⚠</span>
@@ -311,7 +311,7 @@ export default function Blog103ManPage() {
             <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
               <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
               <p className="text-sm text-muted-foreground">
-                本記事は2025年度の税制改正に基づいた情報です。最終的な判断は税務署・自治体でご確認ください。
+                本記事は令和7年度税制改正に基づいた情報です。最終的な判断は税務署・自治体でご確認ください。
               </p>
               <p className="text-xs text-muted-foreground mt-2">
                 参考：<a href="https://www.works-hi.co.jp/businesscolumn/103kabe2" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">ワークスHI「年収の壁」2025最新版</a>
@@ -323,7 +323,7 @@ export default function Blog103ManPage() {
         <Card className="bg-primary/5 border-primary">
           <CardContent className="pt-6 text-center space-y-4">
             <Calculator className="w-12 h-12 text-primary mx-auto" />
-            <h3 className="text-xl font-bold text-foreground">2025年改正対応！年収をシミュレーション</h3>
+            <h3 className="text-xl font-bold text-foreground">令和7年度改正対応！年収をシミュレーション</h3>
             <p className="text-sm text-muted-foreground">
               160万円の壁や社会保険の影響を今すぐ確認できます
             </p>
@@ -349,4 +349,5 @@ export default function Blog103ManPage() {
     </>
   )
 }
+
 

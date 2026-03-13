@@ -15,8 +15,8 @@ import {
 } from "@/components/blog-components"
 
 export const metadata = {
-  title: "【2025年最新】学生バイトの税金対策｜勤労学生控除で年収188万円まで！",
-  description: "2025年改正で大きく変更！勤労学生控除を使えば年収188万円まで親の扶養維持。申請方法と注意点をわかりやすく解説。",
+  title: "【令和7年度対応】学生バイトの税金対策｜160万円の壁と親の控除影響",
+  description: "令和7年度改正で大きく変更。所得税160万円ライン、扶養判定123万円目安、特定親族特別控除（19〜22歳・〜188万円）を解説。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin",
   },
@@ -25,7 +25,7 @@ export const metadata = {
     publishedTime: "2026-01-29T00:00:00Z",
     modifiedTime: "2026-01-29T00:00:00Z",
     authors: ["年収の壁シミュレーター"],
-    tags: ["学生バイト", "勤労学生控除", "税金対策", "節税", "2025年改正"],
+    tags: ["学生バイト", "特定親族特別控除", "税金対策", "節税", "令和7年度改正"],
   },
 }
 
@@ -39,8 +39,8 @@ export default function GakuseiZeikinPage() {
   return (
     <>
       <ArticleStructuredData
-        title="【2025年最新】学生バイトの税金対策｜勤労学生控除で年収188万円まで！"
-        description="2025年改正で大きく変更！勤労学生控除を使えば年収188万円まで親の扶養維持。申請方法と注意点をわかりやすく解説。"
+        title="【令和7年度対応】学生バイトの税金対策｜160万円の壁と親の控除影響"
+        description="令和7年度改正で大きく変更。所得税160万円ライン、扶養判定123万円目安、特定親族特別控除（19〜22歳・〜188万円）を解説。"
         datePublished="2026-01-29T00:00:00Z"
         dateModified="2026-01-29T00:00:00Z"
         url="https://nenshuu-kabe.com/blog/gakusei-baito-zeikin"
@@ -56,8 +56,7 @@ export default function GakuseiZeikinPage() {
             ブログ一覧に戻る
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-            【2025年最新】学生バイトの税金対策<br />
-            勤労学生控除で年収188万円まで！
+            【令和7年度対応】学生バイトの税金対策<br />160万円の壁と親の控除影響
           </h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
             <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full font-semibold">✨ 朗報</span>
@@ -80,10 +79,10 @@ export default function GakuseiZeikinPage() {
         {/* TL;DR */}
         <TldrBox>
           <ul className="list-disc list-inside space-y-2">
-            <li><strong>2025年改正で学生にとって大きく有利に！</strong></li>
-            <li><strong>年収160万円まで所得税0円</strong>（給与所得控除123万円+基礎控除48万円-10万円）</li>
+            <li><strong>令和7年度改正で基準が大きく変わった！</strong></li>
+            <li><strong>年収160万円まで所得税0円</strong>（給与所得控除65万円＋基礎控除95万円）</li>
             <li><strong>勤労学生控除（27万円）は不要になった！？</strong></li>
-            <li>19〜22歳の昼間学生なら<strong>年収188万円（学生は201万円）まで親の扶養維持</strong></li>
+            <li>19〜22歳は<strong>年収123万円超〜188万円で特定親族特別控除が段階適用</strong></li>
           </ul>
         </TldrBox>
 
@@ -92,9 +91,9 @@ export default function GakuseiZeikinPage() {
             <div className="flex items-start gap-3">
               <FileText className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
               <div>
-                <h3 className="font-bold text-blue-900 mb-2">🆕 2025年改正でここが変わった！</h3>
+                <h3 className="font-bold text-blue-900 mb-2">🆕 令和7年度改正でここが変わった！</h3>
                 <p className="text-sm text-blue-800 leading-relaxed">
-                  給与所得控除が55万円→123万円に大幅アップ。勤労学生控除を使わなくても、年収160万円まで所得税がかかりません。
+                  給与所得控除（最低保障）が55万円→65万円、低所得帯の基礎控除が48万円→95万円となり、年収160万円まで所得税がかかりません。
                 </p>
               </div>
             </div>
@@ -112,24 +111,24 @@ export default function GakuseiZeikinPage() {
                 勤労学生控除とは、学生がアルバイトで得た収入に対して、<strong className="text-foreground">27万円の追加控除</strong>が受けられる制度です。
               </p>
               <p className="text-muted-foreground leading-relaxed text-base">
-                ただし、<strong className="text-foreground">2025年の税制改正により、勤労学生控除の重要性は大きく低下しました</strong>。後ほど詳しく説明します。
+                ただし、<strong className="text-foreground">令和7年度税制改正により、所得税面での勤労学生控除の必要性は相対的に低下しました</strong>。後ほど詳しく説明します。
               </p>
             </section>
 
             {/* セクション2：2025年改正前後の比較 */}
             <section className="space-y-4">
               <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                2025年改正で何が変わった？
+                令和7年度改正で何が変わった？
               </h2>
               
               <ComparisonTable 
                 headers={["項目", "改正前（〜2024年）", "改正後（2025年〜）"]}
                 rows={[
-                  { label: "給与所得控除", values: ["55万円", "123万円"] },
-                  { label: "基礎控除", values: ["48万円", "48万円"] },
+                  { label: "給与所得控除", values: ["55万円", "65万円"] },
+                  { label: "基礎控除", values: ["48万円", "95万円（低所得帯）"] },
                   { label: "勤労学生控除", values: ["27万円", "27万円（変更なし）"] },
                   { label: "所得税が発生するライン", values: ["103万円", "約160万円"], highlight: true },
-                  { label: "勤労学生控除使用時", values: ["130万円", "約187万円"], highlight: true },
+                  { label: "親控除への影響目安（19〜22歳）", values: ["123万円", "123万円超〜188万円で段階控除"], highlight: true },
                 ]}
               />
 
@@ -206,22 +205,22 @@ export default function GakuseiZeikinPage() {
               </h2>
 
               <p className="text-muted-foreground leading-relaxed">
-                2025年改正により、親の扶養控除の基準も大きく緩和されました。
+                親の扶養控除判定は給与収入約123万円が目安です。19〜22歳は特定親族特別控除が新設され、123万円超〜188万円で段階適用されます。
               </p>
 
               <ComparisonTable 
                 headers={["年齢・状況", "改正前", "改正後（2025年〜）"]}
                 rows={[
-                  { label: "16〜18歳", values: ["123万円", "約160万円"] },
-                  { label: "19〜22歳（昼間学生）", values: ["123万円", "約188万円（学生は201万円）"], highlight: true },
-                  { label: "23歳以上", values: ["123万円", "約160万円"] },
+                  { label: "16〜18歳", values: ["123万円", "123万円（目安）"] },
+                  { label: "19〜22歳（昼間学生）", values: ["123万円", "123万円超〜188万円で段階適用"], highlight: true },
+                  { label: "23歳以上", values: ["123万円", "123万円（目安）"] },
                 ]}
               />
 
               <GoodCaseBox title="19〜22歳の昼間学生の場合（最も有利！）">
                 <ul className="text-sm space-y-2">
-                  <li>✅ 年収188万円まで親の扶養控除が満額維持</li>
-                  <li>✅ 年収201万円まで親の扶養控除が一部維持（特定扶養親族）</li>
+                  <li>✅ 年収123万円までは親の扶養控除判定を満たしやすい</li>
+                  <li>✅ 19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用</li>
                   <li>✅ 年収160万円まで所得税0円</li>
                   <li>⚠️ ただし130万円を超えると社会保険料が発生</li>
                 </ul>
@@ -288,12 +287,12 @@ export default function GakuseiZeikinPage() {
             <QaSection 
               qas={[
                 {
-                  question: "2025年改正後、勤労学生控除はもう必要ないの？",
+                  question: "令和7年度改正後、勤労学生控除はもう必要ないの？",
                   answer: "年収160万円以下なら不要です。ただし、160万円を超えて稼ぐ場合や、住民税を減らしたい場合は依然として有効です。"
                 },
                 {
                   question: "親の扶養控除に影響しないって本当？",
-                  answer: "はい、勤労学生控除を使っても、親の扶養控除の判定には影響しません。ただし、年収160万円（学生は188〜201万円）を超えると、親の扶養控除に影響が出ます。"
+                  answer: "はい、勤労学生控除を使っても、親の扶養控除判定の基準自体は変わりません。親の扶養控除判定は給与収入約123万円が目安で、19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用されます。"
                 },
                 {
                   question: "社会保険の130万円の壁との関係は？",
@@ -301,7 +300,7 @@ export default function GakuseiZeikinPage() {
                 },
                 {
                   question: "結局、学生はいくらまで稼げばいいの？",
-                  answer: "おすすめは130万円以内（社会保険料なし）、または160万円以上（社会保険料を払っても手取りが増える）。19〜22歳の昼間学生なら188万円まで親の扶養も維持できます。"
+                  answer: "おすすめは130万円以内（社会保険料なし）、または160万円以上（社会保険料を払っても手取り増を狙う）です。親への影響は123万円と188万円を目安に確認してください。"
                 }
               ]}
             />
@@ -316,7 +315,7 @@ export default function GakuseiZeikinPage() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>2025年改正で学生に大きく有利に！</strong></span>
+                      <span className="text-foreground"><strong>令和7年度改正で学生に大きく有利に！</strong></span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
@@ -328,7 +327,7 @@ export default function GakuseiZeikinPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>19〜22歳の昼間学生なら188〜201万円まで親の扶養維持</strong></span>
+                      <span className="text-foreground"><strong>19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用</strong></span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-red-600 shrink-0 font-bold">⚠</span>
@@ -354,7 +353,7 @@ export default function GakuseiZeikinPage() {
             <Calculator className="w-12 h-12 text-primary mx-auto" />
             <h3 className="text-xl font-bold text-foreground">あなたの年収で税金はいくら？</h3>
             <p className="text-sm text-muted-foreground">
-              2025年改正対応！勤労学生控除を使った場合の税金をシミュレーション
+              令和7年度改正対応！学生バイトの税金をシミュレーション
             </p>
             <Link href="/">
               <Button size="lg" className="w-full md:w-auto">
@@ -374,3 +373,4 @@ export default function GakuseiZeikinPage() {
     </>
   )
 }
+

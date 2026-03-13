@@ -1,0 +1,39 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="40" fill="#F8FAFC"/>
+  <rect x="32" y="32" width="1136" height="566" rx="32" fill="url(#paint0_linear_1_2)"/>
+  <circle cx="1030" cy="132" r="160" fill="#C7D2FE" fill-opacity="0.45"/>
+  <circle cx="183" cy="533" r="180" fill="#BFDBFE" fill-opacity="0.55"/>
+  <rect x="88" y="92" width="238" height="54" rx="27" fill="#DBEAFE"/>
+  <text x="207" y="127" text-anchor="middle" fill="#1D4ED8" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="26" font-weight="700">令和7年度改正対応</text>
+  <text x="88" y="248" fill="#0F172A" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="76" font-weight="700">年収の壁</text>
+  <text x="88" y="338" fill="#0F172A" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="76" font-weight="700">シミュレーター</text>
+  <text x="88" y="405" fill="#334155" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="34" font-weight="500">103万→160万円の壁、130万円の社会保険ライン、</text>
+  <text x="88" y="451" fill="#334155" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="34" font-weight="500">親の扶養への影響までまとめて確認</text>
+  <rect x="88" y="495" width="404" height="70" rx="18" fill="#0F172A"/>
+  <text x="290" y="540" text-anchor="middle" fill="#F8FAFC" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="32" font-weight="700">親に怒られない年収を判定</text>
+  <g filter="url(#filter0_d_1_2)">
+    <rect x="744" y="145" width="332" height="304" rx="28" fill="#FFFFFF"/>
+    <text x="790" y="222" fill="#0F172A" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="34" font-weight="700">年収 130万円</text>
+    <rect x="790" y="255" width="236" height="20" rx="10" fill="#FDE68A"/>
+    <rect x="790" y="255" width="148" height="20" rx="10" fill="#F59E0B"/>
+    <text x="790" y="327" fill="#92400E" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="28" font-weight="700">注意</text>
+    <text x="790" y="372" fill="#475569" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="24" font-weight="500">社会保険の壁に注意</text>
+    <text x="790" y="410" fill="#475569" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="24" font-weight="500">親の扶養影響も確認</text>
+  </g>
+  <defs>
+    <filter id="filter0_d_1_2" x="712" y="121" width="396" height="368" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="8"/>
+      <feGaussianBlur stdDeviation="16"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.0901961 0 0 0 0 0.164706 0 0 0 0.14 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape"/>
+    </filter>
+    <linearGradient id="paint0_linear_1_2" x1="69" y1="58" x2="1136" y2="598" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EFF6FF"/>
+      <stop offset="1" stop-color="#E0F2FE"/>
+    </linearGradient>
+  </defs>
+</svg>

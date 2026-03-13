@@ -1,5 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Mail, MessageSquare } from "lucide-react"
+import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
   title: "お問い合わせ | 年収の壁シミュレーター",
@@ -11,15 +12,7 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <div className="max-w-2xl mx-auto space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">お問い合わせ</h1>
-          <p className="text-sm text-muted-foreground">
-            ご質問・ご要望・不具合報告など、お気軽にお問い合わせください
-          </p>
-        </div>
-
+    <ContentPageShell title="お問い合わせ" description="ご質問・ご要望・不具合報告など、お気軽にお問い合わせください">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-4">
@@ -103,15 +96,6 @@ export default function ContactPage() {
             </section>
           </CardContent>
         </Card>
-
-        <div className="text-center pt-6">
-          <a href="/" className="text-primary hover:underline text-sm">
-            ← シミュレーターに戻る
-          </a>
-        </div>
-      </div>
-    </main>
+    </ContentPageShell>
   )
 }
-
-

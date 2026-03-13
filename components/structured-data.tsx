@@ -7,14 +7,6 @@ export function WebsiteStructuredData() {
     "name": "年収の壁シミュレーター",
     "description": "扶養控除・社会保険の壁をシンプルに判定するシミュレーター",
     "url": "https://nenshuu-kabe.com",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://nenshuu-kabe.com/?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
   }
 
   return (
@@ -30,7 +22,7 @@ export function WebApplicationStructuredData() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "年収の壁シミュレーター",
-    "description": "2025年税制改正対応！年収の壁（103万円→160万円）を30秒でシミュレーション",
+    "description": "令和7年度税制改正対応！年収の壁（103万円→160万円）を30秒でシミュレーション",
     "url": "https://nenshuu-kabe.com",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web",
@@ -44,7 +36,7 @@ export function WebApplicationStructuredData() {
       "所得税計算",
       "社会保険料計算",
       "扶養控除判定",
-      "2025年改正対応"
+      "令和7年度改正対応"
     ]
   }
 
@@ -87,11 +79,11 @@ export function ArticleStructuredData({
       "name": "年収の壁シミュレーター",
       "logo": {
         "@type": "ImageObject",
-        "url": imageUrl || "https://nenshuu-kabe.com/placeholder-logo.png"
+        "url": "https://nenshuu-kabe.com/icon.svg"
       }
     },
     "url": url,
-    "image": imageUrl || "https://nenshuu-kabe.com/placeholder-logo.png",
+    "image": imageUrl || "https://nenshuu-kabe.com/site-share-card.svg",
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": url
@@ -162,13 +154,8 @@ export function OrganizationStructuredData() {
     "@type": "Organization",
     "name": "年収の壁シミュレーター",
     "url": "https://nenshuu-kabe.com",
-    "logo": "https://nenshuu-kabe.com/placeholder-logo.png",
+    "logo": "https://nenshuu-kabe.com/icon.svg",
     "description": "扶養控除・社会保険の壁をシンプルに判定するシミュレーター",
-    "sameAs": [
-      // TODO: SNSアカウントがあれば追加してください
-      // "https://twitter.com/yourtwitter",
-      // "https://facebook.com/yourfacebook"
-    ]
   }
 
   return (
@@ -178,4 +165,3 @@ export function OrganizationStructuredData() {
     />
   )
 }
-

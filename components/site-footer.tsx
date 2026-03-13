@@ -49,7 +49,7 @@ export function SiteFooter() {
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-foreground">免責事項</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              当サイトの情報は2025年度税制に基づいた概算です。最終判断は税務署・自治体でご確認ください。
+              当サイトの情報は令和7年度税制改正（2025年分以後適用）に基づいた概算です。最終判断は税務署・自治体でご確認ください。
             </p>
           </div>
         </div>
@@ -63,4 +63,3 @@ export function SiteFooter() {
     </footer>
   )
 }
-
