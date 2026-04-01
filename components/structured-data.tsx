@@ -1,51 +1,83 @@
-// 構造化データ（JSON-LD）コンポーネント
+import { BLOG_POSTS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 
-export function WebsiteStructuredData() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "年収の壁シミュレーター",
-    "description": "扶養控除・社会保険の壁をシンプルに判定するシミュレーター",
-    "url": "https://nenshuu-kabe.com",
-  }
-
+function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   )
 }
 
-export function WebApplicationStructuredData() {
-  const structuredData = {
+export function WebsiteStructuredData() {
+  const data = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "年収の壁シミュレーター",
-    "description": "令和7年度税制改正対応！年収の壁（103万円→160万円）を30秒でシミュレーション",
-    "url": "https://nenshuu-kabe.com",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "JPY"
+    "@type": "WebSite",
+    name: SITE_NAME,
+    alternateName: "親に怒られない年収をすぐに判定",
+    description:
+      "103万円・106万円・130万円・160万円の年収の壁を比較しながら、扶養や社会保険の影響を確認できるシミュレーター。",
+    url: SITE_URL,
+    inLanguage: "ja-JP",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/blog?keyword={search_term_string}`,
+      "query-input": "required name=search_term_string",
     },
-    "featureList": [
-      "年収シミュレーション",
-      "所得税計算",
-      "社会保険料計算",
-      "扶養控除判定",
-      "令和7年度改正対応"
-    ]
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  return <JsonLd data={data} />
+}
+
+export function WebApplicationStructuredData() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description:
+      "扶養・税金・社会保険の壁を年収別に比較し、学生バイトや家計への影響を30秒で確認できる無料シミュレーター。",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Web",
+    browserRequirements: "JavaScript required",
+    inLanguage: "ja-JP",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "JPY",
+    },
+    featureList: [
+      "年収の壁シミュレーション",
+      "所得税の目安表示",
+      "社会保険の影響確認",
+      "親の扶養への影響確認",
+      "学生バイト向け解説記事",
+    ],
+  }
+
+  return <JsonLd data={data} />
+}
+
+export function BlogListStructuredData() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `ブログ | ${SITE_NAME}`,
+    url: `${SITE_URL}/blog`,
+    description:
+      "年収の壁、扶養、社会保険、学生バイトの税金をわかりやすく解説した記事一覧。",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: BLOG_POSTS.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${SITE_URL}/blog/${post.slug}`,
+        name: post.title,
+      })),
+    },
+  }
+
+  return <JsonLd data={data} />
 }
 
 export function ArticleStructuredData({
@@ -63,39 +95,35 @@ export function ArticleStructuredData({
   url: string
   imageUrl?: string
 }) {
-  const structuredData = {
+  const data = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": title,
-    "description": description,
-    "datePublished": datePublished,
-    "dateModified": dateModified || datePublished,
-    "author": {
-      "@type": "Organization",
-      "name": "年収の壁シミュレーター"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "年収の壁シミュレーター",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://nenshuu-kabe.com/icon.svg"
-      }
-    },
-    "url": url,
-    "image": imageUrl || "https://nenshuu-kabe.com/site-share-card.svg",
-    "mainEntityOfPage": {
+    "@type": "BlogPosting",
+    headline: title,
+    description,
+    datePublished,
+    dateModified: dateModified || datePublished,
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": url
-    }
+      "@id": url,
+    },
+    url,
+    image: [imageUrl || DEFAULT_OG_IMAGE],
+    inLanguage: "ja-JP",
+    author: {
+      "@type": "Organization",
+      name: SITE_NAME,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/icon.svg`,
+      },
+    },
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  return <JsonLd data={data} />
 }
 
 export function BreadcrumbStructuredData({
@@ -103,23 +131,18 @@ export function BreadcrumbStructuredData({
 }: {
   items: Array<{ name: string; url: string }>
 }) {
-  const structuredData = {
+  const data = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": items.map((item, index) => ({
+    itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "name": item.name,
-      "item": item.url,
+      position: index + 1,
+      name: item.name,
+      item: item.url,
     })),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  return <JsonLd data={data} />
 }
 
 export function FAQStructuredData({
@@ -127,41 +150,32 @@ export function FAQStructuredData({
 }: {
   faqs: Array<{ question: string; answer: string }>
 }) {
-  const structuredData = {
+  const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": faqs.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
+      name: faq.question,
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": faq.answer,
+        text: faq.answer,
       },
     })),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  return <JsonLd data={data} />
 }
 
 export function OrganizationStructuredData() {
-  const structuredData = {
+  const data = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "年収の壁シミュレーター",
-    "url": "https://nenshuu-kabe.com",
-    "logo": "https://nenshuu-kabe.com/icon.svg",
-    "description": "扶養控除・社会保険の壁をシンプルに判定するシミュレーター",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/icon.svg`,
+    description:
+      "年収の壁、扶養、社会保険の基準をわかりやすく解説する情報サイト。",
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
-  )
+  return <JsonLd data={data} />
 }

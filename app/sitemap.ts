@@ -1,65 +1,20 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next"
+import { BLOG_POSTS, SITE_URL, STATIC_PAGES } from "@/lib/seo"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://nenshuu-kabe.com'
-  
-  // ブログ記事のスラッグ
-  const blogPosts = [
-    '103man-no-kabe',
-    '130man-no-kabe',
-    'gakusei-baito-zeikin',
-    'tokutei-fuyo',
-    'shakaihoken-kabe',
-  ]
+  const staticPages: MetadataRoute.Sitemap = STATIC_PAGES.map((page) => ({
+    url: `${SITE_URL}${page.path}`,
+    lastModified: page.lastModified,
+    changeFrequency: page.changeFrequency,
+    priority: page.priority,
+  }))
 
-  // 静的ページ
-  const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/privacy-policy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-  ]
-
-  // ブログ記事のサイトマップ
-  const blogPages = blogPosts.map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: post.updatedAt,
+    changeFrequency: "monthly",
+    priority: post.priority,
   }))
 
   return [...staticPages, ...blogPages]
 }
-

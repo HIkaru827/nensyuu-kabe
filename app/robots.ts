@@ -1,21 +1,16 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next"
+import { SITE_URL } from "@/lib/seo"
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://nenshuu-kabe.com'
-  
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/private/'],
-      },
-      {
-        userAgent: 'Googlebot',
-        allow: '/',
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/private/"],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }
-

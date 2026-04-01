@@ -1,13 +1,41 @@
+import type { Metadata } from "next"
 import { IncomeSimulator } from "@/components/income-simulator"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { WebsiteStructuredData, WebApplicationStructuredData, OrganizationStructuredData } from "@/components/structured-data"
+import {
+  OrganizationStructuredData,
+  WebApplicationStructuredData,
+  WebsiteStructuredData,
+} from "@/components/structured-data"
+import { DEFAULT_KEYWORDS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
-  description: "令和7年度税制改正対応！年収の壁（103万円→160万円）をシミュレーション。学生バイト・アルバイトの税金や社会保険料、親への影響をすぐに判定。",
+  description:
+    "103万円・106万円・130万円・160万円の年収の壁を比較して、扶養・社会保険・学生バイトへの影響をすぐ確認できます。",
+  keywords: [
+    ...DEFAULT_KEYWORDS,
+    "扶養内 バイト",
+    "学生 扶養 年収",
+    "年収の壁 2026",
+  ],
   alternates: {
-    canonical: "https://nenshuu-kabe.com",
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    title: "親に怒られない年収をすぐに判定 | 年収の壁シミュレーター",
+    description:
+      "扶養・社会保険・学生バイトへの影響を年収別に比較。103万円・106万円・130万円・160万円の壁を一目で確認。",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    type: "website",
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "親に怒られない年収を30秒で判定",
+    description: "年収の壁を比較して、扶養や社会保険への影響をすぐ確認。",
+    images: [DEFAULT_OG_IMAGE],
   },
 }
 

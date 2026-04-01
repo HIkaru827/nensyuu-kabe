@@ -1,91 +1,95 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight, Calendar } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { BlogListStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { BLOG_POSTS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 
-export const metadata = {
-  title: "ブログ | 年収の壁シミュレーター",
+export const metadata: Metadata = {
+  title: "ブログ | 年収の壁・扶養・社会保険の解説",
   description:
-    "年収の壁、扶養控除、特定親族特別控除、社会保険の判定について、国税庁と日本年金機構の公的情報に沿って整理した記事一覧です。",
+    "年収の壁、扶養、社会保険、学生バイトの税金について詳しく解説する記事一覧です。検索ニーズの高い基準をまとめて確認できます。",
   alternates: {
-    canonical: "https://nenshuu-kabe.com/blog",
+    canonical: `${SITE_URL}/blog`,
   },
   openGraph: {
-    title: "ブログ | 年収の壁シミュレーター",
+    title: `ブログ | ${SITE_NAME}`,
     description:
-      "年収の壁、扶養控除、特定親族特別控除、社会保険の判定について、国税庁と日本年金機構の公的情報に沿って整理した記事一覧です。",
+      "103万円・130万円・160万円の壁、扶養、社会保険、学生バイトの税金をわかりやすく解説した記事一覧。",
+    url: `${SITE_URL}/blog`,
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   },
 }
 
 const blogPosts = [
   {
     slug: "103man-no-kabe",
-    title: "160万円の壁とは何か。所得税・扶養・社会保険の違い",
+    title: "160万円の壁とは？103万円からどう変わったかを解説",
     description:
-      "160万円は本人の所得税の基準です。123万円、188万円、社会保険の判定と分けて確認するための整理記事です。",
+      "103万円の壁が160万円に変わった背景、所得税の基準、親の扶養や社会保険への影響をまとめています。",
     date: "2026年4月2日",
-    category: "現行法対応",
-    badge: "更新済み",
-  },
-  {
-    slug: "130man-no-kabe",
-    title: "130万円の壁とは何か。社会保険の扶養判定を現行ルールで整理",
-    description:
-      "130万円の壁は主に社会保険の被扶養者認定の話です。106万円との違いや19歳以上23歳未満の150万円未満要件も整理しています。",
-    date: "2026年4月2日",
-    category: "現行法対応",
-    badge: "更新済み",
+    category: "年収の壁",
+    badge: "最新更新",
   },
   {
     slug: "130man-no-kabe-v2",
-    title: "130万円を超えるとどうなるか。被扶養者認定と勤務先加入を分けて確認",
+    title: "130万円の壁を超えるとどうなる？働き損を避ける考え方",
     description:
-      "130万円を超えた後に確認すべき論点を、被扶養者認定と勤務先での加入条件に分けて説明しています。",
+      "社会保険料が増えるライン、手取りの変化、130万円を超えるか抑えるかの判断軸を整理しています。",
     date: "2026年4月2日",
-    category: "現行法対応",
-    badge: "更新済み",
+    category: "社会保険",
+    badge: "最新版",
   },
   {
     slug: "gakusei-baito-zeikin",
-    title: "学生バイトの税金。160万円・123万円・社会保険を分けて確認",
+    title: "学生バイトの税金対策 160万円・123万円・188万円の基準を解説",
     description:
-      "学生アルバイトで見るべき税金と扶養の基準を、160万円、123万円、188万円、社会保険に分けて整理しています。",
+      "学生アルバイト向けに、所得税160万円ライン、扶養判定123万円目安、19〜22歳の188万円基準を解説。",
     date: "2026年4月2日",
-    category: "現行法対応",
-    badge: "更新済み",
+    category: "学生バイト",
+    badge: "人気記事",
   },
   {
     slug: "tokutei-fuyo",
-    title: "特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理",
+    title: "特定親族特別控除とは？19歳から22歳の新ルールを解説",
     description:
-      "19歳以上23歳未満の子の給与収入が123万円を超えたときに、親が受けられる段階的な控除を整理しています。",
+      "新設された特定親族特別控除の対象、収入条件、家庭への影響をやさしく整理しています。",
     date: "2026年4月2日",
-    category: "現行法対応",
-    badge: "更新済み",
+    category: "扶養控除",
+    badge: "新記事",
   },
   {
     slug: "shakaihoken-kabe",
-    title: "社会保険の壁とは何か。130万円・106万円・150万円未満の関係を整理",
+    title: "社会保険の壁とは？106万円・130万円の違いを整理",
     description:
-      "社会保険の壁を、被扶養者認定と短時間労働者の加入要件に分けて、現行ルールで整理した記事です。",
+      "106万円と130万円の違い、扶養から外れる条件、手取りの考え方を初心者向けに解説します。",
     date: "2026年4月2日",
-    category: "現行法対応",
-    badge: "更新済み",
+    category: "社会保険",
+    badge: "基礎知識",
   },
 ]
 
 export default function BlogPage() {
   return (
     <>
+      <BlogListStructuredData />
+      <BreadcrumbStructuredData
+        items={[
+          { name: "ホーム", url: SITE_URL },
+          { name: "ブログ", url: `${SITE_URL}/blog` },
+        ]}
+      />
       <SiteHeader />
       <main className="min-h-screen bg-background px-4 py-12">
         <div className="mx-auto max-w-4xl space-y-8">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold text-foreground">ブログ</h1>
-            <p className="text-sm text-muted-foreground">
-              年収の壁、扶養控除、社会保険の判定を、公的資料ベースで整理した記事一覧です。
+          <div className="space-y-3 text-center">
+            <h1 className="text-3xl font-bold text-foreground">年収の壁・扶養・社会保険のブログ</h1>
+            <p className="mx-auto max-w-2xl text-sm text-muted-foreground">
+              「扶養内で働きたい」「学生バイトはいくらまで稼げるか知りたい」といった検索ニーズに合わせて、
+              重要テーマをわかりやすく整理しています。
             </p>
           </div>
 
@@ -115,7 +119,11 @@ export default function BlogPage() {
             ))}
           </div>
 
-          <div className="pt-6 text-center">
+          <div className="pt-2 text-center text-xs text-muted-foreground">
+            公開中の記事数: {BLOG_POSTS.length}
+          </div>
+
+          <div className="pt-4 text-center">
             <Link href="/" className="text-sm text-primary hover:underline">
               シミュレーターに戻る
             </Link>
