@@ -1,237 +1,204 @@
 import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Calculator, Shield } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "社会保険の壁を徹底解説｜130万円・106万円の違いとは",
-  description: "社会保険の扶養から外れる基準は130万円（または106万円）。それぞれの条件と対策を解説します。",
+  title: "社会保険の壁とは？130万円・106万円・150万円未満の関係を現行ルールで整理",
+  description: "社会保険の壁を、被扶養者認定、短時間労働者への適用、19歳以上23歳未満の150万円未満要件に分けて整理します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/shakaihoken-kabe",
-  },
-  openGraph: {
-    type: "article",
-    publishedTime: "2026-01-18T00:00:00Z",
-    authors: ["年収の壁シミュレーター"],
-    tags: ["社会保険", "106万円の壁", "130万円の壁", "年収の壁"],
   },
 }
 
 export default function ShakaiHokenPage() {
-  const breadcrumbItems = [
-    { name: "ホーム", url: "https://nenshuu-kabe.com" },
-    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
-    { name: "社会保険の壁を徹底解説", url: "https://nenshuu-kabe.com/blog/shakaihoken-kabe" },
-  ]
+  const url = "https://nenshuu-kabe.com/blog/shakaihoken-kabe"
 
   return (
     <>
       <ArticleStructuredData
-        title="社会保険の壁を徹底解説｜130万円・106万円の違いとは"
-        description="社会保険の扶養から外れる基準は130万円（または106万円）。それぞれの条件と対策を解説します。"
-        datePublished="2026-01-18T00:00:00Z"
-        url="https://nenshuu-kabe.com/blog/shakaihoken-kabe"
+        title="社会保険の壁とは？130万円・106万円・150万円未満の関係を現行ルールで整理"
+        description="社会保険の壁を、被扶養者認定、短時間労働者への適用、19歳以上23歳未満の150万円未満要件に分けて整理します。"
+        datePublished="2026-04-02T00:00:00Z"
+        dateModified="2026-04-02T00:00:00Z"
+        url={url}
       />
-      <BreadcrumbStructuredData items={breadcrumbItems} />
+      <BreadcrumbStructuredData
+        items={[
+          { name: "ホーム", url: "https://nenshuu-kabe.com" },
+          { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+          { name: "社会保険の壁とは？", url },
+        ]}
+      />
+      <SiteHeader />
       <main className="min-h-screen bg-background py-12 px-4">
-        <article className="max-w-3xl mx-auto space-y-8">
-        <div className="space-y-4">
-          <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" />
-            ブログ一覧に戻る
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            社会保険の壁を徹底解説｜130万円・106万円の違いとは
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="bg-primary/10 text-primary px-2 py-1 rounded">社会保険</span>
-            <span>2026年1月18日</span>
-          </div>
-        </div>
-
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <Shield className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
-              <div>
-                <h3 className="font-bold text-blue-900 mb-2">社会保険には2つの壁がある</h3>
-                <p className="text-sm text-blue-800 leading-relaxed">
-                  106万円の壁と130万円の壁。あなたがどちらに該当するかで、働き方が大きく変わります。
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6 prose prose-sm max-w-none">
-            <h2 className="text-2xl font-bold text-foreground mt-0">社会保険の壁とは</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              社会保険の壁とは、親や配偶者の社会保険の扶養から外れ、自分で社会保険料（健康保険料・厚生年金保険料）を払わなければならなくなる年収のラインのことです。
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-2">
-              社会保険料は年収の約15%にもなるため、扶養から外れると手取りが大きく減ってしまいます。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">130万円の壁（原則）</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              年収が<strong>130万円</strong>を超えると、原則として社会保険の扶養から外れます。これがいわゆる「130万円の壁」です。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">130万円の壁の条件</h3>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li>年収が130万円以上の見込みがあること</li>
-              <li>月収換算で10.8万円以上が継続すること</li>
-              <li>勤務先の規模に関係なく適用</li>
-            </ul>
-
-            <div className="bg-muted p-4 rounded-lg my-4">
-              <p className="text-sm font-semibold text-foreground mb-2">社会保険料の目安（年収140万円の場合）</p>
-              <p className="text-sm text-foreground">健康保険料：年収の約5% = 約7万円</p>
-              <p className="text-sm text-foreground">厚生年金保険料：年収の約9% = 約12.6万円</p>
-              <p className="text-sm font-bold text-foreground mt-2">合計：約20万円</p>
-            </div>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">106万円の壁（一定の条件下）</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              2016年10月から、一定の条件を満たすと、<strong>106万円</strong>から社会保険の加入義務が発生するようになりました。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">106万円の壁の適用条件（すべて満たす必要あり）</h3>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li><strong>週の所定労働時間が20時間以上</strong></li>
-              <li><strong>月額賃金が8.8万円以上</strong>（年収106万円相当）</li>
-              <li><strong>2ヶ月を超える雇用の見込みがある</strong></li>
-              <li><strong>従業員数が101人以上の企業</strong>（2024年10月から）</li>
-              <li><strong>学生でないこと</strong>（ただし夜間・通信・定時制は対象）</li>
-            </ul>
-
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 my-4">
-              <p className="text-sm font-semibold text-amber-900 mb-2">⚠️ 注意</p>
-              <p className="text-sm text-amber-800">
-                <strong>昼間の大学生・専門学生は106万円の壁の対象外</strong>です。夜間・通信・定時制の学生は対象になります。
-              </p>
-            </div>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">130万円と106万円の違い</h2>
-            <div className="overflow-x-auto my-6">
-              <table className="min-w-full border border-border">
-                <thead className="bg-muted">
-                  <tr>
-                    <th className="border border-border px-4 py-2 text-left">項目</th>
-                    <th className="border border-border px-4 py-2 text-left">130万円の壁</th>
-                    <th className="border border-border px-4 py-2 text-left">106万円の壁</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-border px-4 py-2">適用基準</td>
-                    <td className="border border-border px-4 py-2">年収130万円以上</td>
-                    <td className="border border-border px-4 py-2">月収8.8万円以上<br />（年収106万円相当）</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-border px-4 py-2">勤務先の規模</td>
-                    <td className="border border-border px-4 py-2">関係なし</td>
-                    <td className="border border-border px-4 py-2">従業員101人以上</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-border px-4 py-2">労働時間</td>
-                    <td className="border border-border px-4 py-2">関係なし</td>
-                    <td className="border border-border px-4 py-2">週20時間以上</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-border px-4 py-2">学生の扱い</td>
-                    <td className="border border-border px-4 py-2">関係なし</td>
-                    <td className="border border-border px-4 py-2">昼間学生は対象外</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">あなたはどちらに該当する？</h2>
-            
-            <h3 className="text-xl font-bold text-foreground mt-6">パターン1：昼間の大学生・専門学生</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              → <strong>130万円の壁のみ</strong>を気にすればOK<br />
-              106万円の壁は適用されません。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">パターン2：夜間・通信・定時制の学生</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              → 勤務先が従業員101人以上の場合、<strong>106万円の壁に注意</strong><br />
-              それ以外は130万円の壁。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">パターン3：フリーター（学生でない）</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              → 勤務先が従業員101人以上で週20時間以上働く場合、<strong>106万円の壁に注意</strong><br />
-              それ以外は130万円の壁。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">対策方法</h2>
-            
-            <h3 className="text-xl font-bold text-foreground mt-6">対策1：年収を抑える</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              最も確実な方法は、該当する壁の手前に年収を抑えることです。
-            </p>
-            <ul className="list-disc list-inside text-muted-foreground space-y-1 my-4 ml-4">
-              <li>106万円の壁 → 月収8.8万円以内</li>
-              <li>130万円の壁 → 月収10.8万円以内</li>
-            </ul>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">対策2：労働時間を調整（106万円の壁の場合）</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              106万円の壁は週20時間以上が条件なので、<strong>週20時間未満に抑える</strong>ことで回避できます。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">対策3：思い切って160万円以上を目指す</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              中途半端に稼ぐなら、いっそ160万円以上を目指すのも一つの手です。社会保険料を払っても、160万円以上稼げば手取りは増えていきます。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">まとめ</h2>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li>社会保険の壁には130万円と106万円の2種類がある</li>
-              <li>昼間の大学生は106万円の壁の対象外</li>
-              <li>夜間・通信学生やフリーターは条件次第で106万円から加入</li>
-              <li>社会保険料は年収の約15%（約20万円）</li>
-              <li>106万円の壁は労働時間で回避可能</li>
-            </ul>
-
-            <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
-              <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
-              <p className="text-sm text-muted-foreground">
-                本記事は2025年度の制度に基づいた情報です。最終的な判断は勤務先・社会保険事務所でご確認ください。
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-primary/5 border-primary">
-          <CardContent className="pt-6 text-center space-y-4">
-            <Calculator className="w-12 h-12 text-primary mx-auto" />
-            <h3 className="text-xl font-bold text-foreground">あなたは社会保険の壁に引っかかる？</h3>
-            <p className="text-sm text-muted-foreground">
-              年収と社会保険料の影響を今すぐシミュレーション
-            </p>
-            <Link href="/">
-              <Button size="lg" className="w-full md:w-auto">
-                無料でシミュレーションする
-              </Button>
+        <article className="mx-auto max-w-3xl space-y-8">
+          <div className="space-y-4">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              <ArrowLeft className="h-4 w-4" />
+              ブログ一覧に戻る
             </Link>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
+              社会保険の壁とは？
+              <br />
+              130万円・106万円・150万円未満の関係を現行ルールで整理
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              2026年4月2日時点で確認した日本年金機構の公的情報に基づいて整理しています。
+            </p>
+          </div>
 
-        <div className="text-center pt-6 space-y-4">
-          <Link href="/blog" className="text-primary hover:underline text-sm block">
-            ← ブログ一覧に戻る
-          </Link>
-        </div>
+          <Card className="border-blue-200 bg-blue-50">
+            <CardContent className="pt-6 space-y-3">
+              <h2 className="text-lg font-bold text-blue-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-blue-900">
+                <li>・ 130万円は、被扶養者認定の年間収入要件として使う数字です</li>
+                <li>・ 106万円は法律上の独立基準ではなく、月額 8.8万円の参考値です</li>
+                <li>・ 短時間労働者への適用は、週20時間、月額8.8万円、学生区分、企業規模などで決まります</li>
+                <li>・ 19歳以上23歳未満の方は、2025年10月1日以降の認定分から 150万円未満が目安です</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6 space-y-8">
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">社会保険の壁は1本ではない</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  「社会保険の壁」と言うと、130万円や106万円が一つの線のように語られがちですが、実際には
+                  <strong className="text-foreground"> 被扶養者認定の話</strong> と
+                  <strong className="text-foreground"> 勤務先で自分が被保険者になる話</strong>
+                  が混ざっています。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  この2つは基準が違うため、年収だけで一律に判定すると誤りやすいです。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">130万円は被扶養者認定の年間収入要件</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  健康保険の被扶養者認定では、原則として年間収入 130万円未満が目安です。
+                  ただし、同居なら被保険者の収入の半分未満、別居なら仕送り額未満など、年収以外の要件もあります。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  さらに、2025年10月1日以降の認定で、被保険者の配偶者を除く 19歳以上23歳未満の方は、
+                  年間収入要件が <strong className="text-foreground">150万円未満</strong> に変わっています。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">106万円は参考値。実際は月額8.8万円などで見る</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  いわゆる「106万円の壁」は、短時間労働者への適用拡大を説明する俗称です。
+                  日本年金機構は、年収106万円以上かどうかではなく、
+                  <strong className="text-foreground">所定内賃金が月額8.8万円以上かどうか</strong>
+                  で要件判定すると案内しています。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  そのため、年収だけを見て「106万円を超えたから加入」「超えていないから加入しない」と断定するのは危険です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">短時間労働者として加入する主な要件</h2>
+                <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                  <ul className="space-y-2">
+                    <li>・ 週の所定労働時間が20時間以上</li>
+                    <li>・ 所定内賃金が月額8.8万円以上</li>
+                    <li>・ 学生でないこと</li>
+                    <li>・ 特定適用事業所、任意特定適用事業所、または国・地方公共団体の事業所で働いていること</li>
+                  </ul>
+                </div>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  特定適用事業所の企業規模要件は、令和6年10月以降、実質的に <strong className="text-foreground">51人以上</strong> の企業等です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">学生の扱い</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  短時間労働者の要件にある「学生でないこと」では、昼間の大学生や高等学校の生徒などは対象外ですが、
+                  休学中の方、定時制課程、通信制課程に在学する方などは除外の対象から外れます。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  つまり、学生だから一律に106万円ルールの対象外とは言えません。学生区分まで確認が必要です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">確認の順番</h2>
+                <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                  <ol className="space-y-2">
+                    <li>1. 親や配偶者の被扶養者でいたいなら、まず 130万円未満または 19歳以上23歳未満なら 150万円未満を確認する</li>
+                    <li>2. 次に、週20時間、月額8.8万円、学生区分、勤務先規模を確認する</li>
+                    <li>3. 年収106万円という数字は、あくまで月額8.8万円の参考値として見る</li>
+                  </ol>
+                </div>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
+                <div className="space-y-3">
+                  <a href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/shutokuyouken.html" target="_blank" rel="noopener noreferrer" className="block rounded-lg border border-border p-4 hover:border-primary">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 短時間労働者の取得要件</p>
+                        <p className="text-xs text-muted-foreground">週20時間、月額8.8万円、学生でないこと、事業所要件を確認</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/nenshuu.html" target="_blank" rel="noopener noreferrer" className="block rounded-lg border border-border p-4 hover:border-primary">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 106万円は参考値というFAQ</p>
+                        <p className="text-xs text-muted-foreground">年収106万円以上かどうかは勘案しないと明記</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/gakusei02.html" target="_blank" rel="noopener noreferrer" className="block rounded-lg border border-border p-4 hover:border-primary">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 学生区分の扱い</p>
+                        <p className="text-xs text-muted-foreground">通信制、定時制、休学中の扱いを確認</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html" target="_blank" rel="noopener noreferrer" className="block rounded-lg border border-border p-4 hover:border-primary">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 19歳以上23歳未満の被扶養者認定</p>
+                        <p className="text-xs text-muted-foreground">2025年10月1日以降の 150万円未満要件を確認</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary bg-primary/5">
+            <CardContent className="pt-6 text-center space-y-4">
+              <Calculator className="mx-auto h-12 w-12 text-primary" />
+              <h3 className="text-xl font-bold text-foreground">あなたの条件で整理する</h3>
+              <p className="text-sm text-muted-foreground">
+                シミュレーターでは、年収だけで断定できる範囲だけを表示しています。
+              </p>
+              <Link href="/">
+                <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </article>
       </main>
+      <SiteFooter />
     </>
   )
 }
-
-

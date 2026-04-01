@@ -1,376 +1,186 @@
 import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Calculator, FileText } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
-import { 
-  TldrBox, 
-  GoodCaseBox, 
-  BadCaseBox, 
-  TipBox,
-  TargetAudienceBox,
-  ComparisonTable,
-  StepByStep,
-  QaSection 
-} from "@/components/blog-components"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "【令和7年度対応】学生バイトの税金対策｜160万円の壁と親の控除影響",
-  description: "令和7年度改正で大きく変更。所得税160万円ライン、扶養判定123万円目安、特定親族特別控除（19〜22歳・〜188万円）を解説。",
+  title: "学生バイトの税金。160万円・123万円・社会保険を分けて確認",
+  description:
+    "学生アルバイトの税金と扶養判定を、160万円、123万円、19歳以上23歳未満の188万円、社会保険のルールに分けて整理します。年収だけで断定しにくい点も含めて、現行法ベースで説明します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin",
-  },
-  openGraph: {
-    type: "article",
-    publishedTime: "2026-01-29T00:00:00Z",
-    modifiedTime: "2026-01-29T00:00:00Z",
-    authors: ["年収の壁シミュレーター"],
-    tags: ["学生バイト", "特定親族特別控除", "税金対策", "節税", "令和7年度改正"],
   },
 }
 
 export default function GakuseiZeikinPage() {
-  const breadcrumbItems = [
-    { name: "ホーム", url: "https://nenshuu-kabe.com" },
-    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
-    { name: "学生バイトの税金対策", url: "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin" },
-  ]
+  const url = "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin"
 
   return (
     <>
       <ArticleStructuredData
-        title="【令和7年度対応】学生バイトの税金対策｜160万円の壁と親の控除影響"
-        description="令和7年度改正で大きく変更。所得税160万円ライン、扶養判定123万円目安、特定親族特別控除（19〜22歳・〜188万円）を解説。"
-        datePublished="2026-01-29T00:00:00Z"
-        dateModified="2026-01-29T00:00:00Z"
-        url="https://nenshuu-kabe.com/blog/gakusei-baito-zeikin"
-        imageUrl="https://nenshuu-kabe.com/placeholder-logo.png"
+        title="学生バイトの税金。160万円・123万円・社会保険を分けて確認"
+        description="学生アルバイトの税金と扶養判定を、160万円、123万円、19歳以上23歳未満の188万円、社会保険のルールに分けて整理します。年収だけで断定しにくい点も含めて、現行法ベースで説明します。"
+        datePublished="2026-04-02T00:00:00Z"
+        dateModified="2026-04-02T00:00:00Z"
+        url={url}
       />
-      <BreadcrumbStructuredData items={breadcrumbItems} />
-      <main className="min-h-screen bg-background py-12 px-4">
-        <article className="max-w-3xl mx-auto space-y-8">
-        {/* ヘッダー */}
-        <div className="space-y-4">
-          <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" />
-            ブログ一覧に戻る
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-            【令和7年度対応】学生バイトの税金対策<br />160万円の壁と親の控除影響
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
-            <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full font-semibold">✨ 朗報</span>
-            <span className="bg-primary/10 text-primary px-2 py-1 rounded">節税</span>
-            <span>2026年1月29日</span>
-            <span>読了時間：約7分</span>
-          </div>
-        </div>
-
-        {/* 対象者 */}
-        <TargetAudienceBox 
-          audiences={[
-            "アルバイトをしている大学生・専門学生",
-            "勤労学生控除について知りたい人",
-            "親の扶養に入っている学生",
-            "年収をどこまで増やせるか知りたい人"
-          ]}
-        />
-
-        {/* TL;DR */}
-        <TldrBox>
-          <ul className="list-disc list-inside space-y-2">
-            <li><strong>令和7年度改正で基準が大きく変わった！</strong></li>
-            <li><strong>年収160万円まで所得税0円</strong>（給与所得控除65万円＋基礎控除95万円）</li>
-            <li><strong>勤労学生控除（27万円）は不要になった！？</strong></li>
-            <li>19〜22歳は<strong>年収123万円超〜188万円で特定親族特別控除が段階適用</strong></li>
-          </ul>
-        </TldrBox>
-
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <FileText className="w-6 h-6 text-blue-600 mt-1 shrink-0" />
-              <div>
-                <h3 className="font-bold text-blue-900 mb-2">🆕 令和7年度改正でここが変わった！</h3>
-                <p className="text-sm text-blue-800 leading-relaxed">
-                  給与所得控除（最低保障）が55万円→65万円、低所得帯の基礎控除が48万円→95万円となり、年収160万円まで所得税がかかりません。
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6 space-y-8">
-            {/* セクション1：勤労学生控除とは */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                勤労学生控除とは？
-              </h2>
-              <p className="text-muted-foreground leading-relaxed text-base">
-                勤労学生控除とは、学生がアルバイトで得た収入に対して、<strong className="text-foreground">27万円の追加控除</strong>が受けられる制度です。
-              </p>
-              <p className="text-muted-foreground leading-relaxed text-base">
-                ただし、<strong className="text-foreground">令和7年度税制改正により、所得税面での勤労学生控除の必要性は相対的に低下しました</strong>。後ほど詳しく説明します。
-              </p>
-            </section>
-
-            {/* セクション2：2025年改正前後の比較 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                令和7年度改正で何が変わった？
-              </h2>
-              
-              <ComparisonTable 
-                headers={["項目", "改正前（〜2024年）", "改正後（2025年〜）"]}
-                rows={[
-                  { label: "給与所得控除", values: ["55万円", "65万円"] },
-                  { label: "基礎控除", values: ["48万円", "95万円（低所得帯）"] },
-                  { label: "勤労学生控除", values: ["27万円", "27万円（変更なし）"] },
-                  { label: "所得税が発生するライン", values: ["103万円", "約160万円"], highlight: true },
-                  { label: "親控除への影響目安（19〜22歳）", values: ["123万円", "123万円超〜188万円で段階控除"], highlight: true },
-                ]}
-              />
-
-              <TipBox>
-                <p className="mb-2"><strong>つまり、こういうこと！</strong></p>
-                <ul className="text-sm space-y-1 list-disc list-inside">
-                  <li>改正前：103万円までしか稼げなかった → 勤労学生控除で130万円に</li>
-                  <li>改正後：160万円まで稼げる → 勤労学生控除はほぼ不要に！</li>
-                </ul>
-              </TipBox>
-            </section>
-
-            {/* セクション3：具体例で理解 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                具体例で理解しよう
-              </h2>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <GoodCaseBox title="年収150万円の場合">
-                  <p className="mb-2"><strong>年収：150万円</strong></p>
-                  <p className="text-sm mb-2">所得税：<strong className="text-emerald-600">0円</strong></p>
-                  <p className="text-sm mb-2">勤労学生控除：<strong className="text-emerald-600">不要</strong></p>
-                  <p className="text-sm text-emerald-800">✨ 160万円以下なので自動的に非課税！</p>
-                </GoodCaseBox>
-
-                <GoodCaseBox title="年収170万円の場合">
-                  <p className="mb-2"><strong>年収：170万円</strong></p>
-                  <p className="text-sm mb-2">所得税：約5,100円（少額）</p>
-                  <p className="text-sm mb-2">勤労学生控除を使うと：<strong className="text-emerald-600">さらに少なく！</strong></p>
-                  <p className="text-sm text-emerald-800">✨ 勤労学生控除で追加の27万円控除</p>
-                </GoodCaseBox>
-              </div>
-            </section>
-
-            {/* セクション4：勤労学生控除を使うべきケース */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                勤労学生控除を使うべきケース
-              </h2>
-              
-              <StepByStep 
-                steps={[
-                  {
-                    title: "年収が160万円を超える場合",
-                    description: "年収160万円を超えて稼ぐ場合、勤労学生控除を使うことで所得税をさらに減らせます。"
-                  },
-                  {
-                    title: "住民税を減らしたい場合",
-                    description: "多くの自治体では、勤労学生控除（26万円）が住民税にも適用されます。"
-                  },
-                  {
-                    title: "親の扶養控除を気にしない場合",
-                    description: "親の扶養から外れることを了承している場合、勤労学生控除で本人の税金を減らせます。"
-                  }
-                ]}
-              />
-
-              <Card className="bg-amber-50 border-amber-200 my-4">
-                <CardContent className="pt-4">
-                  <h3 className="font-bold text-amber-900 mb-3">⚠️ 重要な注意点</h3>
-                  <div className="space-y-2 text-sm text-amber-800">
-                    <p><strong>勤労学生控除を使っても、親の扶養控除の判定には影響しません！</strong></p>
-                    <p>つまり、年収160万円を超えると、勤労学生控除を使っていても親の扶養控除に影響が出る可能性があります。</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </section>
-
-            {/* セクション5：親の扶養控除との関係 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                親の扶養控除との関係
-              </h2>
-
-              <p className="text-muted-foreground leading-relaxed">
-                親の扶養控除判定は給与収入約123万円が目安です。19〜22歳は特定親族特別控除が新設され、123万円超〜188万円で段階適用されます。
-              </p>
-
-              <ComparisonTable 
-                headers={["年齢・状況", "改正前", "改正後（2025年〜）"]}
-                rows={[
-                  { label: "16〜18歳", values: ["123万円", "123万円（目安）"] },
-                  { label: "19〜22歳（昼間学生）", values: ["123万円", "123万円超〜188万円で段階適用"], highlight: true },
-                  { label: "23歳以上", values: ["123万円", "123万円（目安）"] },
-                ]}
-              />
-
-              <GoodCaseBox title="19〜22歳の昼間学生の場合（最も有利！）">
-                <ul className="text-sm space-y-2">
-                  <li>✅ 年収123万円までは親の扶養控除判定を満たしやすい</li>
-                  <li>✅ 19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用</li>
-                  <li>✅ 年収160万円まで所得税0円</li>
-                  <li>⚠️ ただし130万円を超えると社会保険料が発生</li>
-                </ul>
-              </GoodCaseBox>
-            </section>
-
-            {/* セクション6：申請方法 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                勤労学生控除の申請方法
-              </h2>
-
-              <p className="text-muted-foreground leading-relaxed">
-                年収が160万円を超えて勤労学生控除を使いたい場合の申請方法です。
-              </p>
-
-              <StepByStep 
-                steps={[
-                  {
-                    title: "年末調整で申請（最も簡単）",
-                    description: "アルバイト先で「扶養控除等（異動）申告書」を提出する際、勤労学生控除の欄にチェック＋学校名を記入。学生証のコピーを求められる場合があります。"
-                  },
-                  {
-                    title: "確定申告で申請",
-                    description: "複数のバイトをしている場合や、年末調整を忘れた場合は、翌年2〜3月に確定申告を行います。"
-                  }
-                ]}
-              />
-            </section>
-
-            {/* セクション7：適用条件 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                勤労学生控除の適用条件
-              </h2>
-
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary shrink-0">✓</span>
-                  <span>給与所得などの勤労による所得があること</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary shrink-0">✓</span>
-                  <span>合計所得金額が75万円以下であること（給与収入なら130万円以下）</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary shrink-0">✓</span>
-                  <span>特定の学校の学生・生徒であること</span>
-                </li>
-              </ul>
-
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <h3 className="font-bold text-foreground mb-2">対象となる学校</h3>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• 大学、大学院</li>
-                  <li>• 高等学校、高等専門学校</li>
-                  <li>• 専修学校、各種学校（一定の要件を満たすもの）</li>
-                  <li>• 職業訓練校（一定の要件を満たすもの）</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Q&A */}
-            <QaSection 
-              qas={[
-                {
-                  question: "令和7年度改正後、勤労学生控除はもう必要ないの？",
-                  answer: "年収160万円以下なら不要です。ただし、160万円を超えて稼ぐ場合や、住民税を減らしたい場合は依然として有効です。"
-                },
-                {
-                  question: "親の扶養控除に影響しないって本当？",
-                  answer: "はい、勤労学生控除を使っても、親の扶養控除判定の基準自体は変わりません。親の扶養控除判定は給与収入約123万円が目安で、19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用されます。"
-                },
-                {
-                  question: "社会保険の130万円の壁との関係は？",
-                  answer: "勤労学生控除は税金（所得税・住民税）の控除であり、社会保険の壁（130万円）には影響しません。130万円を超えると社会保険料が発生します。"
-                },
-                {
-                  question: "結局、学生はいくらまで稼げばいいの？",
-                  answer: "おすすめは130万円以内（社会保険料なし）、または160万円以上（社会保険料を払っても手取り増を狙う）です。親への影響は123万円と188万円を目安に確認してください。"
-                }
-              ]}
-            />
-
-            {/* まとめ */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                まとめ
-              </h2>
-              <Card className="bg-primary/5">
-                <CardContent className="pt-4">
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>令和7年度改正で学生に大きく有利に！</strong></span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>年収160万円まで所得税0円</strong>（勤労学生控除不要）</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground">勤労学生控除は年収160万円超で使う</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>19〜22歳は123万円超〜188万円で特定親族特別控除が段階適用</strong></span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-600 shrink-0 font-bold">⚠</span>
-                      <span className="text-foreground">社会保険の壁（130万円）は据え置き</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </section>
-
-            <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
-              <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
-              <p className="text-sm text-muted-foreground">
-                本記事は2025年度の税制改正に基づいた情報です。最終的な判断は税務署・自治体でご確認ください。
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* CTA */}
-        <Card className="bg-primary/5 border-primary">
-          <CardContent className="pt-6 text-center space-y-4">
-            <Calculator className="w-12 h-12 text-primary mx-auto" />
-            <h3 className="text-xl font-bold text-foreground">あなたの年収で税金はいくら？</h3>
-            <p className="text-sm text-muted-foreground">
-              令和7年度改正対応！学生バイトの税金をシミュレーション
-            </p>
-            <Link href="/">
-              <Button size="lg" className="w-full md:w-auto">
-                無料でシミュレーションする
-              </Button>
+      <BreadcrumbStructuredData
+        items={[
+          { name: "ホーム", url: "https://nenshuu-kabe.com" },
+          { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+          { name: "学生バイトの税金", url },
+        ]}
+      />
+      <SiteHeader />
+      <main className="min-h-screen bg-background px-4 py-12">
+        <article className="mx-auto max-w-3xl space-y-8">
+          <div className="space-y-4">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              <ArrowLeft className="h-4 w-4" />
+              ブログ一覧に戻る
             </Link>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
+              学生バイトの税金
+              <br />
+              160万円・123万円・社会保険を分けて確認
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              2026年4月2日時点の公的資料に基づき、学生アルバイトで確認すべき順番を整理しています。
+            </p>
+          </div>
 
-        <div className="text-center pt-6 space-y-4">
-          <Link href="/blog" className="text-primary hover:underline text-sm block">
-            ← ブログ一覧に戻る
-          </Link>
-        </div>
+          <Card className="border-emerald-200 bg-emerald-50">
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="text-lg font-bold text-emerald-950">先に要点</h2>
+              <ul className="space-y-2 text-sm text-emerald-900">
+                <li>学生本人の所得税は、給与収入160万円までなら発生しない設計です。</li>
+                <li>親の扶養控除は、原則として給与収入123万円までが目安です。</li>
+                <li>19歳以上23歳未満は、給与収入188万円まで特定親族特別控除の対象になり得ます。</li>
+                <li>社会保険は別判定です。学生区分や勤務条件を見ないと結論を出せません。</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="space-y-8 pt-6">
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">学生本人の所得税は160万円を基準に確認する</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  給与所得者の所得税では、給与所得控除の最低額65万円と、基礎控除などを踏まえると、
+                  給与収入160万円までは所得税が発生しない設計です。ここは学生かどうかにかかわらず、まず本人の税金を見る基準になります。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">親の扶養控除は123万円が基本</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  親の税金で扶養控除の対象になるかを見るときは、子の合計所得金額が58万円以下かどうかを見ます。
+                  給与収入だけなら、給与所得控除65万円を差し引いた後の所得で判定するため、給与収入123万円がひとつの目安です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は188万円まで段階的な控除があり得る</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  19歳以上23歳未満の子については、2025年分以後、特定親族特別控除が創設されています。
+                  給与収入123万円を超えても、188万円までの範囲であれば、親が段階的な控除を受けられる可能性があります。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  ただし、控除額は一律ではありません。収入帯ごとに段階的に変わるため、雑な概算金額で「親の税金がいくら増える」と断定するのは避けるべきです。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">社会保険は学生区分も確認が必要</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  社会保険は税金とは別です。短時間労働者の加入では、週20時間以上、月額賃金8.8万円以上、学生でないこと、勤務先規模などを見ます。
+                  そのため、学生バイトでは年収だけで社会保険加入を断定できません。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  また、家族の健康保険の被扶養者認定は別に確認が必要です。19歳以上23歳未満は、2025年10月1日から年間収入要件が150万円未満になっています。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">確認の順番</h2>
+                <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                  <ol className="space-y-2">
+                    <li>1. 本人の所得税を見るなら、まず160万円を確認する。</li>
+                    <li>2. 親の扶養控除を見るなら、まず123万円を確認する。</li>
+                    <li>3. 19歳以上23歳未満なら、188万円までの特定親族特別控除を追加で確認する。</li>
+                    <li>4. 社会保険は別に、学生区分と勤務条件を確認する。</li>
+                  </ol>
+                </div>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
+                <div className="space-y-3">
+                  <a
+                    href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">国税庁 給与所得控除</p>
+                        <p className="text-xs text-muted-foreground">給与所得控除65万円のルールを確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1177.htm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">国税庁 特定親族特別控除</p>
+                        <p className="text-xs text-muted-foreground">19歳以上23歳未満の188万円までの段階的控除を確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/gakusei02.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 学生の扱い</p>
+                        <p className="text-xs text-muted-foreground">社会保険で学生をどう扱うかの確認に使えます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary bg-primary/5">
+            <CardContent className="space-y-4 pt-6 text-center">
+              <Calculator className="mx-auto h-12 w-12 text-primary" />
+              <h3 className="text-xl font-bold text-foreground">現行法ベースでシミュレーターを見る</h3>
+              <p className="text-sm text-muted-foreground">
+                シミュレーターでは、学生のケースでも年収だけで断定できる範囲だけを表示しています。
+              </p>
+              <Link href="/">
+                <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </article>
       </main>
+      <SiteFooter />
     </>
   )
 }
-

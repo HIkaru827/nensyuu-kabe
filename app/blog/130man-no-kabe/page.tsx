@@ -1,203 +1,182 @@
 import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Calculator, AlertTriangle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "130万円の壁が最も危険な理由｜働き損を防ぐ方法",
-  description: "130万円の壁を超えると社会保険料が発生し、手取りが大きく減ります。働き損ゾーンを回避する方法を解説。",
+  title: "130万円の壁とは何か。社会保険の扶養判定を現行ルールで整理",
+  description:
+    "130万円の壁は税金の壁ではなく、主に社会保険の被扶養者認定で使われる年収要件です。106万円との違い、19歳以上23歳未満の150万円未満要件も含めて、現行ルールに沿って整理します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/130man-no-kabe",
-  },
-  openGraph: {
-    type: "article",
-    publishedTime: "2026-01-18T00:00:00Z",
-    authors: ["年収の壁シミュレーター"],
-    tags: ["130万円の壁", "社会保険", "働き損", "年収の壁"],
   },
 }
 
 export default function Blog130ManPage() {
-  const breadcrumbItems = [
-    { name: "ホーム", url: "https://nenshuu-kabe.com" },
-    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
-    { name: "130万円の壁が最も危険な理由", url: "https://nenshuu-kabe.com/blog/130man-no-kabe" },
-  ]
+  const url = "https://nenshuu-kabe.com/blog/130man-no-kabe"
 
   return (
     <>
       <ArticleStructuredData
-        title="130万円の壁が最も危険な理由｜働き損を防ぐ方法"
-        description="130万円の壁を超えると社会保険料が発生し、手取りが大きく減ります。働き損ゾーンを回避する方法を解説。"
-        datePublished="2026-01-18T00:00:00Z"
-        url="https://nenshuu-kabe.com/blog/130man-no-kabe"
+        title="130万円の壁とは何か。社会保険の扶養判定を現行ルールで整理"
+        description="130万円の壁は税金の壁ではなく、主に社会保険の被扶養者認定で使われる年収要件です。106万円との違い、19歳以上23歳未満の150万円未満要件も含めて、現行ルールに沿って整理します。"
+        datePublished="2026-04-02T00:00:00Z"
+        dateModified="2026-04-02T00:00:00Z"
+        url={url}
       />
-      <BreadcrumbStructuredData items={breadcrumbItems} />
-      <main className="min-h-screen bg-background py-12 px-4">
-        <article className="max-w-3xl mx-auto space-y-8">
-        <div className="space-y-4">
-          <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" />
-            ブログ一覧に戻る
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            130万円の壁が最も危険な理由｜働き損を防ぐ方法
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="bg-red-100 text-red-600 px-2 py-1 rounded">注意点</span>
-            <span>2026年1月18日</span>
-          </div>
-        </div>
-
-        <Card className="bg-red-50 border-red-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-6 h-6 text-red-600 mt-1 shrink-0" />
-              <div>
-                <h3 className="font-bold text-red-900 mb-2">130万円の壁は最も危険！</h3>
-                <p className="text-sm text-red-800 leading-relaxed">
-                  130万円を超えると社会保険料（年間約20万円）が発生し、手取りが大きく減少します。これが「働き損ゾーン」と呼ばれる理由です。
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6 prose prose-sm max-w-none">
-            <h2 className="text-2xl font-bold text-foreground mt-0">130万円の壁とは</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              「130万円の壁」とは、年収が130万円を超えると、親や配偶者の社会保険の扶養から外れ、自分で社会保険料を払う必要が出てくるラインのことです。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">なぜ「働き損」になるのか</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              年収130万円を超えると、以下の社会保険料を自分で負担する必要があります：
-            </p>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li><strong>健康保険料</strong>：年収の約5%</li>
-              <li><strong>厚生年金保険料</strong>：年収の約9%</li>
-              <li><strong>合計</strong>：年収の約15%</li>
-            </ul>
-
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 my-6">
-              <p className="text-sm font-semibold text-red-900 mb-2">具体例：年収140万円の場合</p>
-              <p className="text-sm text-red-800">社会保険料：約21万円</p>
-              <p className="text-sm text-red-800">手取り：119万円</p>
-              <p className="text-sm font-bold text-red-900 mt-2">
-                → 年収130万円（手取り約128万円）より手取りが減る！
-              </p>
-            </div>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">年収別の手取り比較</h2>
-            <div className="overflow-x-auto my-6">
-              <table className="min-w-full border border-border">
-                <thead className="bg-muted">
-                  <tr>
-                    <th className="border border-border px-4 py-2 text-left">年収</th>
-                    <th className="border border-border px-4 py-2 text-left">社会保険料</th>
-                    <th className="border border-border px-4 py-2 text-left">手取り（概算）</th>
-                    <th className="border border-border px-4 py-2 text-left">判定</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-border px-4 py-2">120万円</td>
-                    <td className="border border-border px-4 py-2">0円</td>
-                    <td className="border border-border px-4 py-2">約118万円</td>
-                    <td className="border border-border px-4 py-2 text-green-600 font-semibold">安全</td>
-                  </tr>
-                  <tr className="bg-red-50">
-                    <td className="border border-border px-4 py-2">140万円</td>
-                    <td className="border border-border px-4 py-2">約21万円</td>
-                    <td className="border border-border px-4 py-2">約117万円</td>
-                    <td className="border border-border px-4 py-2 text-red-600 font-semibold">危険</td>
-                  </tr>
-                  <tr className="bg-red-50">
-                    <td className="border border-border px-4 py-2">150万円</td>
-                    <td className="border border-border px-4 py-2">約22万円</td>
-                    <td className="border border-border px-4 py-2">約125万円</td>
-                    <td className="border border-border px-4 py-2 text-red-600 font-semibold">危険</td>
-                  </tr>
-                  <tr className="bg-green-50">
-                    <td className="border border-border px-4 py-2">180万円</td>
-                    <td className="border border-border px-4 py-2">約27万円</td>
-                    <td className="border border-border px-4 py-2">約148万円</td>
-                    <td className="border border-border px-4 py-2 text-green-600 font-semibold">OK</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="text-sm text-muted-foreground italic">
-              ※ 税金・社会保険料を考慮した概算値です
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">働き損を防ぐ3つの対策</h2>
-            
-            <h3 className="text-xl font-bold text-foreground mt-6">対策1：130万円以内に抑える</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              最も確実な方法は、年収を130万円以内に抑えることです。月額約10.8万円以内を目安にシフトを調整しましょう。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">対策2：160万円以上を目指す</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              中途半端に稼ぐなら、いっそ160万円以上を目指すのも一つの手です。160万円以上稼げば、社会保険料を払っても手取りは増えていきます。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">対策3：106万円の壁にも注意</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              以下の条件を満たすと、106万円から社会保険の加入義務が発生する場合があります：
-            </p>
-            <ul className="list-disc list-inside text-muted-foreground space-y-1 my-4 ml-4">
-              <li>従業員数101人以上の企業</li>
-              <li>週20時間以上勤務</li>
-              <li>月収8.8万円以上</li>
-              <li>2ヶ月を超える雇用見込み</li>
-              <li>学生でない（夜間・通信は除く）</li>
-            </ul>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">まとめ</h2>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li>130万円を超えると社会保険料が年間約20万円発生</li>
-              <li>130〜160万円は「働き損ゾーン」</li>
-              <li>130万円以内に抑えるか、160万円以上を目指すべき</li>
-              <li>106万円の壁にも注意が必要</li>
-            </ul>
-
-            <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
-              <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
-              <p className="text-sm text-muted-foreground">
-                本記事は2025年度の制度に基づいた概算です。最終的な判断は勤務先・社会保険事務所でご確認ください。
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-primary/5 border-primary">
-          <CardContent className="pt-6 text-center space-y-4">
-            <Calculator className="w-12 h-12 text-primary mx-auto" />
-            <h3 className="text-xl font-bold text-foreground">あなたは働き損ゾーンに入っていませんか？</h3>
-            <p className="text-sm text-muted-foreground">
-              年収と社会保険料の影響を今すぐシミュレーション
-            </p>
-            <Link href="/">
-              <Button size="lg" className="w-full md:w-auto">
-                無料でシミュレーションする
-              </Button>
+      <BreadcrumbStructuredData
+        items={[
+          { name: "ホーム", url: "https://nenshuu-kabe.com" },
+          { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+          { name: "130万円の壁とは何か", url },
+        ]}
+      />
+      <SiteHeader />
+      <main className="min-h-screen bg-background px-4 py-12">
+        <article className="mx-auto max-w-3xl space-y-8">
+          <div className="space-y-4">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              <ArrowLeft className="h-4 w-4" />
+              ブログ一覧に戻る
             </Link>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
+              130万円の壁とは何か
+              <br />
+              社会保険の扶養判定を現行ルールで整理
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              2026年4月2日時点で確認した国税庁・日本年金機構の公的情報に基づいて整理しています。
+            </p>
+          </div>
 
-        <div className="text-center pt-6 space-y-4">
-          <Link href="/blog" className="text-primary hover:underline text-sm block">
-            ← ブログ一覧に戻る
-          </Link>
-        </div>
+          <Card className="border-blue-200 bg-blue-50">
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="text-lg font-bold text-blue-950">先に要点</h2>
+              <ul className="space-y-2 text-sm text-blue-900">
+                <li>130万円の壁は、主に社会保険の被扶養者認定で使われる年間収入要件です。</li>
+                <li>税金の壁とは別です。所得税や扶養控除の判定とは分けて見ます。</li>
+                <li>19歳以上23歳未満は、2025年10月1日以後、被扶養者認定の年間収入要件が150万円未満に変わっています。</li>
+                <li>106万円は単独で断定できる壁ではなく、週20時間や月額賃金8.8万円以上など複数条件で見ます。</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="space-y-8 pt-6">
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">130万円の壁は税金ではなく社会保険の話</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  一般に「130万円の壁」と呼ばれるものは、健康保険などで家族の被扶養者として認定されるかどうかを見るときの年間収入要件を指すことが多いです。
+                  税金の世界で使う123万円や160万円とは別の基準なので、同じ「年収の壁」としてひとまとめにしない方が安全です。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  このサイトでも、税金の判定と社会保険の判定は分けて表示しています。年収だけで一括判断すると誤解が生まれやすいためです。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">通常は130万円未満、19歳以上23歳未満は150万円未満</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  日本年金機構の案内では、被扶養者認定の年間収入要件は通常130万円未満です。ただし、19歳以上23歳未満の被扶養者については、
+                  2025年10月1日から年間収入要件が150万円未満に見直されています。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  そのため、学生や若年層のアルバイトでは、古い記事にある「一律130万円」と書かれた説明をそのまま信じない方が安全です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">106万円との違い</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  106万円は、短時間労働者の社会保険加入でよく使われる通称です。ただし、日本年金機構は「106万円以上かどうか」ではなく、
+                  主に月額賃金8.8万円以上かどうかで判定する案内を出しています。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  実際には、週20時間以上、学生でないこと、勤務先の企業規模なども確認が必要です。したがって、年収だけで
+                  「106万円を超えたから必ず加入」「超えていないから加入しない」と断定するのは正確ではありません。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">確認の順番</h2>
+                <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                  <ol className="space-y-2">
+                    <li>1. 税金の話か、社会保険の話かを先に分ける。</li>
+                    <li>2. 社会保険なら、被扶養者認定を見るのか、勤務先で自分が加入する話なのかを分ける。</li>
+                    <li>3. 被扶養者認定なら130万円未満、19歳以上23歳未満なら150万円未満の特例も確認する。</li>
+                    <li>4. 短時間労働者の加入なら、週20時間、月額賃金8.8万円、学生区分、勤務先規模を確認する。</li>
+                  </ol>
+                </div>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
+                <div className="space-y-3">
+                  <a
+                    href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/shutokuyouken.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 短時間労働者の加入要件</p>
+                        <p className="text-xs text-muted-foreground">週20時間、月額賃金8.8万円、学生でないことなどの条件を確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/nenshuu.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 106万円は参考であるというFAQ</p>
+                        <p className="text-xs text-muted-foreground">年収106万円そのものではなく、月額賃金8.8万円などで判定する旨が示されています。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 19歳以上23歳未満の被扶養者認定</p>
+                        <p className="text-xs text-muted-foreground">2025年10月1日から年間収入要件が150万円未満に変わった案内です。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary bg-primary/5">
+            <CardContent className="space-y-4 pt-6 text-center">
+              <Calculator className="mx-auto h-12 w-12 text-primary" />
+              <h3 className="text-xl font-bold text-foreground">年収だけで断定しない形で確認する</h3>
+              <p className="text-sm text-muted-foreground">
+                シミュレーターでは、現行法で年収だけから安全に判断できる範囲だけを表示しています。
+              </p>
+              <Link href="/">
+                <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </article>
       </main>
+      <SiteFooter />
     </>
   )
 }
-
-

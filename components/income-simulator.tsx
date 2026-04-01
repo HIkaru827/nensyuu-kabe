@@ -3,8 +3,7 @@
 import type React from "react"
 
 import { useMemo, useState } from "react"
-import { AlertCircle, AlertTriangle, ArrowRight, BookOpen, CheckCircle, Clock, Info, TrendingUp } from "lucide-react"
-import Link from "next/link"
+import { AlertCircle, AlertTriangle, BookOpen, CheckCircle, Clock, ExternalLink, Info, TrendingUp } from "lucide-react"
 import { JobAdSlot, AdSlot } from "@/components/ad-slot"
 import { GoogleAdSenseBanner } from "@/components/google-adsense"
 import { Button } from "@/components/ui/button"
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Slider } from "@/components/ui/slider"
-import { simulateIncome, type ParentIncomeLevel, type StudentType } from "@/lib/income-simulator"
+import { getSocialInsuranceDependentLimit, simulateIncome, type StudentType } from "@/lib/income-simulator"
 
 interface ThresholdInfo {
   amount: number
@@ -23,7 +22,7 @@ interface ThresholdInfo {
 
 const THRESHOLDS: ThresholdInfo[] = [
   { amount: 110, label: "110万", description: "住民税発生" },
-  { amount: 130, label: "130万", description: "社会保険の壁" },
+  { amount: 123, label: "123万", description: "税法上の扶養目安" },
   { amount: 160, label: "160万", description: "所得税の壁" },
 ]
 
@@ -31,8 +30,6 @@ export function IncomeSimulator() {
   const [income, setIncome] = useState(100)
   const [age, setAge] = useState(20)
   const [attribute, setAttribute] = useState<"daytime-student" | "evening-student" | "freeter">("daytime-student")
-  const [parentIncome, setParentIncome] = useState<ParentIncomeLevel>("middle")
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number.parseInt(e.target.value, 10)
@@ -61,9 +58,19 @@ export function IncomeSimulator() {
       annualIncome: income * 10_000,
       age,
       studentType: getStudentType(),
-      parentIncomeLevel: parentIncome,
     })
-  }, [income, age, attribute, parentIncome])
+  }, [income, age, attribute])
+
+  const socialInsuranceLimit = useMemo(() => getSocialInsuranceDependentLimit(age) / 10_000, [age])
+  const thresholdMarkers = useMemo(
+    () => [
+      THRESHOLDS[0],
+      THRESHOLDS[1],
+      { amount: socialInsuranceLimit, label: `${socialInsuranceLimit}万`, description: "被扶養者年収要件目安" },
+      THRESHOLDS[2],
+    ],
+    [socialInsuranceLimit],
+  )
 
   const statusConfig = useMemo(() => {
     const color = simulationResult.color
@@ -107,7 +114,7 @@ export function IncomeSimulator() {
         <p className="text-sm text-muted-foreground sm:text-base">親に怒られない年収をすぐに判定</p>
         <p className="text-xs text-primary font-semibold">🆕 令和7年度改正対応（103万→160万円）</p>
         <p className="text-sm text-muted-foreground">
-          税金、社会保険、親の扶養への影響をまとめてチェックできます。
+          税金、税法上の扶養判定、社会保険の確認ポイントを分けてチェックできます。
         </p>
       </div>
 
@@ -176,44 +183,9 @@ export function IncomeSimulator() {
               </RadioGroup>
             </div>
 
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-              >
-                <Info className="w-3 h-3" />
-                {showAdvancedOptions ? "詳細設定を隠す" : "詳細設定を表示"}
-              </button>
+            <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+              この判定は厳格運用です。親の税額増加や社会保険料額のような条件依存の強い数値は、誤解を避けるため表示していません。
             </div>
-
-            {showAdvancedOptions && (
-              <div className="space-y-3 pb-2 pt-2 border-t border-border">
-                <Label className="text-sm font-semibold text-foreground">
-                  親の所得レベル（任意）
-                </Label>
-                <RadioGroup value={parentIncome} onValueChange={(v) => setParentIncome(v as ParentIncomeLevel)} className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="low" id="low" />
-                    <Label htmlFor="low" className="font-normal cursor-pointer text-sm">
-                      低所得（住民税非課税世帯など）
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="middle" id="middle" />
-                    <Label htmlFor="middle" className="font-normal cursor-pointer text-sm">
-                      中所得（一般的な会社員など）
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="high" id="high" />
-                    <Label htmlFor="high" className="font-normal cursor-pointer text-sm">
-                      高所得（高額納税者など）
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </div>
-            )}
 
             <div className="pb-2">
               <Slider
@@ -232,7 +204,7 @@ export function IncomeSimulator() {
 
             <div className="relative pt-8 pb-2">
               <div className="absolute top-0 left-0 right-0">
-                {THRESHOLDS.map((threshold) => (
+                {thresholdMarkers.map((threshold) => (
                   <div
                     key={threshold.amount}
                     className="absolute flex flex-col items-center -translate-x-1/2"
@@ -291,101 +263,6 @@ export function IncomeSimulator() {
                 </p>
               </div>
 
-              {(simulationResult.estimatedSelfLoss !== undefined || simulationResult.estimatedParentLoss !== undefined) && (
-                <div className="space-y-3 pt-3 border-t border-current/10">
-                  {simulationResult.selfBurdenBreakdown !== undefined && (
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground font-semibold">あなたの負担</span>
-                        <span className={`font-bold ${statusConfig.textClass}`}>
-                          約 {Math.floor(simulationResult.selfBurdenBreakdown.total / 10_000).toLocaleString()}万円
-                        </span>
-                      </div>
-                      <div className="ml-3 space-y-1">
-                        {simulationResult.selfBurdenBreakdown.incomeTax > 0 && (
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="text-muted-foreground">└ 所得税</span>
-                            <span className="text-muted-foreground">
-                              約 {simulationResult.selfBurdenBreakdown.incomeTax.toLocaleString()}円
-                            </span>
-                          </div>
-                        )}
-                        {simulationResult.selfBurdenBreakdown.residentTax > 0 && (
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="text-muted-foreground">└ 住民税</span>
-                            <span className="text-muted-foreground">
-                              約 {simulationResult.selfBurdenBreakdown.residentTax.toLocaleString()}円
-                            </span>
-                          </div>
-                        )}
-                        {simulationResult.selfBurdenBreakdown.socialInsurance > 0 && (
-                          <>
-                            <div className="flex justify-between items-center text-xs">
-                              <span className="text-muted-foreground">└ 社会保険料</span>
-                              <span className="text-muted-foreground">
-                                約 {simulationResult.selfBurdenBreakdown.socialInsurance.toLocaleString()}円
-                              </span>
-                            </div>
-                            {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown && (
-                              <div className="ml-3 space-y-0.5">
-                                {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.healthInsurance > 0 && (
-                                  <div className="flex justify-between items-center text-xs">
-                                    <span className="text-muted-foreground/80">　└ 健康保険料</span>
-                                    <span className="text-muted-foreground/80">
-                                      約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.healthInsurance.toLocaleString()}円
-                                    </span>
-                                  </div>
-                                )}
-                                {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.pensionInsurance > 0 && (
-                                  <div className="flex justify-between items-center text-xs">
-                                    <span className="text-muted-foreground/80">　└ 厚生年金保険料</span>
-                                    <span className="text-muted-foreground/80">
-                                      約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.pensionInsurance.toLocaleString()}円
-                                    </span>
-                                  </div>
-                                )}
-                                {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.employmentInsurance > 0 && (
-                                  <div className="flex justify-between items-center text-xs">
-                                    <span className="text-muted-foreground/80">　└ 雇用保険料</span>
-                                    <span className="text-muted-foreground/80">
-                                      約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.employmentInsurance.toLocaleString()}円
-                                    </span>
-                                  </div>
-                                )}
-                                {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.nursingInsurance > 0 && (
-                                  <div className="flex justify-between items-center text-xs">
-                                    <span className="text-muted-foreground/80">　└ 介護保険料</span>
-                                    <span className="text-muted-foreground/80">
-                                      約 {simulationResult.selfBurdenBreakdown.socialInsuranceBreakdown.nursingInsurance.toLocaleString()}円
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {simulationResult.estimatedSelfLoss !== undefined && simulationResult.selfBurdenBreakdown === undefined && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">あなたの負担増</span>
-                      <span className={`font-bold ${statusConfig.textClass}`}>
-                        約 {Math.floor(simulationResult.estimatedSelfLoss / 10_000)}万円
-                      </span>
-                    </div>
-                  )}
-                  {simulationResult.estimatedParentLoss !== undefined && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground font-semibold">親の負担増</span>
-                      <span className={`font-bold ${statusConfig.textClass}`}>
-                        約 {Math.floor(simulationResult.estimatedParentLoss / 10_000)}万円
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-
               {simulationResult.advice.length > 0 && (
                 <div className="pt-3 border-t border-current/10 space-y-2">
                   <h3 className="text-xs font-semibold text-foreground">💡 アドバイス</h3>
@@ -403,7 +280,7 @@ export function IncomeSimulator() {
           </Card>
 
           <div className="space-y-3">
-            {income >= 130 && income < 160 && (
+            {income >= socialInsuranceLimit && income < 160 && (
               <>
                 <Button className="w-full h-12 text-base font-semibold gap-2" size="lg" asChild>
                   <a href={process.env.NEXT_PUBLIC_A8_HIGH_WAGE || "#"} target="_blank" rel="noopener noreferrer nofollow">
@@ -414,12 +291,12 @@ export function IncomeSimulator() {
                 <Button variant="outline" className="w-full h-12 text-base font-semibold gap-2 bg-background" size="lg" asChild>
                   <a href={process.env.NEXT_PUBLIC_A8_FLEXIBLE || "#"} target="_blank" rel="noopener noreferrer nofollow">
                     <Clock className="w-5 h-5" />
-                    130万円以下に抑える → シフト調整
+                    被扶養者年収要件内に抑える → シフト調整
                   </a>
                 </Button>
               </>
             )}
-            {income < 130 && (
+            {income < socialInsuranceLimit && (
               <Button className="w-full h-12 text-base font-semibold gap-2" size="lg" asChild>
                 <a href={process.env.NEXT_PUBLIC_A8_RECOMMENDED || "#"} target="_blank" rel="noopener noreferrer nofollow">
                   <TrendingUp className="w-5 h-5" />
@@ -439,7 +316,7 @@ export function IncomeSimulator() {
 
           <footer className="text-center space-y-1 pt-2">
             <p className="text-xs text-muted-foreground">※ 本シミュレーションは概算です</p>
-            <p className="text-xs text-muted-foreground">※ 令和7年度税制改正（2025年分以後適用）を参考</p>
+            <p className="text-xs text-muted-foreground">※ 2026年4月2日時点で確認した公的情報に基づき、年収だけで断定できる範囲に限定して表示しています</p>
           </footer>
         </div>
       </div>
@@ -448,74 +325,54 @@ export function IncomeSimulator() {
         <CardContent className="pt-5 pb-5 space-y-4">
           <div className="flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
-            <h3 className="text-base font-bold text-foreground">📚 もっと詳しく知る</h3>
+            <h3 className="text-base font-bold text-foreground">📚 公的情報を確認する</h3>
           </div>
 
           <div className="space-y-2">
-            {income >= 120 && income <= 160 && (
-              <Link href="/blog/130man-no-kabe-v2">
-                <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
-                  <CardContent className="pt-3 pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-primary mb-1">⚠️ 必読</p>
-                        <p className="text-sm font-bold text-foreground">130万円の壁で働き損を防ぐ方法</p>
-                        <p className="text-xs text-muted-foreground mt-1">社会保険料で手取りが減る理由</p>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            )}
-
-            {income >= 150 && income <= 170 && (
-              <Link href="/blog/103man-no-kabe">
-                <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
-                  <CardContent className="pt-3 pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-green-600 mb-1">✨ 朗報</p>
-                        <p className="text-sm font-bold text-foreground">160万円の壁とは？令和7年度改正を解説</p>
-                        <p className="text-xs text-muted-foreground mt-1">103万円から大きく変更！</p>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            )}
-
-            {attribute !== "freeter" && (
-              <Link href="/blog/gakusei-baito-zeikin">
-                <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
-                  <CardContent className="pt-3 pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold text-blue-600 mb-1">🎓 学生向け</p>
-                        <p className="text-sm font-bold text-foreground">学生バイトの税金対策</p>
-                        <p className="text-xs text-muted-foreground mt-1">160万円の壁と特定親族特別控除を解説</p>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            )}
-
-            <Link href="/blog">
+            <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm" target="_blank" rel="noopener noreferrer">
               <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
                 <CardContent className="pt-3 pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <p className="text-sm font-bold text-foreground">その他の記事を見る</p>
-                      <p className="text-xs text-muted-foreground mt-1">社会保険の壁、特定扶養親族など</p>
+                      <p className="text-xs font-semibold text-primary mb-1">所得税</p>
+                      <p className="text-sm font-bold text-foreground">国税庁: 給与所得控除</p>
+                      <p className="text-xs text-muted-foreground mt-1">160万円ラインの前提になる公的資料</p>
                     </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                    <ExternalLink className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
                   </div>
                 </CardContent>
               </Card>
-            </Link>
+            </a>
+
+            <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1177.htm" target="_blank" rel="noopener noreferrer">
+              <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
+                <CardContent className="pt-3 pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-blue-600 mb-1">扶養</p>
+                      <p className="text-sm font-bold text-foreground">国税庁: 特定親族特別控除</p>
+                      <p className="text-xs text-muted-foreground mt-1">123万円と188万円の扱いを確認</p>
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
+
+            <a href="https://www.nenkin.go.jp/section/faq/kounen/dependents/aged19to22/sokyu.html" target="_blank" rel="noopener noreferrer">
+              <Card className="hover:border-primary transition-all cursor-pointer bg-white/80 backdrop-blur">
+                <CardContent className="pt-3 pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-green-600 mb-1">社会保険</p>
+                      <p className="text-sm font-bold text-foreground">日本年金機構: 19歳以上23歳未満の被扶養者認定</p>
+                      <p className="text-xs text-muted-foreground mt-1">150万円未満の年収要件を確認</p>
+                    </div>
+                    <ExternalLink className="w-5 h-5 text-muted-foreground shrink-0 ml-2" />
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
           </div>
         </CardContent>
       </Card>

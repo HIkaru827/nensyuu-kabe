@@ -1,297 +1,182 @@
 import Link from "next/link"
+import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Calculator } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { 
-  TldrBox, 
-  GoodCaseBox, 
-  BadCaseBox, 
-  TipBox,
-  TargetAudienceBox,
-  ComparisonTable,
-  StepByStep,
-  QaSection 
-} from "@/components/blog-components"
 
 export const metadata = {
-  title: "【超危険】130万円の壁で働き損！手取りが減る理由をわかりやすく解説 | 年収の壁シミュレーター",
-  description: "130万円の壁を超えると年間20万円の社会保険料が発生！なぜ働き損になるのか、具体例とともにわかりやすく解説します。",
+  title: "130万円を超えるとどうなるか。被扶養者認定と勤務先加入を分けて確認",
+  description:
+    "130万円を超えたときに何が起きるかを、被扶養者認定と勤務先での社会保険加入に分けて整理します。106万円だけでは判定できない点、学生や19歳以上23歳未満の扱いも現行ルールで説明します。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/blog/130man-no-kabe-v2",
+  },
 }
 
 export default function Blog130ManV2Page() {
+  const url = "https://nenshuu-kabe.com/blog/130man-no-kabe-v2"
+
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <article className="max-w-3xl mx-auto space-y-8">
-        {/* ヘッダー */}
-        <div className="space-y-4">
-          <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" />
-            ブログ一覧に戻る
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-            【超危険】130万円の壁で働き損！<br />手取りが減る理由をわかりやすく解説
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
-            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full font-semibold">⚠️ 最重要</span>
-            <span>2026年1月18日</span>
-            <span>読了時間：約5分</span>
-          </div>
-        </div>
-
-        {/* 対象者 */}
-        <TargetAudienceBox 
-          audiences={[
-            "年収が130万円前後の学生・アルバイト",
-            "シフトを増やそうか迷っている人",
-            "親の扶養に入っている人",
-            "働き損を避けたい人"
-          ]}
-        />
-
-        {/* TL;DR */}
-        <TldrBox>
-          <ul className="list-disc list-inside space-y-2">
-            <li><strong>130万円を超えると社会保険料が年間約20万円発生</strong></li>
-            <li><strong>年収140万円でも手取りは120万円以下より少ない</strong>（働き損）</li>
-            <li><strong>130万円以内に抑えるか、160万円以上を目指すべき</strong></li>
-            <li>社会保険の壁は令和7年度税制改正でも変更なし</li>
-          </ul>
-        </TldrBox>
-
-        {/* メインコンテンツ */}
-        <Card>
-          <CardContent className="pt-6 space-y-8">
-            {/* セクション1：130万円の壁とは */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                130万円の壁とは？
-              </h2>
-              <p className="text-muted-foreground leading-relaxed text-base">
-                「130万円の壁」とは、年収が130万円を超えると、<strong className="text-foreground">親や配偶者の社会保険の扶養から外れ、自分で社会保険料を払う必要が出てくる</strong>ラインのことです。
-              </p>
-              <p className="text-muted-foreground leading-relaxed text-base">
-                この社会保険料が<span className="text-red-600 font-bold">年間約20万円</span>にもなるため、手取りが大きく減ってしまいます。これが「働き損」と呼ばれる理由です。
-              </p>
-            </section>
-
-            {/* セクション2：具体例で理解 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                具体例で理解しよう
-              </h2>
-              
-              <GoodCaseBox title="年収120万円の場合（セーフ）">
-                <p className="mb-2"><strong>年収：120万円</strong></p>
-                <p className="mb-2">税金：約2万円</p>
-                <p className="mb-2">社会保険料：<strong className="text-emerald-600">0円</strong>（扶養内のため）</p>
-                <p className="text-lg font-bold text-emerald-600 mt-3">
-                  手取り：約118万円 ✨
-                </p>
-              </GoodCaseBox>
-
-              <BadCaseBox title="年収140万円の場合（働き損！）">
-                <p className="mb-2"><strong>年収：140万円</strong></p>
-                <p className="mb-2">税金：約5万円</p>
-                <p className="mb-2">社会保険料：<strong className="text-red-600">約21万円</strong>（健康保険+厚生年金）</p>
-                <p className="text-lg font-bold text-red-600 mt-3">
-                  手取り：約114万円 😱
-                </p>
-                <p className="text-sm mt-3 pt-3 border-t border-red-300">
-                  → 年収120万円より<strong>手取りが4万円も少ない</strong>！
-                </p>
-              </BadCaseBox>
-
-              <TipBox>
-                <p>
-                  年収を20万円増やしたのに、手取りは逆に減ってしまう。これが「働き損ゾーン」です。
-                </p>
-              </TipBox>
-            </section>
-
-            {/* セクション3：手取り比較表 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                年収別の手取り比較
-              </h2>
-              <ComparisonTable 
-                headers={["年収", "社会保険料", "手取り（概算）", "判定"]}
-                rows={[
-                  { label: "100万円", values: ["0円", "約100万円", "✅ 安全"] },
-                  { label: "120万円", values: ["0円", "約118万円", "✅ 安全"] },
-                  { label: "130万円", values: ["0円", "約128万円", "✅ ギリギリOK"] },
-                  { label: "140万円", values: ["約21万円", "約114万円", "❌ 働き損"], highlight: true },
-                  { label: "150万円", values: ["約22万円", "約123万円", "❌ 働き損"], highlight: true },
-                  { label: "160万円", values: ["約24万円", "約131万円", "⚠️ ギリギリ"], },
-                  { label: "180万円", values: ["約27万円", "約148万円", "✅ OK"], },
-                ]}
-              />
-              <p className="text-xs text-muted-foreground italic">
-                ※ 税金・社会保険料を考慮した概算値です
-              </p>
-            </section>
-
-            {/* セクション4：社会保険料の内訳 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                社会保険料の内訳
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                130万円を超えると、以下の2つの保険料を払う必要があります：
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 my-4">
-                <Card className="bg-slate-50">
-                  <CardContent className="pt-4">
-                    <h3 className="font-bold text-foreground mb-2">健康保険料</h3>
-                    <p className="text-2xl font-bold text-primary mb-1">年収の約5%</p>
-                    <p className="text-sm text-muted-foreground">年収140万円なら約7万円</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-slate-50">
-                  <CardContent className="pt-4">
-                    <h3 className="font-bold text-foreground mb-2">厚生年金保険料</h3>
-                    <p className="text-2xl font-bold text-primary mb-1">年収の約9%</p>
-                    <p className="text-sm text-muted-foreground">年収140万円なら約12.6万円</p>
-                  </CardContent>
-                </Card>
-              </div>
-              <Card className="bg-red-50 border-red-200">
-                <CardContent className="pt-4">
-                  <p className="text-center">
-                    <span className="text-3xl font-bold text-red-600">合計：約15%</span>
-                  </p>
-                  <p className="text-center text-sm text-red-800 mt-2">
-                    年収140万円 × 15% = <strong>約21万円</strong>
-                  </p>
-                </CardContent>
-              </Card>
-            </section>
-
-            {/* セクション5：対策方法 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                働き損を防ぐ3つの対策
-              </h2>
-              <StepByStep 
-                steps={[
-                  {
-                    title: "130万円以内に抑える（最も確実）",
-                    description: "月額約10.8万円以内を目安にシフトを調整。社会保険料が発生しないため、手取りを最大化できます。"
-                  },
-                  {
-                    title: "思い切って160万円以上を目指す",
-                    description: "社会保険料を払っても、160万円以上稼げば手取りは増えていきます。長期的にはこちらがおすすめ。"
-                  },
-                  {
-                    title: "106万円の壁にも注意",
-                    description: "従業員101人以上の企業で週20時間以上働く場合、106万円から社会保険に加入する場合があります（昼間の大学生は対象外）。"
-                  }
-                ]}
-              />
-            </section>
-
-            {/* セクション6：令和7年度改正との関係 */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                令和7年度税制改正との関係
-              </h2>
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="pt-4">
-                  <h3 className="font-bold text-blue-900 mb-3">📌 重要な注意点</h3>
-                  <div className="space-y-2 text-sm text-blue-800">
-                    <p>✅ <strong>所得税の壁：103万円 → 160万円</strong>（改正済み）</p>
-                    <p>❌ <strong>社会保険の壁：130万円（変更なし！）</strong></p>
-                  </div>
-                  <p className="text-sm text-blue-800 mt-3 pt-3 border-t border-blue-300">
-                    所得税の壁は引き上げられましたが、<strong>社会保険の壁（130万円）は変更されていません</strong>。そのため、130〜160万円は依然として「働き損ゾーン」です。
-                  </p>
-                </CardContent>
-              </Card>
-            </section>
-
-            {/* Q&A */}
-            <QaSection 
-              qas={[
-                {
-                  question: "130万円ぴったりならどうなりますか？",
-                  answer: "130万円以下であれば社会保険料は発生しません。ただし、月収が10.8万円を継続的に超える場合は対象になる可能性があるため、年間130万円以内に収めることが重要です。"
-                },
-                {
-                  question: "社会保険料を払うメリットはありますか？",
-                  answer: "将来の年金額が増える、傷病手当金がもらえる、出産手当金がもらえる等のメリットがあります。長期的に見れば、160万円以上稼いで社会保険に加入する方が有利な場合もあります。"
-                },
-                {
-                  question: "バイトを掛け持ちしている場合は？",
-                  answer: "複数のバイトの合計年収で判断されます。全ての収入を合わせて130万円以内に抑える必要があります。"
-                },
-                {
-                  question: "12月に調整すれば間に合いますか？",
-                  answer: "可能ですが、月収ベースでも判定されるため、特定の月だけ極端に稼ぐと社会保険の対象になる可能性があります。年間を通して調整することをおすすめします。"
-                }
-              ]}
-            />
-
-            {/* まとめ */}
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground border-b-2 border-primary pb-2">
-                まとめ
-              </h2>
-              <Card className="bg-primary/5">
-                <CardContent className="pt-4">
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>130万円の壁は最も危険</strong>：社会保険料が年間約20万円発生</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>130〜160万円は働き損ゾーン</strong>：手取りが逆に減る</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>対策は2つ</strong>：130万円以内に抑えるか、160万円以上を目指す</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary shrink-0 font-bold">✓</span>
-                      <span className="text-foreground"><strong>令和7年度改正でも変更なし</strong>：社会保険の壁（130万円）は据え置き</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </section>
-
-            <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
-              <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
-              <p className="text-sm text-muted-foreground">
-                本記事は令和7年度税制改正（2025年分以後適用）時点の制度に基づいた概算です。最終的な判断は勤務先・社会保険事務所でご確認ください。
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* CTA */}
-        <Card className="bg-primary/5 border-primary">
-          <CardContent className="pt-6 text-center space-y-4">
-            <Calculator className="w-12 h-12 text-primary mx-auto" />
-            <h3 className="text-xl font-bold text-foreground">あなたは働き損ゾーンに入っていませんか？</h3>
-            <p className="text-sm text-muted-foreground">
-              年収と社会保険料の影響を今すぐシミュレーション
-            </p>
-            <Link href="/">
-              <Button size="lg" className="w-full md:w-auto">
-                無料でシミュレーションする
-              </Button>
+    <>
+      <ArticleStructuredData
+        title="130万円を超えるとどうなるか。被扶養者認定と勤務先加入を分けて確認"
+        description="130万円を超えたときに何が起きるかを、被扶養者認定と勤務先での社会保険加入に分けて整理します。106万円だけでは判定できない点、学生や19歳以上23歳未満の扱いも現行ルールで説明します。"
+        datePublished="2026-04-02T00:00:00Z"
+        dateModified="2026-04-02T00:00:00Z"
+        url={url}
+      />
+      <BreadcrumbStructuredData
+        items={[
+          { name: "ホーム", url: "https://nenshuu-kabe.com" },
+          { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+          { name: "130万円を超えるとどうなるか", url },
+        ]}
+      />
+      <SiteHeader />
+      <main className="min-h-screen bg-background px-4 py-12">
+        <article className="mx-auto max-w-3xl space-y-8">
+          <div className="space-y-4">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              <ArrowLeft className="h-4 w-4" />
+              ブログ一覧に戻る
             </Link>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
+              130万円を超えるとどうなるか
+              <br />
+              被扶養者認定と勤務先加入を分けて確認
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              2026年4月2日時点の公的資料に合わせて、年収だけでは断定できない点を明示して説明しています。
+            </p>
+          </div>
 
-        <div className="text-center pt-6 space-y-4">
-          <Link href="/blog" className="text-primary hover:underline text-sm block">
-            ← ブログ一覧に戻る
-          </Link>
-        </div>
-      </article>
-    </main>
+          <Card className="border-amber-200 bg-amber-50">
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="text-lg font-bold text-amber-950">結論</h2>
+              <ul className="space-y-2 text-sm text-amber-900">
+                <li>130万円を超えると、家族の社会保険の被扶養者認定から外れる可能性があります。</li>
+                <li>ただし、その後に自分で社会保険へ加入するかどうかは、勤務条件や勤務先規模など別の判定が必要です。</li>
+                <li>19歳以上23歳未満は、被扶養者認定の年収要件が150万円未満です。</li>
+                <li>学生は短時間労働者の加入判定で例外になることがあり、年収だけでは結論を出せません。</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="space-y-8 pt-6">
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">まず分けるべき2つの論点</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  130万円を超えたときは、次の2つを分けて考えます。ひとつは家族の健康保険などで被扶養者のままでいられるかどうか。
+                  もうひとつは、自分の勤務先で社会保険に加入する条件を満たすかどうかです。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  この2つは似ているようで、根拠条文も実務判断も同じではありません。ここを混同すると、誤った説明になりやすいです。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">被扶養者認定では130万円未満が基本</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  一般的な説明では、被扶養者認定の年間収入要件は130万円未満です。したがって、通常は130万円を超えると、
+                  扶養認定の見直し対象になります。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  ただし、19歳以上23歳未満は2025年10月1日以後、年間収入要件が150万円未満へ見直されています。
+                  この年齢帯では、130万円を超えたから直ちに扶養から外れると決めつけるのは正確ではありません。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">勤務先で自分が加入するかは別判定</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  被扶養者から外れる可能性があるとしても、そのまま自動で勤務先の社会保険に加入するとは限りません。
+                  短時間労働者の加入は、週20時間以上、月額賃金8.8万円以上、学生でないこと、勤務先規模などを確認します。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  ここでよく使われる106万円という数字は、月額賃金8.8万円を年額換算した通称にすぎません。
+                  日本年金機構も、106万円そのものではなく月額賃金などの条件で見ていると案内しています。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">学生は特に年収だけで断定しない</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  学生アルバイトは、短時間労働者の加入要件で「学生でないこと」が置かれているため、一般の短時間労働者と同じ扱いではありません。
+                  ただし、夜間学生や休学中など個別条件があり、学生であれば常に例外と決めつけるのも危険です。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  そのため、学生のケースでは、年収だけで判断せず、日本年金機構の学生区分の案内を先に確認する方が安全です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
+                <div className="space-y-3">
+                  <a
+                    href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/shutokuyouken.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 短時間労働者の取得要件</p>
+                        <p className="text-xs text-muted-foreground">勤務先で加入対象になる条件を確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/gakusei02.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 学生の扱い</p>
+                        <p className="text-xs text-muted-foreground">昼間学生、夜間学生、休学中などの扱いを確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">日本年金機構 19歳以上23歳未満の被扶養者認定</p>
+                        <p className="text-xs text-muted-foreground">2025年10月1日以後の150万円未満要件が確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary bg-primary/5">
+            <CardContent className="space-y-4 pt-6 text-center">
+              <Calculator className="mx-auto h-12 w-12 text-primary" />
+              <h3 className="text-xl font-bold text-foreground">年収だけで断定しない前提で確認する</h3>
+              <p className="text-sm text-muted-foreground">
+                シミュレーターでは、追加条件が必要な箇所は断定せず、公的情報を確認する導線にしています。
+              </p>
+              <Link href="/">
+                <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </article>
+      </main>
+      <SiteFooter />
+    </>
   )
 }
-
-

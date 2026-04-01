@@ -1,217 +1,168 @@
 import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Calculator, Star } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export const metadata = {
-  title: "特定扶養親族とは？19〜22歳の昼間学生が知るべき優遇措置",
-  description: "19〜22歳の大学生・専門学生は「特定扶養親族」として、150万円まで親の控除が維持される可能性があります。",
+  title: "特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理",
+  description:
+    "特定親族特別控除は、19歳以上23歳未満の子の給与収入が123万円を超えても188万円までなら、親が段階的に控除を受けられる制度です。扶養控除との違いと見方を現行法で整理します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/tokutei-fuyo",
-  },
-  openGraph: {
-    type: "article",
-    publishedTime: "2026-01-18T00:00:00Z",
-    authors: ["年収の壁シミュレーター"],
-    tags: ["特定扶養親族", "扶養控除", "大学生", "学生"],
   },
 }
 
 export default function TokuteiFuyoPage() {
-  const breadcrumbItems = [
-    { name: "ホーム", url: "https://nenshuu-kabe.com" },
-    { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
-    { name: "特定扶養親族とは？", url: "https://nenshuu-kabe.com/blog/tokutei-fuyo" },
-  ]
+  const url = "https://nenshuu-kabe.com/blog/tokutei-fuyo"
 
   return (
     <>
       <ArticleStructuredData
-        title="特定扶養親族とは？19〜22歳の昼間学生が知るべき優遇措置"
-        description="19〜22歳の大学生・専門学生は「特定扶養親族」として、150万円まで親の控除が維持される可能性があります。"
-        datePublished="2026-01-18T00:00:00Z"
-        url="https://nenshuu-kabe.com/blog/tokutei-fuyo"
+        title="特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理"
+        description="特定親族特別控除は、19歳以上23歳未満の子の給与収入が123万円を超えても188万円までなら、親が段階的に控除を受けられる制度です。扶養控除との違いと見方を現行法で整理します。"
+        datePublished="2026-04-02T00:00:00Z"
+        dateModified="2026-04-02T00:00:00Z"
+        url={url}
       />
-      <BreadcrumbStructuredData items={breadcrumbItems} />
-      <main className="min-h-screen bg-background py-12 px-4">
-        <article className="max-w-3xl mx-auto space-y-8">
-        <div className="space-y-4">
-          <Link href="/blog" className="text-sm text-primary hover:underline flex items-center gap-1">
-            <ArrowLeft className="w-4 h-4" />
-            ブログ一覧に戻る
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            特定扶養親族とは？19〜22歳の昼間学生が知るべき優遇措置
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="bg-primary/10 text-primary px-2 py-1 rounded">学生向け</span>
-            <span>2026年1月18日</span>
-          </div>
-        </div>
-
-        <Card className="bg-emerald-50 border-emerald-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <Star className="w-6 h-6 text-emerald-600 mt-1 shrink-0" />
-              <div>
-                <h3 className="font-bold text-emerald-900 mb-2">19〜22歳の昼間学生は優遇されている！</h3>
-                <p className="text-sm text-emerald-800 leading-relaxed">
-                  特定扶養親族に該当すると、親の控除額が通常より大きく、150万円程度までは親の税負担への影響が軽微です。
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6 prose prose-sm max-w-none">
-            <h2 className="text-2xl font-bold text-foreground mt-0">特定扶養親族とは</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              特定扶養親族とは、<strong>その年の12月31日時点で19歳以上23歳未満</strong>の扶養親族のことです。大学生や専門学生が該当することが多く、通常の扶養親族よりも親の控除額が大きくなります。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">通常の扶養親族との違い</h2>
-            <div className="overflow-x-auto my-6">
-              <table className="min-w-full border border-border">
-                <thead className="bg-muted">
-                  <tr>
-                    <th className="border border-border px-4 py-2 text-left">区分</th>
-                    <th className="border border-border px-4 py-2 text-left">年齢</th>
-                    <th className="border border-border px-4 py-2 text-left">所得税の控除額</th>
-                    <th className="border border-border px-4 py-2 text-left">住民税の控除額</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-border px-4 py-2">一般の扶養親族</td>
-                    <td className="border border-border px-4 py-2">16〜18歳、23歳以上</td>
-                    <td className="border border-border px-4 py-2">38万円</td>
-                    <td className="border border-border px-4 py-2">33万円</td>
-                  </tr>
-                  <tr className="bg-emerald-50">
-                    <td className="border border-border px-4 py-2 font-bold">特定扶養親族</td>
-                    <td className="border border-border px-4 py-2 font-bold">19〜22歳</td>
-                    <td className="border border-border px-4 py-2 font-bold text-emerald-600">63万円</td>
-                    <td className="border border-border px-4 py-2 font-bold text-emerald-600">45万円</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p className="text-sm text-muted-foreground italic">
-              特定扶養親族は、通常より25万円（所得税）も控除額が大きい！
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">親の税負担への影響</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              特定扶養親族の控除を親が受けている場合、子の年収が多少増えても親の税負担への影響は軽微です。
-            </p>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">年収別の親への影響</h3>
-            <div className="bg-muted p-4 rounded-lg my-4 space-y-3">
-              <div>
-                <p className="text-sm font-semibold text-foreground">年収103万円以下</p>
-                <p className="text-sm text-muted-foreground">→ 親への影響なし ✅</p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">年収103万円超〜123万円</p>
-                <p className="text-sm text-muted-foreground">→ 親への影響なし ✅（扶養控除満額維持）</p>
-              </div>
-              <div className="bg-emerald-50 p-2 rounded">
-                <p className="text-sm font-semibold text-emerald-900">年収123万円超〜150万円</p>
-                <p className="text-sm text-emerald-800">→ <strong>特定扶養控除が維持される見込み</strong> ✅</p>
-                <p className="text-xs text-emerald-700 mt-1">※ 親の税負担への影響は軽微</p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">年収150万円超〜188万円</p>
-                <p className="text-sm text-muted-foreground">→ 親への影響あり ⚠️（段階的に控除が減額）</p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">年収188万円超</p>
-                <p className="text-sm text-muted-foreground">→ 完全に扶養外 ❌</p>
-              </div>
-            </div>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">適用条件</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              特定扶養親族として認定されるには、以下の条件を満たす必要があります：
-            </p>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li>その年の12月31日時点で<strong>19歳以上23歳未満</strong>であること</li>
-              <li>親と生計を一にしていること</li>
-              <li>年間の合計所得金額が48万円以下（給与収入なら103万円以下）</li>
-            </ul>
-
-            <h3 className="text-xl font-bold text-foreground mt-6">「昼間学生」である必要はない</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              重要なポイントとして、特定扶養親族の要件に<strong>「学生であること」は含まれていません</strong>。年齢が19〜22歳で、所得要件を満たせば、働いていても特定扶養親族になります。
-            </p>
-            <p className="text-sm text-muted-foreground italic mt-2">
-              ただし、実務上は大学生・専門学生が該当するケースがほとんどです。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">夜間学生・通信制学生は？</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              夜間学生や通信制の学生でも、19〜22歳であれば特定扶養親族に該当します。ただし、所得要件（年収103万円以下）を満たす必要があります。
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">親が受ける税軽減額</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              親が特定扶養控除を受けることで、親の税金がどれくらい安くなるかを見てみましょう。
-            </p>
-            <div className="bg-muted p-4 rounded-lg my-4">
-              <p className="text-sm font-semibold text-foreground mb-3">親の所得税率が20%の場合</p>
-              <p className="text-sm text-foreground">特定扶養控除：63万円</p>
-              <p className="text-sm text-foreground">所得税の軽減：63万円 × 20% = 約12.6万円</p>
-              <p className="text-sm text-foreground">住民税の軽減：45万円 × 10% = 約4.5万円</p>
-              <p className="text-sm font-bold text-foreground mt-2">合計：年間約17万円の税軽減 ✨</p>
-            </div>
-            <p className="text-sm text-muted-foreground italic">
-              親の所得税率によって実際の軽減額は異なります
-            </p>
-
-            <h2 className="text-2xl font-bold text-foreground mt-8">まとめ</h2>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2 my-4">
-              <li>19〜22歳は特定扶養親族として優遇される</li>
-              <li>親の控除額が通常より25万円大きい（所得税）</li>
-              <li>123万円までは親の控除が満額維持される</li>
-              <li>150万円程度までは親への影響が軽微</li>
-              <li>学生でなくても年齢要件を満たせば該当</li>
-            </ul>
-
-            <div className="bg-primary/5 border-l-4 border-primary p-4 my-6">
-              <p className="text-sm text-foreground font-semibold mb-2">💡 重要</p>
-              <p className="text-sm text-muted-foreground">
-                本記事は2025年度の税制に基づいた情報です。最終的な判断は税務署でご確認ください。
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-primary/5 border-primary">
-          <CardContent className="pt-6 text-center space-y-4">
-            <Calculator className="w-12 h-12 text-primary mx-auto" />
-            <h3 className="text-xl font-bold text-foreground">特定扶養親族の恩恵を受けられる？</h3>
-            <p className="text-sm text-muted-foreground">
-              あなたの年収で親への影響をシミュレーション
-            </p>
-            <Link href="/">
-              <Button size="lg" className="w-full md:w-auto">
-                無料でシミュレーションする
-              </Button>
+      <BreadcrumbStructuredData
+        items={[
+          { name: "ホーム", url: "https://nenshuu-kabe.com" },
+          { name: "ブログ", url: "https://nenshuu-kabe.com/blog" },
+          { name: "特定親族特別控除とは何か", url },
+        ]}
+      />
+      <SiteHeader />
+      <main className="min-h-screen bg-background px-4 py-12">
+        <article className="mx-auto max-w-3xl space-y-8">
+          <div className="space-y-4">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              <ArrowLeft className="h-4 w-4" />
+              ブログ一覧に戻る
             </Link>
-          </CardContent>
-        </Card>
+            <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
+              特定親族特別控除とは何か
+              <br />
+              19歳以上23歳未満の新ルールを整理
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              2026年4月2日時点の国税庁資料に基づき、特定親族特別控除の見方を整理しています。
+            </p>
+          </div>
 
-        <div className="text-center pt-6 space-y-4">
-          <Link href="/blog" className="text-primary hover:underline text-sm block">
-            ← ブログ一覧に戻る
-          </Link>
-        </div>
+          <Card className="border-violet-200 bg-violet-50">
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="text-lg font-bold text-violet-950">先に要点</h2>
+              <ul className="space-y-2 text-sm text-violet-900">
+                <li>対象は主に19歳以上23歳未満の親族です。</li>
+                <li>給与収入123万円までは通常の扶養控除の判定帯です。</li>
+                <li>123万円を超えても188万円までなら、親が段階的に控除を受けられる可能性があります。</li>
+                <li>控除額は一律ではなく、収入帯ごとに変わります。</li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="space-y-8 pt-6">
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">通常の扶養控除と何が違うか</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  通常の扶養控除では、扶養される子の合計所得金額が58万円以下かどうかを見ます。給与収入だけなら、給与所得控除65万円を差し引くため、
+                  給与収入123万円がひとつの目安になります。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  特定親族特別控除は、その123万円を少し超えたからといって直ちに親の控除がゼロになるのを避けるための制度です。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は188万円まで対象になり得る</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  国税庁の案内では、19歳以上23歳未満の親族について、給与収入123万円超188万円以下の範囲で、
+                  親が特定親族特別控除の対象になる可能性があります。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  ここで大事なのは、188万円までなら常に同じ控除額ではないことです。収入帯に応じて控除額が段階的に減るため、
+                  単純化しすぎた説明や固定額の損得表示は避けるべきです。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">本人の税金や社会保険とは別に見る</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  特定親族特別控除は、親の所得税や住民税の控除の話です。本人の所得税がいつ発生するか、社会保険に入るかどうかとは別の論点です。
+                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  実務では、本人の所得税は160万円、親の通常の扶養控除は123万円、19歳以上23歳未満の特定親族特別控除は188万円、
+                  社会保険は別条件、と切り分けて見る方が誤解が少なくなります。
+                </p>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">確認の順番</h2>
+                <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+                  <ol className="space-y-2">
+                    <li>1. 親の通常の扶養控除を見たいなら、まず123万円を確認する。</li>
+                    <li>2. 対象者が19歳以上23歳未満かどうかを確認する。</li>
+                    <li>3. 123万円を超えているなら、188万円までの特定親族特別控除を確認する。</li>
+                    <li>4. 本人の税金や社会保険は別の基準で見る。</li>
+                  </ol>
+                </div>
+              </section>
+
+              <section className="space-y-3">
+                <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
+                <div className="space-y-3">
+                  <a
+                    href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1180.htm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">国税庁 扶養控除</p>
+                        <p className="text-xs text-muted-foreground">通常の扶養控除の要件と基礎を確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1177.htm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border p-4 hover:border-primary"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">国税庁 特定親族特別控除</p>
+                        <p className="text-xs text-muted-foreground">対象年齢、188万円までの範囲、段階的な控除額を確認できます。</p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </div>
+                  </a>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary bg-primary/5">
+            <CardContent className="space-y-4 pt-6 text-center">
+              <Calculator className="mx-auto h-12 w-12 text-primary" />
+              <h3 className="text-xl font-bold text-foreground">19歳以上23歳未満の判定を安全側で確認する</h3>
+              <p className="text-sm text-muted-foreground">
+                シミュレーターでは、123万円と188万円の関係を、年収だけで確認できる範囲で表示しています。
+              </p>
+              <Link href="/">
+                <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </article>
       </main>
+      <SiteFooter />
     </>
   )
 }
-
-
