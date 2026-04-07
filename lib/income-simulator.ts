@@ -50,6 +50,10 @@ export interface DetailedSimulationResult {
   parentResidentTaxDeduction: number
   parentIncomeTaxDeltaEstimate: number
   parentResidentTaxDeltaEstimate: number
+  parentTaxDeltaEstimate: number
+  selfTaxBurdenEstimate: number
+  selfTakeHomeBeforeSocialInsuranceEstimate: number
+  selfTakeHomeAfterKnownBurdenEstimate: number
   socialInsuranceDependentLimit: number
   canRemainSocialInsuranceDependent: boolean
   shortHoursSocialInsuranceApplies: boolean
@@ -283,6 +287,8 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   const parentResidentTaxDeduction = getParentResidentTaxDeduction(params.age, salaryIncome)
   const parentIncomeTaxDeltaEstimate = Math.max(0, Math.floor((getFullParentIncomeTaxDeduction(params.age) - parentIncomeTaxDeduction) * params.parentTaxRate))
   const parentResidentTaxDeltaEstimate = Math.max(0, Math.floor((getFullParentResidentTaxDeduction(params.age) - parentResidentTaxDeduction) * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE))
+  const parentTaxDeltaEstimate = parentIncomeTaxDeltaEstimate + parentResidentTaxDeltaEstimate
+  const selfTaxBurdenEstimate = incomeTaxEstimate + residentTaxIncomeLevyEstimate
 
   const socialInsuranceDependentLimit = getSocialInsuranceDependentLimit(params.age)
   const canRemainSocialInsuranceDependent = params.annualIncome < socialInsuranceDependentLimit
@@ -339,6 +345,10 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     assumptions.push("Insurance route is undecided, so no concrete premium total is added.")
   }
 
+  const selfTakeHomeBeforeSocialInsuranceEstimate = params.annualIncome - selfTaxBurdenEstimate
+  const selfTakeHomeAfterKnownBurdenEstimate =
+    selfTakeHomeBeforeSocialInsuranceEstimate - (socialInsuranceBurdenEstimate ?? 0)
+
   return {
     salaryIncome,
     taxableIncomeForIncomeTax,
@@ -349,6 +359,10 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     parentResidentTaxDeduction,
     parentIncomeTaxDeltaEstimate,
     parentResidentTaxDeltaEstimate,
+    parentTaxDeltaEstimate,
+    selfTaxBurdenEstimate,
+    selfTakeHomeBeforeSocialInsuranceEstimate,
+    selfTakeHomeAfterKnownBurdenEstimate,
     socialInsuranceDependentLimit,
     canRemainSocialInsuranceDependent,
     shortHoursSocialInsuranceApplies,

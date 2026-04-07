@@ -371,6 +371,24 @@ export function IncomeSimulator() {
                       <p className="text-xs text-muted-foreground">本人の住民税所得割</p>
                       <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.residentTaxIncomeLevyEstimate)}</p>
                     </div>
+                    <div className="rounded-lg border border-blue-200 bg-white/80 p-3 sm:col-span-2">
+                      <p className="text-xs text-muted-foreground">あなたの手元に残るお金</p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {formatCurrency(detailedResult.selfTakeHomeAfterKnownBurdenEstimate)}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        年収から本人の税金と、入力済みの社会保険負担だけを引いた見込みです。
+                      </p>
+                    </div>
+                    <div className="rounded-lg border border-blue-200 bg-white/80 p-3 sm:col-span-2">
+                      <p className="text-xs text-muted-foreground">親の税負担増の目安</p>
+                      <p className="text-2xl font-bold text-foreground">
+                        {formatCurrency(detailedResult.parentTaxDeltaEstimate)}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        あなたの手取りから自動で引かれるものではありません。親に返すかは家族で相談してください。
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -380,6 +398,8 @@ export function IncomeSimulator() {
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">給与所得</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.salaryIncome)}</p></div>
                   <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">課税所得</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.taxableIncomeForIncomeTax)}</p></div>
+                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">本人の税金合計</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.selfTaxBurdenEstimate)}</p></div>
+                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">社会保険料を除く手取り</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.selfTakeHomeBeforeSocialInsuranceEstimate)}</p></div>
                 </div>
               </CardContent></Card>
 
@@ -390,6 +410,13 @@ export function IncomeSimulator() {
                   <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の住民税控除額</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentResidentTaxDeduction)}</p></div>
                   <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の所得税増加見込み</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentIncomeTaxDeltaEstimate)}</p></div>
                   <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の住民税増加見込み</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentResidentTaxDeltaEstimate)}</p></div>
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 sm:col-span-2">
+                    <p className="text-xs text-amber-800">親に返すか相談する目安</p>
+                    <p className="text-xl font-bold text-amber-950">{formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
+                    <p className="mt-1 text-xs text-amber-900">
+                      親の税負担増は本人の給与から天引きされません。この金額を返すか、返さないか、家族で話すための目安として見てください。
+                    </p>
+                  </div>
                 </div>
               </CardContent></Card>
 
