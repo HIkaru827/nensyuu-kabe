@@ -130,17 +130,17 @@ function determineZone(annualIncome: number, age: number): IncomeZone {
 function getZoneInfo(zone: IncomeZone): { label: string; color: "green" | "yellow" | "red" } {
   switch (zone) {
     case IncomeZone.SAFE_LOW:
-      return { label: "Low impact", color: "green" }
+      return { label: "影響は小さめ", color: "green" }
     case IncomeZone.SAFE_RESIDENT:
-      return { label: "Check resident tax", color: "yellow" }
+      return { label: "住民税を確認", color: "yellow" }
     case IncomeZone.DEPENDENT_FULL:
-      return { label: "Within dependent range", color: "green" }
+      return { label: "扶養の範囲内", color: "green" }
     case IncomeZone.SPECIAL_DEPENDENT:
-      return { label: "Check special dependent credit", color: "yellow" }
+      return { label: "特定親族特別控除を確認", color: "yellow" }
     case IncomeZone.TAX_FREE_REVIEW:
-      return { label: "Check tax and insurance", color: "yellow" }
+      return { label: "税金と保険を確認", color: "yellow" }
     case IncomeZone.TAXABLE:
-      return { label: "Taxable and dependent impact", color: "red" }
+      return { label: "税金と扶養に影響あり", color: "red" }
   }
 }
 
@@ -153,39 +153,39 @@ function generateHeadline(annualIncome: number, age: number): string {
   const socialLimitManEn = annualIncomeToManEnLabel(getSocialInsuranceDependentLimit(age))
 
   if (annualIncome <= INCOME_THRESHOLDS.DEPENDENT_FULL) {
-    return `Income ${incomeManEn} man yen. Income tax stays zero and tax dependent range stays in scope.`
+    return `年収${incomeManEn}万円。所得税は0円の見込みで、税法上の扶養の範囲内です。`
   }
 
   if (annualIncome < getSocialInsuranceDependentLimit(age)) {
-    return `Income ${incomeManEn} man yen. Tax dependent range is exceeded, but social dependent limit stays under ${socialLimitManEn} man yen.`
+    return `年収${incomeManEn}万円。税法上の扶養は外れる可能性がありますが、社会保険の扶養目安${socialLimitManEn}万円は下回っています。`
   }
 
   if (annualIncome <= INCOME_THRESHOLDS.INCOME_TAX_START) {
-    return `Income ${incomeManEn} man yen. Income tax stays zero, but dependent and social insurance need review.`
+    return `年収${incomeManEn}万円。所得税は0円の見込みですが、扶養と社会保険は確認が必要です。`
   }
 
-  return `Income ${incomeManEn} man yen. Income tax applies and dependent treatment needs review.`
+  return `年収${incomeManEn}万円。所得税がかかる見込みで、扶養の扱いも確認が必要です。`
 }
 
 function generateDescription(zone: IncomeZone, age: number, studentType: StudentType): string {
   const socialLimitManEn = annualIncomeToManEnLabel(getSocialInsuranceDependentLimit(age))
   const socialInsuranceText = isDayStudentExcludedFromShortHoursRule(studentType)
-    ? `Daytime students may be excluded from the short-hours employee rule. Social dependent limit is ${socialLimitManEn} man yen.`
-    : "Social insurance cannot be decided by annual income alone. Check weekly hours, monthly wage, student status, and employer size."
+    ? `昼間学生は短時間労働者の勤務先加入ルールから外れる場合があります。社会保険の扶養目安は${socialLimitManEn}万円です。`
+    : "社会保険は年収だけでは判定できません。週の労働時間、月額賃金、学生区分、勤務先規模を確認してください。"
 
   switch (zone) {
     case IncomeZone.SAFE_LOW:
-      return `This range is usually low risk for tax and tax-dependent treatment. ${socialInsuranceText}`
+      return `税金や税法上の扶養への影響は比較的小さい範囲です。${socialInsuranceText}`
     case IncomeZone.SAFE_RESIDENT:
-      return `Income tax stays zero, but resident tax can depend on local rules. ${socialInsuranceText}`
+      return `所得税は0円の見込みですが、住民税は自治体の扱いで変わることがあります。${socialInsuranceText}`
     case IncomeZone.DEPENDENT_FULL:
-      return `Income tax stays zero up to 1.6M yen, and the tax-dependent line stays within 1.23M yen. ${socialInsuranceText}`
+      return `所得税は160万円まで0円の見込みで、税法上の扶養も123万円以下の範囲内です。${socialInsuranceText}`
     case IncomeZone.SPECIAL_DEPENDENT:
-      return `If age is 19 to 22, the special dependent credit can still apply up to 1.88M yen. ${socialInsuranceText}`
+      return `19歳以上23歳未満なら、188万円まで特定親族特別控除の対象になり得ます。${socialInsuranceText}`
     case IncomeZone.TAX_FREE_REVIEW:
-      return `Income tax still stays zero, but tax-dependent treatment may already be affected. ${socialInsuranceText}`
+      return `所得税はまだ0円の見込みですが、税法上の扶養には影響している可能性があります。${socialInsuranceText}`
     case IncomeZone.TAXABLE:
-      return `Income tax applies above 1.6M yen, and dependent treatment also needs review. ${socialInsuranceText}`
+      return `160万円を超えると所得税がかかる見込みで、扶養の扱いも確認が必要です。${socialInsuranceText}`
   }
 }
 
@@ -193,17 +193,17 @@ function generateAdvice(annualIncome: number, age: number, studentType: StudentT
   const advice: string[] = []
 
   if (annualIncome <= INCOME_THRESHOLDS.DEPENDENT_FULL) {
-    advice.push("Tax dependent range is still within 1.23M yen.")
+    advice.push("税法上の扶養は123万円以下の範囲内です。")
   } else if (isSpecialTaxDependent(age) && annualIncome <= INCOME_THRESHOLDS.SPECIAL_DEPENDENT_MAX) {
-    advice.push("Special dependent credit can still apply because age is 19 to 22.")
+    advice.push("19歳以上23歳未満のため、特定親族特別控除の対象になり得ます。")
   } else {
-    advice.push("Check year-end adjustment or tax filing for dependent impact.")
+    advice.push("扶養への影響は、年末調整や確定申告の前に確認してください。")
   }
 
   if (isDayStudentExcludedFromShortHoursRule(studentType)) {
-    advice.push(`For social dependent status, check the annual income limit of ${annualIncomeToManEnLabel(getSocialInsuranceDependentLimit(age))} man yen.`)
+    advice.push(`社会保険の扶養は、年収${annualIncomeToManEnLabel(getSocialInsuranceDependentLimit(age))}万円の目安を確認してください。`)
   } else {
-    advice.push("For social insurance, also check weekly hours, monthly wage, student status, and employer size.")
+    advice.push("社会保険は、週の労働時間、月額賃金、学生区分、勤務先規模も確認してください。")
   }
 
   return advice
@@ -298,28 +298,28 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     params.monthlySalary >= 88_000 &&
     params.companySize === "over_50"
 
-  let socialInsuranceStatusLabel = "More checks needed"
-  let socialInsuranceStatusDescription = "Social insurance depends on work conditions and route after leaving dependent status."
+  let socialInsuranceStatusLabel = "追加確認が必要"
+  let socialInsuranceStatusDescription = "社会保険は勤務条件と、扶養を外れた後の加入先によって変わります。"
 
   if (!canRemainSocialInsuranceDependent && shortHoursSocialInsuranceApplies) {
-    socialInsuranceStatusLabel = "Likely employee social insurance"
-    socialInsuranceStatusDescription = "Dependent income limit is exceeded and the main short-hours conditions are met."
+    socialInsuranceStatusLabel = "勤務先の社会保険に加入する可能性が高め"
+    socialInsuranceStatusDescription = "扶養の年収目安を超えていて、短時間労働者の主な条件も満たしています。"
   } else if (!canRemainSocialInsuranceDependent) {
-    socialInsuranceStatusLabel = "Likely outside dependent status"
-    socialInsuranceStatusDescription = "Dependent income limit is exceeded. Check whether the next route is employee insurance or national insurance."
+    socialInsuranceStatusLabel = "扶養を外れる可能性が高め"
+    socialInsuranceStatusDescription = "扶養の年収目安を超えています。勤務先の社会保険か、国民健康保険・国民年金かを確認してください。"
   } else if (shortHoursSocialInsuranceApplies) {
-    socialInsuranceStatusLabel = "Employee coverage may still apply"
-    socialInsuranceStatusDescription = "Even inside the annual dependent limit, the short-hours employee rule can still apply."
+    socialInsuranceStatusLabel = "勤務先加入の可能性があります"
+    socialInsuranceStatusDescription = "年収が扶養目安の範囲内でも、短時間労働者の勤務先加入ルールに該当する場合があります。"
   } else {
-    socialInsuranceStatusLabel = "Dependent status may remain"
-    socialInsuranceStatusDescription = "By annual income alone, dependent status may remain. Final confirmation still needs work-condition checks."
+    socialInsuranceStatusLabel = "扶養に残れる可能性があります"
+    socialInsuranceStatusDescription = "年収だけで見ると扶養に残れる可能性があります。最終確認には勤務条件の確認も必要です。"
   }
 
   const assumptions = [
-    "Salary income only.",
-    "Resident tax estimate is income levy only at a standard 10% rate.",
-    "Parent resident tax impact is estimated at a standard 10% rate.",
-    "Parent income tax impact is estimated with the selected marginal rate.",
+    "給与収入のみとして計算しています。",
+    "住民税の試算は、所得割のみを標準的な10%で計算しています。",
+    "親の住民税への影響は、標準的な10%で概算しています。",
+    "親の所得税への影響は、選択した限界税率で概算しています。",
   ]
 
   let nationalPensionAnnualEstimate: number | undefined
@@ -335,14 +335,14 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
 
     if (typeof params.nationalHealthInsuranceAnnual === "number" && params.nationalHealthInsuranceAnnual > 0) {
       socialInsuranceBurdenEstimate = (socialInsuranceBurdenEstimate ?? 0) + params.nationalHealthInsuranceAnnual
-      assumptions.push("National health insurance uses the entered amount.")
+      assumptions.push("国民健康保険料は入力した金額を使用しています。")
     } else {
-      assumptions.push("National health insurance is not included unless entered.")
+      assumptions.push("国民健康保険料は、金額を入力した場合のみ含めています。")
     }
   } else if (params.socialInsuranceRoute === "employee") {
-    assumptions.push("Employee health and pension premiums are not included because insurer-specific rates vary.")
+    assumptions.push("勤務先の健康保険・厚生年金保険料は、保険者ごとに料率が異なるため含めていません。")
   } else {
-    assumptions.push("Insurance route is undecided, so no concrete premium total is added.")
+    assumptions.push("加入先が未定のため、具体的な社会保険料は加算していません。")
   }
 
   const selfTakeHomeBeforeSocialInsuranceEstimate = params.annualIncome - selfTaxBurdenEstimate

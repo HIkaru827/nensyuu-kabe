@@ -56,7 +56,7 @@ export function SiteFooter() {
 
         <div className="mt-8 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
-            © 2026 年収の壁シミュレーター (nenshuu-kabe.com). All rights reserved.
+            © 2026 年収の壁シミュレーター (nenshuu-kabe.com). 無断転載を禁じます。
           </p>
         </div>
       </div>
