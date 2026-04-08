@@ -12,8 +12,27 @@ export const DEFAULT_KEYWORDS = [
   "特定親族特別控除",
   "社会保険",
   "学生バイト",
+  "大学生 バイト 扶養",
+  "高校生 バイト 扶養",
+  "親の扶養 学生",
   "年収シミュレーター",
 ]
+
+export const STUDENT_BAITO_PAGE = {
+  path: "/student-baito",
+  title: "学生バイトはいくらまで稼げる？扶養・税金・社会保険の年収ガイド",
+  description:
+    "学生アルバイト向けに、103万円・130万円・160万円・188万円の年収の壁と、親の扶養・税金・社会保険への影響を整理。",
+  keywords: [
+    "学生バイト いくらまで",
+    "学生バイト 扶養",
+    "大学生 バイト 扶養 いくらまで",
+    "高校生 バイト 扶養",
+    "学生 130万円の壁",
+    "学生 160万円の壁",
+    "学生 特定親族特別控除",
+  ],
+} as const
 
 export const BLOG_POSTS = [
   {
@@ -65,6 +84,7 @@ export const BLOG_POSTS = [
 
 export const STATIC_PAGES = [
   { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-04-02T00:00:00Z" },
+  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-04-09T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-04-02T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },

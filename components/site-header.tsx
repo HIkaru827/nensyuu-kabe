@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { BookOpen, Home } from "lucide-react"
+import { BookOpen, GraduationCap, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function SiteHeader() {
@@ -12,6 +12,12 @@ export function SiteHeader() {
         </Link>
         
         <nav className="flex items-center gap-2">
+          <Link href="/student-baito">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <GraduationCap className="w-4 h-4" />
+              <span className="hidden sm:inline">学生バイト</span>
+            </Button>
+          </Link>
           <Link href="/blog">
             <Button variant="ghost" size="sm" className="gap-2">
               <BookOpen className="w-4 h-4" />
