@@ -1,6 +1,6 @@
 export const SITE_URL = "https://nenshuu-kabe.com"
 export const SITE_NAME = "年収の壁シミュレーター"
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/site-share-card.svg`
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/site-share-card.png`
 
 export const DEFAULT_KEYWORDS = [
   "年収の壁",
