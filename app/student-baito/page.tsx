@@ -89,6 +89,11 @@ export default function StudentBaitoPage() {
                 <Link href="/blog/gakusei-baito-zeikin">詳しい税金記事へ</Link>
               </Button>
             </div>
+            <div className="mx-auto max-w-2xl rounded-lg border border-border bg-muted/40 px-4 py-3 text-left text-xs leading-relaxed text-muted-foreground">
+              <p>確認日: 2026年4月15日</p>
+              <p>主な参照先: 国税庁、日本年金機構、公的案内</p>
+              <p>年収だけで断定しにくい論点は、本文中で追加条件を明記しています。</p>
+            </div>
           </section>
 
           <section className="grid gap-4 md:grid-cols-4">
@@ -201,6 +206,15 @@ export default function StudentBaitoPage() {
                   className="flex items-center gap-2 text-primary hover:underline"
                 >
                   国税庁: 扶養控除
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+                <a
+                  href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-primary hover:underline"
+                >
+                  日本年金機構: 19歳以上23歳未満の被扶養者認定
                   <ExternalLink className="h-3 w-3" />
                 </a>
               </div>

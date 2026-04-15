@@ -33,9 +33,12 @@ export default function AboutPage() {
 
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">運営者</h2>
-              <p className="text-sm text-muted-foreground">
-                年収の壁シミュレーター運営事務局
-              </p>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>年収の壁シミュレーター運営事務局</p>
+                <p>
+                  学生アルバイトや扶養内就業の情報を調べるときに、税金と社会保険の基準が混ざって分かりにくいという課題を解消するために運営しています。
+                </p>
+              </div>
             </section>
 
             <section className="space-y-3">
@@ -91,6 +94,30 @@ export default function AboutPage() {
               <div className="flex items-start gap-3">
                 <Shield className="w-6 h-6 text-primary mt-1 shrink-0" />
                 <div className="space-y-2">
+                  <h2 className="text-lg font-bold text-foreground">編集方針と確認方法</h2>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+                    <li>国税庁、日本年金機構、自治体などの公的資料を優先して確認します。</li>
+                    <li>制度改正のあったテーマは、該当ページの更新日と参照先を見直します。</li>
+                    <li>年収だけで断定できない論点は、断定表現を避けて追加確認の条件を明記します。</li>
+                    <li>体験談や誤解しやすい論点は、ケース別の記事として分離して整理します。</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Shield className="w-6 h-6 text-primary mt-1 shrink-0" />
+                <div className="space-y-2">
+                  <h2 className="text-lg font-bold text-foreground">更新体制</h2>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    シミュレーターと記事は、制度改正や公的資料の更新が確認できたタイミングで見直しています。
+                    主要ページには確認日を明記し、読者が情報の鮮度を判断しやすいようにしています。
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Shield className="w-6 h-6 text-primary mt-1 shrink-0" />
+                <div className="space-y-2">
                   <h2 className="text-lg font-bold text-foreground">免責事項</h2>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     当サイトで提供する情報は、2025年度の税制に基づいた概算です。実際の税額・社会保険料は、個人の状況や自治体により異なります。最終的な判断は、税務署・自治体・社会保険事務所等の公的機関でご確認ください。
@@ -112,7 +139,17 @@ export default function AboutPage() {
             </p>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <h2 className="text-lg font-bold text-foreground">読者への約束</h2>
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
+              <li>煽り見出しより、基準の違いが分かる見出しを優先します。</li>
+              <li>広告の有無にかかわらず、一次情報への導線を残します。</li>
+              <li>不明確な点は問い合わせで受け付け、必要に応じて記事へ反映します。</li>
+            </ul>
+          </CardContent>
+        </Card>
     </ContentPageShell>
   )
 }
-

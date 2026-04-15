@@ -4,11 +4,14 @@ import { ContentPageShell } from "@/components/content-page-shell"
 export const metadata = {
   title: "プライバシーポリシー | 年収の壁シミュレーター",
   description: "年収の壁シミュレーターのプライバシーポリシーです。",
+  alternates: {
+    canonical: "https://nenshuu-kabe.com/privacy-policy",
+  },
 }
 
 export default function PrivacyPolicyPage() {
   return (
-    <ContentPageShell title="プライバシーポリシー" description="最終更新日：2026年1月18日">
+    <ContentPageShell title="プライバシーポリシー" description="最終更新日：2026年4月15日">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-3">
@@ -19,7 +22,7 @@ export default function PrivacyPolicyPage() {
               <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4">
                 <li>アクセス情報（IPアドレス、ブラウザ情報、デバイス情報）</li>
                 <li>Cookie及びこれに類する技術を用いて取得する情報</li>
-                <li>シミュレーション入力情報（年齢、年収等）※サーバーには保存されません</li>
+                <li>シミュレーション入力情報（年齢、年収等）※計算はブラウザ上で行い、サーバーには保存しません</li>
               </ul>
             </section>
 
@@ -48,6 +51,9 @@ export default function PrivacyPolicyPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 当サイトでは、Googleアナリティクス等のアクセス解析ツールを使用しています。これらのツールはCookieを使用してアクセス情報を収集しますが、個人を特定する情報は含まれません。
               </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                収集された情報は、ページの改善、利用状況の把握、人気コンテンツの分析などに利用します。
+              </p>
             </section>
 
             <section className="space-y-3">
@@ -57,6 +63,9 @@ export default function PrivacyPolicyPage() {
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 これらの広告配信事業者は、独自のプライバシーポリシーを有しています。詳細は各事業者のプライバシーポリシーをご確認ください。
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                パーソナライズ広告を望まない場合は、ブラウザ設定や各広告事業者の案内に従ってCookieを無効化してください。
               </p>
             </section>
 
@@ -78,14 +87,21 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section className="space-y-3">
-              <h2 className="text-xl font-bold text-foreground">8. プライバシーポリシーの変更</h2>
+              <h2 className="text-xl font-bold text-foreground">8. 保存しない情報について</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                シミュレーターに入力した年齢、年収、勤務条件などの値は、ページ内での計算処理にのみ使用し、当サイトのサーバーには送信・保存しません。
+              </p>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-xl font-bold text-foreground">9. プライバシーポリシーの変更</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 当サイトは、法令の変更や事業内容の変更に伴い、本プライバシーポリシーを予告なく変更することがあります。変更後のプライバシーポリシーは、当ページに掲載した時点で効力を生じるものとします。
               </p>
             </section>
 
             <section className="space-y-3">
-              <h2 className="text-xl font-bold text-foreground">9. お問い合わせ</h2>
+              <h2 className="text-xl font-bold text-foreground">10. お問い合わせ</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 プライバシーポリシーに関するお問い合わせは、<a href="/contact" className="text-primary hover:underline">お問い合わせページ</a>よりご連絡ください。
               </p>

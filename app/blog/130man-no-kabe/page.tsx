@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function Blog130ManPage() {
               2026年4月2日時点で確認した国税庁・日本年金機構の公的情報に基づいて整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="130万円の壁が税金か社会保険か混乱している人"
+            sources="国税庁、日本年金機構"
+            note="130万円は主に社会保険の話です。税金の123万円や160万円とは分けて読む前提で整理しています。"
+          />
 
           <Card className="border-blue-200 bg-blue-50">
             <CardContent className="space-y-3 pt-6">

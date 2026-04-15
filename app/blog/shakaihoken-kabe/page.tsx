@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -50,6 +51,13 @@ export default function ShakaiHokenPage() {
               2026年4月2日時点で確認した日本年金機構の公的情報に基づいて整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="106万円、130万円、150万円未満の違いを知りたい人"
+            sources="日本年金機構"
+            note="社会保険は被扶養者認定と勤務先加入の2つの論点が混ざりやすいため、この記事では順番に切り分けています。"
+          />
 
           <Card className="border-blue-200 bg-blue-50">
             <CardContent className="pt-6 space-y-3">

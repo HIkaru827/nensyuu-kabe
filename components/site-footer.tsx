@@ -33,6 +33,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/updates" className="text-muted-foreground hover:text-primary transition-colors">
+                  更新履歴
+                </Link>
+              </li>
+              <li>
                 <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">
                   プライバシーポリシー
                 </Link>

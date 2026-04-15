@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function DaigakuseiBaitoFuyoPage() {
               2026年4月9日時点の公的資料に基づき、大学生が確認すべき年収ラインを分けて整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="大学生バイトで親の扶養、本人の税金、社会保険をまとめて確認したい人"
+            sources="国税庁、日本年金機構"
+            note="大学生は19歳以上23歳未満の特例や学生区分が関わるため、年収だけで断定しない前提で整理しています。"
+          />
 
           <Card className="border-emerald-200 bg-emerald-50">
             <CardContent className="space-y-3 pt-6">

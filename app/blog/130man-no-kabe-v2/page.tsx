@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function Blog130ManV2Page() {
               2026年4月2日時点の公的資料に合わせて、年収だけでは断定できない点を明示して説明しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="130万円を超えるか迷っている学生・扶養内就業の人"
+            sources="日本年金機構"
+            note="130万円を超えた後の扱いは、被扶養者認定と勤務先加入で判断が分かれます。この記事ではそこを混同しないように整理しています。"
+          />
 
           <Card className="border-amber-200 bg-amber-50">
             <CardContent className="space-y-3 pt-6">

@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function KoukouseiBaitoFuyoPage() {
               2026年4月9日時点の公的資料に基づき、高校生バイトで誤解しやすい年収ラインを整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="高校生バイトの年収を家族で相談したい人"
+            sources="国税庁、日本年金機構"
+            note="103万円という古いイメージが残りやすいため、現行ルールで重要な123万円、130万円、160万円との違いを明示しています。"
+          />
 
           <Card className="border-blue-200 bg-blue-50">
             <CardContent className="space-y-3 pt-6">

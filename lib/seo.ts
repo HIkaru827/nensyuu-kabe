@@ -36,6 +36,33 @@ export const STUDENT_BAITO_PAGE = {
 
 export const BLOG_POSTS = [
   {
+    slug: "student-123man-parent-impact",
+    title: "学生が123万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
+    description:
+      "学生の給与収入が123万円を超えたときに、親の税金へどんな影響が出るかをケース別に整理。19〜22歳の特例も確認できます。",
+    publishedAt: "2026-04-15T00:00:00Z",
+    updatedAt: "2026-04-15T00:00:00Z",
+    priority: 0.9,
+  },
+  {
+    slug: "kake-mochi-baito-fuyo",
+    title: "掛け持ちバイトで扶養はどう判定する？収入の合算と見落としやすい点",
+    description:
+      "掛け持ちアルバイトで扶養判定を見るときの収入の合算方法、103万円・123万円・130万円の違い、親への影響を解説。",
+    publishedAt: "2026-04-15T00:00:00Z",
+    updatedAt: "2026-04-15T00:00:00Z",
+    priority: 0.88,
+  },
+  {
+    slug: "social-insurance-case-study",
+    title: "社会保険の壁をケース別に比較。学生・非学生・19歳以上23歳未満の違い",
+    description:
+      "106万円、130万円、150万円未満の基準がどう分かれるかを、学生、非学生、19歳以上23歳未満のケース別に整理。",
+    publishedAt: "2026-04-15T00:00:00Z",
+    updatedAt: "2026-04-15T00:00:00Z",
+    priority: 0.88,
+  },
+  {
     slug: "daigakusei-baito-fuyo",
     title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
     description:
@@ -114,6 +141,7 @@ export const STATIC_PAGES = [
   { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-04-09T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-04-09T00:00:00Z" },
+  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-04-15T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-03-08T00:00:00Z" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-03-08T00:00:00Z" },

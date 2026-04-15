@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function TokuteiFuyoPage() {
               2026年4月2日時点の国税庁資料に基づき、特定親族特別控除の見方を整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="19歳以上23歳未満の子どもがいる家庭"
+            sources="国税庁"
+            note="特定親族特別控除は親の控除の話です。本人の所得税や社会保険とは別論点であることを前提に書いています。"
+          />
 
           <Card className="border-violet-200 bg-violet-50">
             <CardContent className="space-y-3 pt-6">

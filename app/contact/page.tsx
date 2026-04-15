@@ -57,6 +57,30 @@ export default function ContactPage() {
             </section>
 
             <section className="pt-6 border-t border-border space-y-3">
+              <h2 className="text-lg font-bold text-foreground">回答できること・できないこと</h2>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-lg border border-border p-4">
+                  <h3 className="text-sm font-bold text-foreground">回答できること</h3>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 mt-2">
+                    <li>サイト上の説明の誤記やリンク切れ</li>
+                    <li>シミュレーターの不具合報告</li>
+                    <li>記事で扱ってほしい論点の要望</li>
+                    <li>公開情報に基づく記載内容の見直し依頼</li>
+                  </ul>
+                </div>
+                <div className="rounded-lg border border-border p-4">
+                  <h3 className="text-sm font-bold text-foreground">回答できないこと</h3>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-4 mt-2">
+                    <li>個別事情を踏まえた税務・社保の最終判断</li>
+                    <li>確定申告や各種届出の代行</li>
+                    <li>勤務先や保険者に代わる公式回答</li>
+                    <li>法的責任を伴う助言</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="pt-6 border-t border-border space-y-3">
               <h2 className="text-lg font-bold text-foreground">ご注意</h2>
               <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2 ml-4">
                 <li>
@@ -67,6 +91,9 @@ export default function ContactPage() {
                 </li>
                 <li>
                   内容によっては回答できない場合もございます。
+                </li>
+                <li>
+                  お問い合わせ内容は、個人が特定されない形でサイト改善や記事追記の参考にする場合があります。
                 </li>
               </ul>
             </section>

@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -50,6 +51,13 @@ export default function Blog103ManPage() {
               2026年4月2日時点で確認した国税庁・日本年金機構の公的情報に基づいて整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="160万円、123万円、188万円、社会保険の基準が混ざって分かりにくい人"
+            sources="国税庁、日本年金機構"
+            note="所得税、税法上の扶養、社会保険は基準が別です。この記事では数字ごとに論点を分けて説明しています。"
+          />
 
           <Card className="border-emerald-200 bg-emerald-50">
             <CardContent className="pt-6 space-y-3">

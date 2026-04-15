@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function GakuseiZeikinPage() {
               2026年4月2日時点の公的資料に基づき、学生アルバイトで確認すべき順番を整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="学生バイトの税金と扶養をざっくりではなく正確に見たい人"
+            sources="国税庁、日本年金機構"
+            note="本人の税金、親の扶養、社会保険はそれぞれ基準が違います。この記事では学生向けに確認順をそろえています。"
+          />
 
           <Card className="border-emerald-200 bg-emerald-50">
             <CardContent className="space-y-3 pt-6">

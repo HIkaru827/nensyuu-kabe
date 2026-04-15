@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -51,6 +52,13 @@ export default function Gakusei1922FuyoPage() {
               2026年4月9日時点の公的資料に基づき、19歳以上23歳未満の学生が確認すべき基準を整理しています。
             </p>
           </div>
+
+          <ArticleTrustSummary
+            checkedAt="2026年4月15日"
+            audience="19歳から22歳の学生本人と、その親"
+            sources="国税庁、日本年金機構"
+            note="123万円、150万円未満、160万円、188万円はそれぞれ意味が違います。この記事では年齢特例を前提に見分けています。"
+          />
 
           <Card className="border-violet-200 bg-violet-50">
             <CardContent className="space-y-3 pt-6">
