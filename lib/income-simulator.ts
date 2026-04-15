@@ -2,6 +2,7 @@ export type StudentType = "day" | "night" | "none"
 export type ParentTaxRate = 0.05 | 0.1 | 0.2 | 0.23 | 0.33 | 0.4 | 0.45
 export type CompanySize = "over_50" | "under_51"
 export type SocialInsuranceRoute = "undecided" | "employee" | "national"
+export type StudentPensionSpecialStatus = "eligible" | "not_eligible" | "unknown"
 
 export enum IncomeZone {
   SAFE_LOW = "SAFE_LOW",
@@ -35,7 +36,7 @@ export interface DetailedSimulationParams extends SimulationParams {
   monthlySalary: number
   companySize: CompanySize
   parentTaxRate: ParentTaxRate
-  useStudentPensionSpecial: boolean
+  studentPensionSpecialStatus: StudentPensionSpecialStatus
   socialInsuranceRoute: SocialInsuranceRoute
   nationalHealthInsuranceAnnual?: number
 }
@@ -74,6 +75,7 @@ export const INCOME_THRESHOLDS = {
   STANDARD_RESIDENT_TAX_RATE: 0.1,
   EMPLOYMENT_INCOME_DEDUCTION_MIN: 650_000,
   BASIC_DEDUCTION_INCOME_TAX_LOW: 950_000,
+  BASIC_DEDUCTION_INCOME_TAX_STANDARD: 580_000,
   BASIC_DEDUCTION_RESIDENT_TAX: 430_000,
   NATIONAL_PENSION_MONTHLY_2026: 17_920,
 } as const
@@ -210,7 +212,40 @@ function generateAdvice(annualIncome: number, age: number, studentType: StudentT
 }
 
 function getEmploymentIncome(annualIncome: number): number {
-  return Math.max(0, annualIncome - INCOME_THRESHOLDS.EMPLOYMENT_INCOME_DEDUCTION_MIN)
+  if (annualIncome <= 1_900_000) {
+    return Math.max(0, annualIncome - INCOME_THRESHOLDS.EMPLOYMENT_INCOME_DEDUCTION_MIN)
+  }
+  if (annualIncome <= 3_600_000) {
+    return Math.max(0, Math.floor(annualIncome - (annualIncome * 0.3 + 80_000)))
+  }
+  if (annualIncome <= 6_600_000) {
+    return Math.max(0, Math.floor(annualIncome - (annualIncome * 0.2 + 440_000)))
+  }
+  if (annualIncome <= 8_500_000) {
+    return Math.max(0, Math.floor(annualIncome - (annualIncome * 0.1 + 1_100_000)))
+  }
+
+  return Math.max(0, annualIncome - 1_950_000)
+}
+
+function getIncomeTaxBasicDeduction(totalIncome: number): number {
+  if (totalIncome <= 1_320_000) {
+    return INCOME_THRESHOLDS.BASIC_DEDUCTION_INCOME_TAX_LOW
+  }
+  if (totalIncome <= 23_500_000) {
+    return INCOME_THRESHOLDS.BASIC_DEDUCTION_INCOME_TAX_STANDARD
+  }
+  if (totalIncome <= 24_000_000) {
+    return 480_000
+  }
+  if (totalIncome <= 24_500_000) {
+    return 320_000
+  }
+  if (totalIncome <= 25_000_000) {
+    return 160_000
+  }
+
+  return 0
 }
 
 function computeIncomeTax(taxableIncome: number): number {
@@ -278,7 +313,8 @@ export function simulateIncome(params: SimulationParams): SimulationResult {
 
 export function simulateDetailedIncome(params: DetailedSimulationParams): DetailedSimulationResult {
   const salaryIncome = getEmploymentIncome(params.annualIncome)
-  const taxableIncomeForIncomeTax = Math.max(0, salaryIncome - INCOME_THRESHOLDS.BASIC_DEDUCTION_INCOME_TAX_LOW)
+  const incomeTaxBasicDeduction = getIncomeTaxBasicDeduction(salaryIncome)
+  const taxableIncomeForIncomeTax = Math.max(0, salaryIncome - incomeTaxBasicDeduction)
   const taxableIncomeForResidentTax = Math.max(0, salaryIncome - INCOME_THRESHOLDS.BASIC_DEDUCTION_RESIDENT_TAX)
   const incomeTaxEstimate = computeIncomeTax(taxableIncomeForIncomeTax)
   const residentTaxIncomeLevyEstimate = Math.floor(taxableIncomeForResidentTax * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE)
@@ -317,6 +353,7 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
 
   const assumptions = [
     "給与収入のみとして計算しています。",
+    "所得税の基礎控除は2026年分の現行ルールを前提にしています。",
     "住民税の試算は、所得割のみを標準的な10%で計算しています。",
     "親の住民税への影響は、標準的な10%で概算しています。",
     "親の所得税への影響は、選択した限界税率で概算しています。",
@@ -326,11 +363,14 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   let socialInsuranceBurdenEstimate: number | undefined
 
   if (params.socialInsuranceRoute === "national") {
-    if (params.age >= 20 && !params.useStudentPensionSpecial) {
+    if (params.age >= 20 && params.studentPensionSpecialStatus === "not_eligible") {
       nationalPensionAnnualEstimate = INCOME_THRESHOLDS.NATIONAL_PENSION_MONTHLY_2026 * 12
       socialInsuranceBurdenEstimate = nationalPensionAnnualEstimate
-    } else if (params.age >= 20 && params.useStudentPensionSpecial) {
+    } else if (params.age >= 20 && params.studentPensionSpecialStatus === "eligible") {
       nationalPensionAnnualEstimate = 0
+      assumptions.push("学生納付特例は、前年所得などの要件を満たしている前提で0円としています。")
+    } else if (params.age >= 20) {
+      assumptions.push("学生納付特例は前年所得などで判定されるため、対象未確認のときは国民年金を加算していません。")
     }
 
     if (typeof params.nationalHealthInsuranceAnnual === "number" && params.nationalHealthInsuranceAnnual > 0) {

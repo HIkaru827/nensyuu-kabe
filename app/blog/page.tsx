@@ -26,6 +26,33 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    slug: "daigakusei-baito-fuyo",
+    title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
+    description:
+      "大学生アルバイト向けに、所得税160万円、親の扶養123万円、特定親族特別控除188万円、社会保険の注意点を整理。",
+    date: "2026年4月9日",
+    category: "学生バイト",
+    badge: "新記事",
+  },
+  {
+    slug: "koukousei-baito-fuyo",
+    title: "高校生バイトはいくらまでなら扶養内？103万円・123万円・130万円の違い",
+    description:
+      "高校生アルバイト向けに、103万円、123万円、130万円、160万円の違いを税金・扶養・社会保険に分けて解説。",
+    date: "2026年4月9日",
+    category: "高校生バイト",
+    badge: "新記事",
+  },
+  {
+    slug: "gakusei-19-22-fuyo",
+    title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険の注意点",
+    description:
+      "19歳以上23歳未満の学生向けに、123万円、150万円未満、160万円、188万円の基準を分けて整理。",
+    date: "2026年4月9日",
+    category: "扶養控除",
+    badge: "新記事",
+  },
+  {
     slug: "103man-no-kabe",
     title: "160万円の壁とは？103万円からどう変わったかを解説",
     description:

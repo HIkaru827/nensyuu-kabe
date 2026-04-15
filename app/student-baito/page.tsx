@@ -34,7 +34,7 @@ const faqItems = [
 export const metadata: Metadata = {
   title: STUDENT_BAITO_PAGE.title,
   description: STUDENT_BAITO_PAGE.description,
-  keywords: STUDENT_BAITO_PAGE.keywords,
+  keywords: [...STUDENT_BAITO_PAGE.keywords],
   alternates: {
     canonical: `${SITE_URL}${STUDENT_BAITO_PAGE.path}`,
   },

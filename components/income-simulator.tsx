@@ -21,6 +21,7 @@ import {
   type CompanySize,
   type ParentTaxRate,
   type SocialInsuranceRoute,
+  type StudentPensionSpecialStatus,
   type StudentType,
 } from "@/lib/income-simulator"
 
@@ -31,7 +32,7 @@ interface ThresholdInfo {
 }
 
 const THRESHOLDS: ThresholdInfo[] = [
-  { amount: 110, label: "110万円", description: "住民税" },
+  { amount: 110, label: "110万円", description: "住民税所得割の目安" },
   { amount: 123, label: "123万円", description: "税法上の扶養" },
   { amount: 160, label: "160万円", description: "所得税" },
 ]
@@ -64,7 +65,7 @@ export function IncomeSimulator() {
   const [companySize, setCompanySize] = useState<CompanySize>("over_50")
   const [parentTaxRate, setParentTaxRate] = useState<ParentTaxRate>(0.1)
   const [socialInsuranceRoute, setSocialInsuranceRoute] = useState<SocialInsuranceRoute>("undecided")
-  const [useStudentPensionSpecial, setUseStudentPensionSpecial] = useState(true)
+  const [studentPensionSpecialStatus, setStudentPensionSpecialStatus] = useState<StudentPensionSpecialStatus>("unknown")
   const [nationalHealthInsuranceAnnual, setNationalHealthInsuranceAnnual] = useState<number | "">("")
 
   const studentType = getStudentType(attribute)
@@ -89,7 +90,7 @@ export function IncomeSimulator() {
         monthlySalary,
         companySize,
         parentTaxRate,
-        useStudentPensionSpecial,
+        studentPensionSpecialStatus,
         socialInsuranceRoute,
         nationalHealthInsuranceAnnual:
           typeof nationalHealthInsuranceAnnual === "number" ? nationalHealthInsuranceAnnual : undefined,
@@ -102,7 +103,7 @@ export function IncomeSimulator() {
       monthlySalary,
       companySize,
       parentTaxRate,
-      useStudentPensionSpecial,
+      studentPensionSpecialStatus,
       socialInsuranceRoute,
       nationalHealthInsuranceAnnual,
     ],
@@ -157,7 +158,7 @@ export function IncomeSimulator() {
         <p className="text-sm text-muted-foreground sm:text-base">
           まずは簡易判定で全体像をつかみ、必要なら詳細条件を追加してより具体的な試算まで進められます。
         </p>
-        <p className="text-xs font-semibold text-primary">2026年4月2日時点の公的情報を確認して更新</p>
+        <p className="text-xs font-semibold text-primary">2026年4月15日時点の公的情報を確認して更新</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-start">
@@ -183,7 +184,7 @@ export function IncomeSimulator() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="age">年齢</Label>
+                  <Label htmlFor="age">その年の12月31日時点の年齢</Label>
                   <div className="flex items-center gap-2">
                     <Input id="age" type="number" value={age} onChange={handleAgeChange} min={15} max={30} className="w-20 text-center" />
                     <span className="text-sm text-muted-foreground">歳</span>
@@ -215,7 +216,7 @@ export function IncomeSimulator() {
                 </div>
 
                 <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-                  簡易版は方向性をつかむための表示です。詳細版では勤務条件や親の税率を入れて、数字を出せる範囲まで試算します。
+                  税法上の年齢判定と、19歳以上23歳未満の社会保険判定は12月31日時点の年齢で見ています。詳細版では勤務条件や親の税率を入れて、数字を出せる範囲まで試算します。
                 </div>
 
                 <div className="pb-2">
@@ -297,14 +298,18 @@ export function IncomeSimulator() {
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label>学生納付特例</Label>
-                        <Select value={useStudentPensionSpecial ? "yes" : "no"} onValueChange={(value) => setUseStudentPensionSpecial(value === "yes")}>
+                        <Label>学生納付特例の対象確認</Label>
+                        <Select value={studentPensionSpecialStatus} onValueChange={(value) => setStudentPensionSpecialStatus(value as StudentPensionSpecialStatus)}>
                           <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="yes">使う予定</SelectItem>
-                            <SelectItem value="no">使わない</SelectItem>
+                            <SelectItem value="unknown">まだ確認していない</SelectItem>
+                            <SelectItem value="eligible">対象要件を満たす</SelectItem>
+                            <SelectItem value="not_eligible">対象外</SelectItem>
                           </SelectContent>
                         </Select>
+                        <p className="text-xs text-muted-foreground">
+                          学生納付特例は前年所得などで決まります。未確認なら国民年金は確定額にしません。
+                        </p>
                       </div>
                     </div>
                     {socialInsuranceRoute === "national" && (
