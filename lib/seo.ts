@@ -36,6 +36,15 @@ export const STUDENT_BAITO_PAGE = {
 
 export const BLOG_POSTS = [
   {
+    slug: "4-6gatsu-hatarakisugi",
+    title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険の違い",
+    description:
+      "この話は原則として税金ではなく社会保険料の話です。学生バイトにどこまで当てはまるかを公的資料ベースで整理。",
+    publishedAt: "2026-04-20T00:00:00Z",
+    updatedAt: "2026-04-20T00:00:00Z",
+    priority: 0.9,
+  },
+  {
     slug: "student-123man-parent-impact",
     title: "学生が123万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
     description:
@@ -140,7 +149,7 @@ export const STATIC_PAGES = [
   { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-04-02T00:00:00Z" },
   { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-04-09T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
-  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-04-09T00:00:00Z" },
+  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-04-20T00:00:00Z" },
   { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-04-15T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-03-08T00:00:00Z" },

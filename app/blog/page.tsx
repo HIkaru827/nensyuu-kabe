@@ -26,6 +26,15 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    slug: "4-6gatsu-hatarakisugi",
+    title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険の違い",
+    description:
+      "この話は原則として税金ではなく社会保険料の話です。学生バイトにどこまで当てはまるかを公的資料ベースで整理。",
+    date: "2026年4月20日",
+    category: "学生バイト",
+    badge: "2026年4月追加",
+  },
+  {
     slug: "student-123man-parent-impact",
     title: "学生が123万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
     description:
