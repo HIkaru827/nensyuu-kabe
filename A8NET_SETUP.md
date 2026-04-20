@@ -67,6 +67,9 @@ NEXT_PUBLIC_A8_CAREER="https://px.a8.net/svt/ejp?..."
 
 # バナー広告（オプション）- HTMLコード全体を1行で記述
 NEXT_PUBLIC_A8_BANNER="<a href='https://px.a8.net/...'><img src='...' /></a>"
+
+# A8.net のバナーで、末尾に 1x1 計測画像が付く形式もそのまま設定可能
+# NEXT_PUBLIC_A8_BANNER="<a href='https://px.a8.net/...'><img ...></a><img width='1' height='1' src='https://www10.a8.net/0.gif?...' alt=''>"
 ```
 
 ### 4. 開発サーバーを再起動する

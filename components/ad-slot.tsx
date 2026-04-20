@@ -95,6 +95,24 @@ function normalizeAffiliateUrl(url: string | null | undefined): string | undefin
 }
 
 function extractFromHtml(raw: string): ParsedAffiliateLink | null {
+  const findTrackingPixel = (images: Element[]): string | undefined => {
+    for (const image of images) {
+      const width = image.getAttribute("width")
+      const height = image.getAttribute("height")
+      const src = normalizeAffiliateUrl(image.getAttribute("src"))
+
+      if (!src) {
+        continue
+      }
+
+      if ((width === "1" && height === "1") || src.includes("/0.gif") || src.includes("gifbanner")) {
+        return src
+      }
+    }
+
+    return undefined
+  }
+
   if (typeof DOMParser !== "undefined") {
     const doc = new DOMParser().parseFromString(raw, "text/html")
     const anchor = doc.querySelector("a")
@@ -103,17 +121,19 @@ function extractFromHtml(raw: string): ParsedAffiliateLink | null {
       return null
     }
 
-    const image = anchor.querySelector("img")
     const href = normalizeAffiliateUrl(anchor.getAttribute("href"))
-    const impressionPixelSrc = normalizeAffiliateUrl(image?.getAttribute("src"))
+    const impressionPixelSrc = findTrackingPixel(Array.from(doc.querySelectorAll("img")))
 
     return href ? { href, impressionPixelSrc } : null
   }
 
   const hrefMatch = raw.match(/href=["']([^"']+)["']/i)
-  const imgMatch = raw.match(/<img[^>]+src=["']([^"']+)["']/i)
   const href = normalizeAffiliateUrl(hrefMatch?.[1])
-  const impressionPixelSrc = normalizeAffiliateUrl(imgMatch?.[1])
+  const trackingPixelMatch =
+    raw.match(/<img[^>]+width=["']?1["']?[^>]+height=["']?1["']?[^>]+src=["']([^"']+)["']/i) ??
+    raw.match(/<img[^>]+height=["']?1["']?[^>]+width=["']?1["']?[^>]+src=["']([^"']+)["']/i) ??
+    raw.match(/<img[^>]+src=["']([^"']*(?:0\.gif|gifbanner)[^"']*)["']/i)
+  const impressionPixelSrc = normalizeAffiliateUrl(trackingPixelMatch?.[1])
 
   return href ? { href, impressionPixelSrc } : null
 }

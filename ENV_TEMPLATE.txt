@@ -47,6 +47,7 @@ NEXT_PUBLIC_A8_ARBEIT_EX="https://px.a8.net/svt/ejp?..."
 
 # ----- バナー広告（オプション）-----
 # HTMLコードを1行で記述してください
+# A8.net の <a>...</a><img width="1" height="1" ...> 形式もそのまま使えます
 # NEXT_PUBLIC_A8_BANNER="<a href='https://px.a8.net/...'><img src='...' /></a>"
 
 
