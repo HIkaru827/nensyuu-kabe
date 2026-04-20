@@ -18,6 +18,7 @@ NEXT_PUBLIC_ADSENSE_BOTTOM_SLOT=5787776891
 
 # ----- バイト求人広告 -----
 # タウンワーク（リクルート）- 最も知名度が高い
+# URLだけでも、<a><img ...></a> 形式の広告タグでも設定できます
 NEXT_PUBLIC_A8_TOWNWORK="https://px.a8.net/svt/ejp?..."
 
 # マッハバイト（旧ジョブセンス）- 祝い金がもらえる

@@ -72,6 +72,67 @@ interface JobAdSlotProps {
   jobs?: A8JobLink[]
 }
 
+interface ParsedAffiliateLink {
+  href: string
+  impressionPixelSrc?: string
+}
+
+function normalizeAffiliateUrl(url: string | null | undefined): string | undefined {
+  if (!url) {
+    return undefined
+  }
+
+  const trimmed = url.trim()
+  if (!trimmed) {
+    return undefined
+  }
+
+  if (trimmed.startsWith("//")) {
+    return `https:${trimmed}`
+  }
+
+  return trimmed
+}
+
+function extractFromHtml(raw: string): ParsedAffiliateLink | null {
+  if (typeof DOMParser !== "undefined") {
+    const doc = new DOMParser().parseFromString(raw, "text/html")
+    const anchor = doc.querySelector("a")
+
+    if (!anchor) {
+      return null
+    }
+
+    const image = anchor.querySelector("img")
+    const href = normalizeAffiliateUrl(anchor.getAttribute("href"))
+    const impressionPixelSrc = normalizeAffiliateUrl(image?.getAttribute("src"))
+
+    return href ? { href, impressionPixelSrc } : null
+  }
+
+  const hrefMatch = raw.match(/href=["']([^"']+)["']/i)
+  const imgMatch = raw.match(/<img[^>]+src=["']([^"']+)["']/i)
+  const href = normalizeAffiliateUrl(hrefMatch?.[1])
+  const impressionPixelSrc = normalizeAffiliateUrl(imgMatch?.[1])
+
+  return href ? { href, impressionPixelSrc } : null
+}
+
+function parseAffiliateLink(raw: string): ParsedAffiliateLink | null {
+  const trimmed = raw.trim()
+
+  if (!trimmed || trimmed === "#") {
+    return null
+  }
+
+  if (trimmed.startsWith("<")) {
+    return extractFromHtml(trimmed)
+  }
+
+  const href = normalizeAffiliateUrl(trimmed)
+  return href ? { href } : null
+}
+
 /**
  * バイト求人広告用のカスタム広告枠
  * 
@@ -81,7 +142,23 @@ export function JobAdSlot({
   title = "あなたにぴったりのバイトを探す",
   jobs = []
 }: JobAdSlotProps) {
-  if (jobs.length === 0) {
+  const normalizedJobs = jobs
+    .map((job) => {
+      const affiliateLink = parseAffiliateLink(job.url)
+
+      if (!affiliateLink) {
+        return null
+      }
+
+      return {
+        ...job,
+        href: affiliateLink.href,
+        impressionPixelSrc: affiliateLink.impressionPixelSrc,
+      }
+    })
+    .filter((job): job is NonNullable<typeof job> => job !== null)
+
+  if (normalizedJobs.length === 0) {
     return null
   }
 
@@ -91,14 +168,24 @@ export function JobAdSlot({
       <Card className="border-2 border-primary/20 bg-primary/5">
         <CardContent className="p-4 space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            {jobs.map((job, index) => (
+            {normalizedJobs.map((job, index) => (
               <a
                 key={index}
-                href={job.url}
+                href={job.href}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 className="bg-background border-2 border-border hover:border-primary rounded-lg p-3 text-center transition-all hover:shadow-md group"
               >
+                {job.impressionPixelSrc && (
+                  <img
+                    src={job.impressionPixelSrc}
+                    alt=""
+                    width={1}
+                    height={1}
+                    className="sr-only"
+                    aria-hidden="true"
+                  />
+                )}
                 <div className="space-y-1">
                   {job.tag && (
                     <span className="inline-block text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">

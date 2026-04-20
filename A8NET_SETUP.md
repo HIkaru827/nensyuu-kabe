@@ -23,7 +23,8 @@ A8.netの管理画面で：
 2. 提携した広告主の「広告リンク」をクリック
 3. テキストリンクまたはバナーリンクをコピー
 
-**注意**: 広告リンクの形式は `https://px.a8.net/svt/ejp?...` のようなURLです。
+**注意**: いまの実装は `https://px.a8.net/svt/ejp?...` のようなURLに加えて、
+バリューコマース形式の `<a><img ...></a>` タグも求人カード枠では受け取れます。
 
 ### 3. `.env.local`ファイルに追加する
 
@@ -38,6 +39,9 @@ NEXT_PUBLIC_GA_ID=G-FKSP61MD9N
 
 # タウンワーク（リクルート）
 NEXT_PUBLIC_A8_TOWNWORK="https://px.a8.net/svt/ejp?..."
+
+# もしくはバリューコマースのHTMLタグをそのまま設定
+# NEXT_PUBLIC_A8_TOWNWORK='<a href="//ck.jp.ap.valuecommerce.com/servlet/referral?..."><img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?..." height="1" width="1" border="0">タウンワーク</a>'
 
 # マッハバイト（旧ジョブセンス）
 NEXT_PUBLIC_A8_MACHBAITO="https://px.a8.net/svt/ejp?..."
