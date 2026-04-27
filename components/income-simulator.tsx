@@ -59,6 +59,7 @@ export function IncomeSimulator() {
   const [mode, setMode] = useState<"simple" | "detailed">("simple")
   const [income, setIncome] = useState(100)
   const [age, setAge] = useState(20)
+  const [ageInput, setAgeInput] = useState("20")
   const [attribute, setAttribute] = useState<"daytime-student" | "evening-student" | "freeter">("daytime-student")
   const [weeklyHours, setWeeklyHours] = useState(20)
   const [monthlySalary, setMonthlySalary] = useState(90_000)
@@ -145,10 +146,15 @@ export function IncomeSimulator() {
   }
 
   const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number.parseInt(e.target.value, 10)
-    if (!Number.isNaN(value)) {
-      setAge(Math.min(30, Math.max(15, value)))
-    }
+    setAgeInput(e.target.value)
+  }
+
+  const commitAgeInput = () => {
+    const value = Number.parseInt(ageInput, 10)
+    const normalizedAge = Number.isNaN(value) ? age : Math.min(30, Math.max(15, value))
+
+    setAge(normalizedAge)
+    setAgeInput(String(normalizedAge))
   }
 
   return (
@@ -186,7 +192,17 @@ export function IncomeSimulator() {
                 <div className="space-y-2">
                   <Label htmlFor="age">その年の12月31日時点の年齢</Label>
                   <div className="flex items-center gap-2">
-                    <Input id="age" type="number" value={age} onChange={handleAgeChange} min={15} max={30} className="w-20 text-center" />
+                    <Input
+                      id="age"
+                      type="number"
+                      inputMode="numeric"
+                      value={ageInput}
+                      onChange={handleAgeChange}
+                      onBlur={commitAgeInput}
+                      min={15}
+                      max={30}
+                      className="w-20 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    />
                     <span className="text-sm text-muted-foreground">歳</span>
                     {age >= 19 && age <= 22 && (
                       <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
