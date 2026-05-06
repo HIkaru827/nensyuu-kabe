@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { buildResultCtaLinks } from "@/lib/affiliate-links"
 import {
   getSocialInsuranceDependentLimit,
   simulateDetailedIncome,
@@ -111,6 +112,20 @@ export function IncomeSimulator() {
   )
 
   const socialInsuranceLimit = useMemo(() => getSocialInsuranceDependentLimit(age) / 10_000, [age])
+  const ctaLinks = useMemo(
+    () =>
+      buildResultCtaLinks({
+        NEXT_PUBLIC_A8_RECOMMENDED: process.env.NEXT_PUBLIC_A8_RECOMMENDED,
+        NEXT_PUBLIC_A8_TOWNWORK: process.env.NEXT_PUBLIC_A8_TOWNWORK,
+        NEXT_PUBLIC_A8_MACHBAITO: process.env.NEXT_PUBLIC_A8_MACHBAITO,
+        NEXT_PUBLIC_A8_BAITORU: process.env.NEXT_PUBLIC_A8_BAITORU,
+        NEXT_PUBLIC_A8_ARBEIT_EX: process.env.NEXT_PUBLIC_A8_ARBEIT_EX,
+        NEXT_PUBLIC_A8_HIGH_WAGE: process.env.NEXT_PUBLIC_A8_HIGH_WAGE,
+        NEXT_PUBLIC_A8_FLEXIBLE: process.env.NEXT_PUBLIC_A8_FLEXIBLE,
+        NEXT_PUBLIC_A8_CAREER: process.env.NEXT_PUBLIC_A8_CAREER,
+      }),
+    [],
+  )
   const thresholdMarkers = useMemo(
     () => [
       THRESHOLDS[0],
@@ -120,6 +135,17 @@ export function IncomeSimulator() {
     ],
     [socialInsuranceLimit],
   )
+  const bandSegments = useMemo(() => {
+    const greenWidth = Math.min(123, 200)
+    const amberWidth = Math.max(0, Math.min(socialInsuranceLimit, 200) - greenWidth)
+    const redWidth = Math.max(0, 200 - greenWidth - amberWidth)
+
+    return [
+      { label: "扶養内の目安", width: greenWidth, className: "bg-emerald-200" },
+      { label: "確認ゾーン", width: amberWidth, className: "bg-amber-200" },
+      { label: "負担増に注意", width: redWidth, className: "bg-rose-200" },
+    ].filter((segment) => segment.width > 0)
+  }, [socialInsuranceLimit])
 
   const statusConfig = useMemo(() => {
     const color = simulationResult.color
@@ -165,6 +191,39 @@ export function IncomeSimulator() {
           まずは簡易判定で全体像をつかみ、必要なら詳細条件を追加してより具体的な試算まで進められます。
         </p>
         <p className="text-xs font-semibold text-primary">2026年4月15日時点の公的情報を確認して更新</p>
+      </div>
+
+      <div className="lg:hidden">
+        {mode === "simple" ? (
+          <Card className={`border-2 ${statusConfig.bgClass}`}>
+            <CardContent className="space-y-2 pb-4 pt-4">
+              <div className="flex items-start gap-3">
+                <StatusIcon className={`mt-0.5 h-5 w-5 shrink-0 ${statusConfig.iconClass}`} />
+                <div className="space-y-1">
+                  <p className={`text-sm font-bold ${statusConfig.textClass}`}>{simulationResult.label}</p>
+                  <p className="text-sm text-foreground">{simulationResult.headline}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="grid gap-3 pb-4 pt-4 sm:grid-cols-2">
+              <div>
+                <p className="text-xs font-semibold text-primary">いまの見込み手取り</p>
+                <p className="mt-1 text-xl font-bold text-foreground">
+                  {formatCurrency(detailedResult.selfTakeHomeAfterKnownBurdenEstimate)}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-primary">親の税負担増の目安</p>
+                <p className="mt-1 text-xl font-bold text-foreground">
+                  {formatCurrency(detailedResult.parentTaxDeltaEstimate)}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-start">
@@ -254,14 +313,25 @@ export function IncomeSimulator() {
                     ))}
                   </div>
                   <div className="relative mt-8 flex h-3 overflow-hidden rounded-full">
-                    <div className="h-full bg-emerald-200" style={{ width: "55%" }} />
-                    <div className="h-full bg-amber-200" style={{ width: "10%" }} />
-                    <div className="h-full bg-red-200" style={{ width: "15%" }} />
-                    <div className="h-full bg-violet-200" style={{ width: "20%" }} />
+                    {bandSegments.map((segment) => (
+                      <div
+                        key={segment.label}
+                        className={`h-full ${segment.className}`}
+                        style={{ width: `${(segment.width / 200) * 100}%` }}
+                      />
+                    ))}
                   </div>
                   <div className="absolute left-0 h-3 overflow-hidden rounded-full" style={{ top: "calc(2rem + 0.5rem)", width: `${getPositionPercent(income)}%` }}>
                     <div className={`h-full w-full transition-colors duration-300 ${statusConfig.barColor}`} />
                   </div>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {bandSegments.map((segment) => (
+                    <div key={segment.label} className="flex items-center gap-2 rounded-md bg-muted/40 px-3 py-2">
+                      <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${segment.className}`} />
+                      <span className="text-xs text-muted-foreground">{segment.label}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <TabsContent value="simple" className="mt-0" />
@@ -463,35 +533,35 @@ export function IncomeSimulator() {
           )}
 
           <div className="space-y-3">
-            {income >= socialInsuranceLimit && income < 160 && (
+            {income >= socialInsuranceLimit && income < 160 && ctaLinks.highWage && ctaLinks.flexible && (
               <>
                 <Button className="h-12 w-full gap-2 text-base font-semibold" size="lg" asChild>
-                  <a href={process.env.NEXT_PUBLIC_A8_HIGH_WAGE || "#"} target="_blank" rel="noopener noreferrer nofollow">
+                  <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow">
                     <TrendingUp className="h-5 w-5" />
-                    もっと稼げる仕事を探す
+                    高時給バイトを探す
                   </a>
                 </Button>
                 <Button variant="outline" className="h-12 w-full gap-2 bg-background text-base font-semibold" size="lg" asChild>
-                  <a href={process.env.NEXT_PUBLIC_A8_FLEXIBLE || "#"} target="_blank" rel="noopener noreferrer nofollow">
+                  <a href={ctaLinks.flexible} target="_blank" rel="noopener noreferrer nofollow">
                     <Clock className="h-5 w-5" />
-                    扶養内に調整しやすい仕事を探す
+                    短時間・単発バイトを探す
                   </a>
                 </Button>
               </>
             )}
-            {income < socialInsuranceLimit && (
+            {income < socialInsuranceLimit && ctaLinks.recommended && (
               <Button className="h-12 w-full gap-2 text-base font-semibold" size="lg" asChild>
-                <a href={process.env.NEXT_PUBLIC_A8_RECOMMENDED || "#"} target="_blank" rel="noopener noreferrer nofollow">
+                <a href={ctaLinks.recommended} target="_blank" rel="noopener noreferrer nofollow">
                   <TrendingUp className="h-5 w-5" />
-                  条件に合う仕事を見る
+                  扶養内で働けるバイトを探す
                 </a>
               </Button>
             )}
-            {income >= 160 && (
+            {income >= 160 && ctaLinks.career && (
               <Button className="h-12 w-full gap-2 text-base font-semibold" size="lg" asChild>
-                <a href={process.env.NEXT_PUBLIC_A8_CAREER || "#"} target="_blank" rel="noopener noreferrer nofollow">
+                <a href={ctaLinks.career} target="_blank" rel="noopener noreferrer nofollow">
                   <TrendingUp className="h-5 w-5" />
-                  次の働き方を探す
+                  年収アップしやすいバイトを探す
                 </a>
               </Button>
             )}
@@ -504,10 +574,10 @@ export function IncomeSimulator() {
         </div>
       </div>
 
-      <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
         <CardContent className="space-y-4 pb-5 pt-5">
           <div className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-blue-600" />
+            <BookOpen className="h-5 w-5 text-emerald-700" />
             <h3 className="text-base font-bold text-foreground">一次情報</h3>
           </div>
           <div className="space-y-2">

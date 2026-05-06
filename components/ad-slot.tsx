@@ -46,9 +46,9 @@ export function AdSlot({ position, size = "medium", title, adCode }: AdSlotProps
       {title && (
         <p className="text-xs text-muted-foreground text-center">{title}</p>
       )}
-      <Card className="border-dashed border-2 border-border">
-        <CardContent className={`${heightClass} flex items-center justify-center p-6`}>
-          <div className="text-center space-y-2">
+      <Card className="overflow-hidden border-dashed border-2 border-border">
+        <CardContent className={`${heightClass} flex items-center justify-center p-3 sm:p-6`}>
+          <div className="affiliate-ad-shell w-full text-center space-y-2">
             <div dangerouslySetInnerHTML={{ __html: adCode }} />
           </div>
         </CardContent>
@@ -187,14 +187,14 @@ export function JobAdSlot({
       <p className="text-xs text-muted-foreground text-center">{title}</p>
       <Card className="border-2 border-primary/20 bg-primary/5">
         <CardContent className="p-4 space-y-3">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {normalizedJobs.map((job, index) => (
               <a
                 key={index}
                 href={job.href}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                className="bg-background border-2 border-border hover:border-primary rounded-lg p-3 text-center transition-all hover:shadow-md group"
+                className="group rounded-lg border-2 border-border bg-background p-3 text-center transition-all hover:border-primary hover:shadow-md"
               >
                 {job.impressionPixelSrc && (
                   <img

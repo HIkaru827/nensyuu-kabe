@@ -45,14 +45,15 @@ export function GoogleAdSenseBanner({ client, slot, className }: GoogleAdSenseBa
   }, [])
 
   return (
-    <ins
-      className={`adsbygoogle ${className ?? ""}`.trim()}
-      style={{ display: "block" }}
-      data-ad-client={client}
-      data-ad-slot={slot}
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    />
+    <div className="adsense-shell mx-auto w-full max-w-[320px] overflow-hidden">
+      <ins
+        className={`adsbygoogle block w-full ${className ?? ""}`.trim()}
+        style={{ display: "block" }}
+        data-ad-client={client}
+        data-ad-slot={slot}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
   )
 }
-

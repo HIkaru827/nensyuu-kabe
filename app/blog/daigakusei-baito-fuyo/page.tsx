@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowLeft, Calculator, ExternalLink } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { ArticleMonetizationSection } from "@/components/article-monetization-section"
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
@@ -139,6 +140,7 @@ export default function DaigakuseiBaitoFuyoPage() {
               </section>
             </CardContent>
           </Card>
+          <ArticleMonetizationSection />
 
           <Card className="border-primary bg-primary/5">
             <CardContent className="space-y-4 pt-6 text-center">

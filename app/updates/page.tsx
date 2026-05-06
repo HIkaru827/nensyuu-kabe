@@ -12,7 +12,7 @@ export const metadata = {
 const updates = [
   {
     date: "2026年4月15日",
-    title: "AdSense審査向けに信頼性ページと独自記事を追加",
+    title: "運営情報と解説記事を拡充",
     items: [
       "トップページにサイトの目的、更新方針、おすすめ記事導線を追加",
       "運営者情報に編集方針、更新体制、読者への約束を追加",
@@ -38,15 +38,15 @@ const updates = [
 ]
 
 export default function UpdatesPage() {
-  const recrawlTargets = [
-    { path: "/", purpose: "トップページの完成度と導線の改善を反映" },
-    { path: "/about", purpose: "運営者情報、編集方針、更新体制の追加を反映" },
-    { path: "/updates", purpose: "更新履歴ページの新設を反映" },
-    { path: "/student-baito", purpose: "確認日と参照元の明示を反映" },
-    { path: "/blog", purpose: "記事一覧と新規記事導線の追加を反映" },
-    { path: "/blog/student-123man-parent-impact", purpose: "独自ケース記事の追加を反映" },
-    { path: "/blog/kake-mochi-baito-fuyo", purpose: "掛け持ちバイト記事の追加を反映" },
-    { path: "/blog/social-insurance-case-study", purpose: "ケース比較記事の追加を反映" },
+  const recentHighlights = [
+    { path: "/", purpose: "トップページの案内と導線を見直しました" },
+    { path: "/about", purpose: "運営者情報、編集方針、更新体制を追記しました" },
+    { path: "/updates", purpose: "更新履歴ページを新設しました" },
+    { path: "/student-baito", purpose: "確認日と参照元を明記しました" },
+    { path: "/blog", purpose: "記事一覧と新規記事への導線を整理しました" },
+    { path: "/blog/student-123man-parent-impact", purpose: "親への影響を整理した記事を追加しました" },
+    { path: "/blog/kake-mochi-baito-fuyo", purpose: "掛け持ちバイト向けの記事を追加しました" },
+    { path: "/blog/social-insurance-case-study", purpose: "ケース比較の記事を追加しました" },
   ]
 
   return (
@@ -66,13 +66,13 @@ export default function UpdatesPage() {
       <Card>
         <CardContent className="space-y-4 pt-6">
           <div className="space-y-1">
-            <h2 className="text-lg font-bold text-foreground">再クロールを優先したいページ</h2>
+            <h2 className="text-lg font-bold text-foreground">最近大きく更新したページ</h2>
             <p className="text-sm text-muted-foreground">
-              Search Consoleで更新を伝えるなら、まず次のページから優先すると変化が伝わりやすいです。
+              直近で内容の見直しや追加が大きかったページをまとめています。どこが変わったかを先に確認したいときに使えます。
             </p>
           </div>
           <div className="space-y-3">
-            {recrawlTargets.map((target) => (
+            {recentHighlights.map((target) => (
               <div key={target.path} className="rounded-lg border border-border px-4 py-3">
                 <p className="text-sm font-semibold text-foreground">{target.path}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{target.purpose}</p>
