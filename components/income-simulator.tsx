@@ -12,7 +12,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
+import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { buildResultCtaLinks } from "@/lib/affiliate-links"
 import {
@@ -69,6 +71,7 @@ export function IncomeSimulator() {
   const [socialInsuranceRoute, setSocialInsuranceRoute] = useState<SocialInsuranceRoute>("undecided")
   const [studentPensionSpecialStatus, setStudentPensionSpecialStatus] = useState<StudentPensionSpecialStatus>("unknown")
   const [nationalHealthInsuranceAnnual, setNationalHealthInsuranceAnnual] = useState<number | "">("")
+  const [includeParentImpactInTakeHome, setIncludeParentImpactInTakeHome] = useState(false)
 
   const studentType = getStudentType(attribute)
 
@@ -112,6 +115,43 @@ export function IncomeSimulator() {
   )
 
   const socialInsuranceLimit = useMemo(() => getSocialInsuranceDependentLimit(age) / 10_000, [age])
+  const displayedTakeHome = useMemo(() => {
+    return includeParentImpactInTakeHome
+      ? detailedResult.selfTakeHomeAfterKnownBurdenEstimate - detailedResult.parentTaxDeltaEstimate
+      : detailedResult.selfTakeHomeAfterKnownBurdenEstimate
+  }, [detailedResult.parentTaxDeltaEstimate, detailedResult.selfTakeHomeAfterKnownBurdenEstimate, includeParentImpactInTakeHome])
+  const detailedBreakdown = useMemo(() => {
+    const baseItems = [
+      {
+        label: "年収",
+        value: formatCurrency(income * 10_000),
+        tone: "text-foreground",
+      },
+      {
+        label: "本人の税金",
+        value: `- ${formatCurrency(detailedResult.selfTaxBurdenEstimate)}`,
+        tone: "text-rose-700",
+      },
+    ]
+
+    if (typeof detailedResult.socialInsuranceBurdenEstimate === "number") {
+      baseItems.push({
+        label: "入力済みの社会保険負担",
+        value: `- ${formatCurrency(detailedResult.socialInsuranceBurdenEstimate)}`,
+        tone: "text-rose-700",
+      })
+    }
+
+    if (includeParentImpactInTakeHome) {
+      baseItems.push({
+        label: "親の税負担増の目安",
+        value: `- ${formatCurrency(detailedResult.parentTaxDeltaEstimate)}`,
+        tone: "text-amber-800",
+      })
+    }
+
+    return baseItems
+  }, [detailedResult.parentTaxDeltaEstimate, detailedResult.selfTaxBurdenEstimate, detailedResult.socialInsuranceBurdenEstimate, includeParentImpactInTakeHome, income])
   const ctaLinks = useMemo(
     () =>
       buildResultCtaLinks({
@@ -210,9 +250,11 @@ export function IncomeSimulator() {
           <Card className="border-primary/20 bg-primary/5">
             <CardContent className="grid gap-3 pb-4 pt-4 sm:grid-cols-2">
               <div>
-                <p className="text-xs font-semibold text-primary">いまの見込み手取り</p>
+                <p className="text-xs font-semibold text-primary">
+                  {includeParentImpactInTakeHome ? "親への影響を含めた見込み" : "いまの見込み手取り"}
+                </p>
                 <p className="mt-1 text-xl font-bold text-foreground">
-                  {formatCurrency(detailedResult.selfTakeHomeAfterKnownBurdenEstimate)}
+                  {formatCurrency(displayedTakeHome)}
                 </p>
               </div>
               <div>
@@ -445,90 +487,98 @@ export function IncomeSimulator() {
           ) : (
             <div className="space-y-4">
               <Card className="border-blue-200 bg-blue-50 shadow-md">
-                <CardContent className="space-y-3 pb-5 pt-5">
+                <CardContent className="space-y-5 pb-5 pt-5">
                   <div className="flex items-start gap-3">
                     <Info className="mt-0.5 h-6 w-6 shrink-0 text-blue-600" />
                     <div className="space-y-1">
                       <h2 className="text-lg font-bold text-blue-900">詳細試算</h2>
-                      <p className="text-sm text-blue-900">入力した前提から試算できる項目だけ数字を出しています。</p>
+                      <p className="text-sm text-blue-900">手元に残る金額を中心に、本人の税金、親への影響、社会保険をまとめて見られます。</p>
                     </div>
                   </div>
+                  <div className="rounded-xl border border-blue-200 bg-white/90 p-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold text-primary">
+                          {includeParentImpactInTakeHome ? "親への影響を含めた見込み" : "あなたの手元に残るお金"}
+                        </p>
+                        <p className="text-3xl font-bold text-foreground">
+                          {formatCurrency(displayedTakeHome)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          年収から本人の税金と、入力済みの社会保険負担を引いた見込みです。
+                          {includeParentImpactInTakeHome ? " 親の税負担増の目安も差し引いています。" : ""}
+                        </p>
+                      </div>
+                      <label className="flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
+                        <div className="space-y-0.5">
+                          <p className="text-xs font-semibold text-blue-900">親への影響も含める</p>
+                          <p className="text-[11px] text-blue-800">返す前提でも見たいときだけオン</p>
+                        </div>
+                        <Switch
+                          checked={includeParentImpactInTakeHome}
+                          onCheckedChange={setIncludeParentImpactInTakeHome}
+                          aria-label="親への影響を含める"
+                        />
+                      </label>
+                    </div>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      {detailedBreakdown.map((item) => (
+                        <div key={item.label} className="rounded-lg border border-blue-100 bg-blue-50/40 p-3">
+                          <p className="text-xs text-muted-foreground">{item.label}</p>
+                          <p className={`text-lg font-bold ${item.tone}`}>{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <Separator />
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-lg border border-blue-200 bg-white/80 p-3">
+                    <div className="rounded-lg bg-white/80 p-3">
                       <p className="text-xs text-muted-foreground">本人の所得税</p>
-                      <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.incomeTaxEstimate)}</p>
+                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.incomeTaxEstimate)}</p>
                     </div>
-                    <div className="rounded-lg border border-blue-200 bg-white/80 p-3">
+                    <div className="rounded-lg bg-white/80 p-3">
                       <p className="text-xs text-muted-foreground">本人の住民税所得割</p>
-                      <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.residentTaxIncomeLevyEstimate)}</p>
+                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.residentTaxIncomeLevyEstimate)}</p>
                     </div>
-                    <div className="rounded-lg border border-blue-200 bg-white/80 p-3 sm:col-span-2">
-                      <p className="text-xs text-muted-foreground">あなたの手元に残るお金</p>
-                      <p className="text-2xl font-bold text-foreground">
-                        {formatCurrency(detailedResult.selfTakeHomeAfterKnownBurdenEstimate)}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        年収から本人の税金と、入力済みの社会保険負担だけを引いた見込みです。
-                      </p>
+                    <div className="rounded-lg bg-white/80 p-3">
+                      <p className="text-xs text-muted-foreground">給与所得</p>
+                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.salaryIncome)}</p>
                     </div>
-                    <div className="rounded-lg border border-blue-200 bg-white/80 p-3 sm:col-span-2">
-                      <p className="text-xs text-muted-foreground">親の税負担増の目安</p>
-                      <p className="text-2xl font-bold text-foreground">
-                        {formatCurrency(detailedResult.parentTaxDeltaEstimate)}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        あなたの手取りから自動で引かれるものではありません。親に返すかは家族で相談してください。
+                    <div className="rounded-lg bg-white/80 p-3">
+                      <p className="text-xs text-muted-foreground">課税所得</p>
+                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.taxableIncomeForIncomeTax)}</p>
+                    </div>
+                    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 sm:col-span-2">
+                      <p className="text-xs text-amber-800">親の税負担増の目安</p>
+                      <p className="text-xl font-bold text-amber-950">{formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
+                      <p className="mt-1 text-xs text-amber-900">
+                        あなたの給与から自動で引かれるものではありません。親に返すかどうかを話すときの目安です。
                       </p>
                     </div>
+                  </div>
+                  <Separator />
+                  <div className="space-y-3">
+                    <div>
+                      <h3 className="text-base font-bold text-foreground">社会保険</h3>
+                      <p className="mt-1 text-sm font-semibold text-foreground">{detailedResult.socialInsuranceStatusLabel}</p>
+                      <p className="text-sm text-muted-foreground">{detailedResult.socialInsuranceStatusDescription}</p>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">扶養年収基準</p><p className="text-base font-semibold text-foreground">{formatManEn(detailedResult.socialInsuranceDependentLimit)}</p></div>
+                      <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">短時間労働者の主条件</p><p className="text-base font-semibold text-foreground">{detailedResult.shortHoursSocialInsuranceApplies ? "主条件を満たす見込み" : "追加条件を確認"}</p></div>
+                      {typeof detailedResult.nationalPensionAnnualEstimate === "number" && <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">国民年金</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.nationalPensionAnnualEstimate)}</p></div>}
+                      {typeof detailedResult.socialInsuranceBurdenEstimate === "number" && <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">加算できた社会保険負担</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.socialInsuranceBurdenEstimate)}</p></div>}
+                    </div>
+                  </div>
+                  <Separator />
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-bold text-foreground">試算の前提</h3>
+                    <ul className="space-y-1 text-xs text-muted-foreground">
+                      {detailedResult.assumptions.map((item) => <li key={item} className="flex gap-2"><span>-</span><span>{item}</span></li>)}
+                    </ul>
                   </div>
                 </CardContent>
               </Card>
-
-              <Card><CardContent className="space-y-3 pb-5 pt-5">
-                <h3 className="text-base font-bold text-foreground">本人の税金</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">給与所得</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.salaryIncome)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">課税所得</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.taxableIncomeForIncomeTax)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">本人の税金合計</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.selfTaxBurdenEstimate)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">社会保険料を除く手取り</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.selfTakeHomeBeforeSocialInsuranceEstimate)}</p></div>
-                </div>
-              </CardContent></Card>
-
-              <Card><CardContent className="space-y-3 pb-5 pt-5">
-                <h3 className="text-base font-bold text-foreground">親への影響</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の所得税控除額</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentIncomeTaxDeduction)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の住民税控除額</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentResidentTaxDeduction)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の所得税増加見込み</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentIncomeTaxDeltaEstimate)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">親の住民税増加見込み</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.parentResidentTaxDeltaEstimate)}</p></div>
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 sm:col-span-2">
-                    <p className="text-xs text-amber-800">親に返すか相談する目安</p>
-                    <p className="text-xl font-bold text-amber-950">{formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
-                    <p className="mt-1 text-xs text-amber-900">
-                      親の税負担増は本人の給与から天引きされません。この金額を返すか、返さないか、家族で話すための目安として見てください。
-                    </p>
-                  </div>
-                </div>
-              </CardContent></Card>
-
-              <Card><CardContent className="space-y-3 pb-5 pt-5">
-                <h3 className="text-base font-bold text-foreground">社会保険</h3>
-                <p className="text-sm font-semibold text-foreground">{detailedResult.socialInsuranceStatusLabel}</p>
-                <p className="text-sm text-muted-foreground">{detailedResult.socialInsuranceStatusDescription}</p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">扶養年収基準</p><p className="text-base font-semibold text-foreground">{formatManEn(detailedResult.socialInsuranceDependentLimit)}</p></div>
-                  <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">短時間労働者の主条件</p><p className="text-base font-semibold text-foreground">{detailedResult.shortHoursSocialInsuranceApplies ? "主条件を満たす見込み" : "追加条件を確認"}</p></div>
-                  {typeof detailedResult.nationalPensionAnnualEstimate === "number" && <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">国民年金</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.nationalPensionAnnualEstimate)}</p></div>}
-                  {typeof detailedResult.socialInsuranceBurdenEstimate === "number" && <div className="rounded-lg bg-muted/40 p-3"><p className="text-xs text-muted-foreground">加算できた社会保険負担</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.socialInsuranceBurdenEstimate)}</p></div>}
-                </div>
-              </CardContent></Card>
-
-              <Card className="border-amber-200 bg-amber-50"><CardContent className="space-y-2 pb-5 pt-5">
-                <h3 className="text-sm font-bold text-amber-900">試算の前提</h3>
-                <ul className="space-y-1 text-xs text-amber-900">
-                  {detailedResult.assumptions.map((item) => <li key={item} className="flex gap-2"><span>-</span><span>{item}</span></li>)}
-                </ul>
-              </CardContent></Card>
             </div>
           )}
 
