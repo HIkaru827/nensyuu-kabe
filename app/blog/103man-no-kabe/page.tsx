@@ -60,10 +60,10 @@ export default function Blog103ManPage() {
             note="所得税、税法上の扶養、社会保険は基準が別です。この記事では数字ごとに論点を分けて説明しています。"
           />
 
-          <Card className="border-emerald-200 bg-emerald-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="pt-6 space-y-3">
-              <h2 className="text-lg font-bold text-emerald-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-emerald-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>・ 「160万円の壁」は、主に所得税の話です</li>
                 <li>・ 税法上の扶養判定の目安は、給与収入 123万円です</li>
                 <li>・ 19歳以上23歳未満は、188万円以下で特定親族特別控除の対象になり得ます</li>
@@ -175,7 +175,7 @@ export default function Blog103ManPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="pt-6 text-center space-y-4">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">今の年収で整理する</h3>

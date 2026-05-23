@@ -53,10 +53,10 @@ export default function KakeMochiBaitoFuyoPage() {
             </p>
           </div>
 
-          <Card className="border-emerald-200 bg-emerald-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-emerald-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-emerald-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>掛け持ちバイトでは、勤務先ごとではなく年間の収入を合算して見るのが基本です。</li>
                 <li>1社では103万円未満でも、2社合計で123万円や130万円を超えることがあります。</li>
                 <li>税金、親の扶養、社会保険は基準が違うため、同じ合計収入でも影響の出方が異なります。</li>
@@ -174,7 +174,7 @@ export default function KakeMochiBaitoFuyoPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">合算した年収で試算する</h3>

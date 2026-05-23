@@ -53,10 +53,10 @@ export default function SocialInsuranceCaseStudyPage() {
             </p>
           </div>
 
-          <Card className="border-amber-200 bg-amber-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-amber-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-amber-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>106万円は独立した法定ラインではなく、月額8.8万円の目安として使われる通称です。</li>
                 <li>130万円は被扶養者認定の基本ラインですが、19歳以上23歳未満は150万円未満の特例があります。</li>
                 <li>勤務先で自分が加入するかどうかは、週20時間、月額賃金、学生区分、企業規模などを確認します。</li>
@@ -174,7 +174,7 @@ export default function SocialInsuranceCaseStudyPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">自分のケースで条件を追加する</h3>

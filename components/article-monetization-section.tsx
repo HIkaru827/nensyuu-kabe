@@ -25,13 +25,13 @@ export function ArticleMonetizationSection() {
 
   return (
     <section className="space-y-4">
-      <Card className="border-sky-200 bg-sky-50">
+      <Card className="border-slate-200 bg-slate-50">
         <CardContent className="space-y-4 pt-6">
           <div className="flex items-start gap-3">
-            <BriefcaseBusiness className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" />
+            <BriefcaseBusiness className="mt-0.5 h-5 w-5 shrink-0 text-slate-700" />
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-sky-950">条件に合う仕事も合わせて見る</h2>
-              <p className="text-sm leading-relaxed text-sky-900">
+              <h2 className="text-lg font-bold text-slate-950">条件に合う仕事も合わせて見る</h2>
+              <p className="text-sm leading-relaxed text-slate-700">
                 壁の手前で調整するか、超えてしっかり働くかは、求人の選び方でかなり変わります。
                 記事で論点を整理したあとに、探し方の入口もそろえておくと判断しやすくなります。
               </p>
@@ -50,8 +50,8 @@ export function ArticleMonetizationSection() {
             />
           )}
 
-          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-sky-200 bg-white/80 px-4 py-3">
-            <Calculator className="h-4 w-4 text-sky-700" />
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white/80 px-4 py-3">
+            <Calculator className="h-4 w-4 text-slate-700" />
             <p className="flex-1 text-sm text-slate-700">
               先に年収のラインを試算してから求人を見ると、働き方の候補を絞り込みやすくなります。
             </p>

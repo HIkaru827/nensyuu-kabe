@@ -53,10 +53,10 @@ export default function AprilToJuneWorkTooMuchPage() {
             </p>
           </div>
 
-          <Card className="border-amber-200 bg-amber-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-amber-950">最初に結論</h2>
-              <ul className="space-y-2 text-sm text-amber-900">
+              <h2 className="text-lg font-bold text-slate-950">最初に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>「4月・5月・6月に働きすぎると9月から高くなる」という話は、原則として税金ではなく社会保険料の話です。</li>
                 <li>日本年金機構の算定基礎届では、4月から6月の報酬をもとに、その年9月から翌年8月までの保険料の基礎を決めます。</li>
                 <li>ただし、この話は勤務先で健康保険・厚生年金の被保険者になっている人の話です。</li>
@@ -153,7 +153,7 @@ export default function AprilToJuneWorkTooMuchPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">自分のケースを落ち着いて確認する</h3>

@@ -61,10 +61,10 @@ export default function DaigakuseiBaitoFuyoPage() {
             note="大学生は19歳以上23歳未満の特例や学生区分が関わるため、年収だけで断定しない前提で整理しています。"
           />
 
-          <Card className="border-emerald-200 bg-emerald-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-emerald-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-emerald-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>本人の所得税だけなら、給与収入160万円までが大きな目安です。</li>
                 <li>親の通常の扶養控除を守りたいなら、給与収入123万円までが目安です。</li>
                 <li>19歳以上23歳未満なら、123万円を超えても188万円まで特定親族特別控除が段階適用され得ます。</li>
@@ -142,7 +142,7 @@ export default function DaigakuseiBaitoFuyoPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">自分の年収で確認する</h3>

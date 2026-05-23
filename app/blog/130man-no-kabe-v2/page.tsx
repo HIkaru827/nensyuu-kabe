@@ -61,10 +61,10 @@ export default function Blog130ManV2Page() {
             note="130万円を超えた後の扱いは、被扶養者認定と勤務先加入で判断が分かれます。この記事ではそこを混同しないように整理しています。"
           />
 
-          <Card className="border-amber-200 bg-amber-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-amber-950">結論</h2>
-              <ul className="space-y-2 text-sm text-amber-900">
+              <h2 className="text-lg font-bold text-slate-950">結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>130万円を超えると、家族の社会保険の被扶養者認定から外れる可能性があります。</li>
                 <li>ただし、その後に自分で社会保険へ加入するかどうかは、勤務条件や勤務先規模など別の判定が必要です。</li>
                 <li>19歳以上23歳未満は、被扶養者認定の年収要件が150万円未満です。</li>
@@ -172,7 +172,7 @@ export default function Blog130ManV2Page() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">年収だけで断定しない前提で確認する</h3>

@@ -53,10 +53,10 @@ export default function Student123ManParentImpactPage() {
             </p>
           </div>
 
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-blue-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-blue-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>子どもの給与収入が123万円を超えると、親の扶養控除は原則そのままでは見られません。</li>
                 <li>ただし、19歳以上23歳未満なら188万円まで特定親族特別控除が段階的に残る可能性があります。</li>
                 <li>親の負担増は一律ではなく、子どもの年齢帯と親の税率で差が出ます。</li>
@@ -177,7 +177,7 @@ export default function Student123ManParentImpactPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">親への影響も含めて試算する</h3>

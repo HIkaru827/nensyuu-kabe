@@ -6,13 +6,13 @@ import { Card, CardContent } from "@/components/ui/card"
  */
 export function TldrBox({ children }: { children: React.ReactNode }) {
   return (
-    <Card className="bg-blue-50 border-blue-200 my-6">
+    <Card className="my-6 border-slate-200 bg-slate-50">
       <CardContent className="pt-6">
         <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+          <Info className="mt-0.5 h-5 w-5 shrink-0 text-slate-700" />
           <div>
-            <h3 className="text-sm font-bold text-blue-900 mb-2">📌 この記事のポイント（TL;DR）</h3>
-            <div className="text-sm text-blue-800 space-y-2">
+            <h3 className="mb-2 text-sm font-bold text-slate-950">この記事のポイント</h3>
+            <div className="space-y-2 text-sm text-slate-700">
               {children}
             </div>
           </div>
@@ -27,13 +27,13 @@ export function TldrBox({ children }: { children: React.ReactNode }) {
  */
 export function GoodCaseBox({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Card className="bg-emerald-50 border-emerald-200 my-4">
+    <Card className="my-4 border-sky-200 bg-sky-50">
       <CardContent className="pt-4">
         <div className="flex items-start gap-3">
-          <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
+          <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" />
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-emerald-900 mb-2">✅ {title}</h4>
-            <div className="text-sm text-emerald-800">
+            <h4 className="mb-2 text-sm font-bold text-sky-950">{title}</h4>
+            <div className="text-sm text-slate-700">
               {children}
             </div>
           </div>
@@ -48,13 +48,13 @@ export function GoodCaseBox({ title, children }: { title: string; children: Reac
  */
 export function BadCaseBox({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Card className="bg-red-50 border-red-200 my-4">
+    <Card className="my-4 border-slate-200 bg-slate-50">
       <CardContent className="pt-4">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-700" />
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-red-900 mb-2">❌ {title}</h4>
-            <div className="text-sm text-red-800">
+            <h4 className="mb-2 text-sm font-bold text-slate-950">{title}</h4>
+            <div className="text-sm text-slate-700">
               {children}
             </div>
           </div>
@@ -69,13 +69,13 @@ export function BadCaseBox({ title, children }: { title: string; children: React
  */
 export function TipBox({ children }: { children: React.ReactNode }) {
   return (
-    <Card className="bg-amber-50 border-amber-200 my-4">
+    <Card className="my-4 border-slate-200 bg-slate-50">
       <CardContent className="pt-4">
         <div className="flex items-start gap-3">
-          <Lightbulb className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-slate-700" />
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-amber-900 mb-2">💡 ヒント</h4>
-            <div className="text-sm text-amber-800">
+            <h4 className="mb-2 text-sm font-bold text-slate-950">ヒント</h4>
+            <div className="text-sm text-slate-700">
               {children}
             </div>
           </div>
@@ -90,13 +90,13 @@ export function TipBox({ children }: { children: React.ReactNode }) {
  */
 export function ActionBox({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Card className="bg-purple-50 border-purple-200 my-4">
+    <Card className="my-4 border-sky-200 bg-sky-50">
       <CardContent className="pt-4">
         <div className="flex items-start gap-3">
-          <TrendingUp className="w-5 h-5 text-purple-600 mt-0.5 shrink-0" />
+          <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" />
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-purple-900 mb-2">🎯 {title}</h4>
-            <div className="text-sm text-purple-800">
+            <h4 className="mb-2 text-sm font-bold text-sky-950">{title}</h4>
+            <div className="text-sm text-slate-700">
               {children}
             </div>
           </div>
@@ -113,11 +113,11 @@ export function TargetAudienceBox({ audiences }: { audiences: string[] }) {
   return (
     <Card className="bg-slate-50 border-slate-200 my-6">
       <CardContent className="pt-4">
-        <h3 className="text-sm font-bold text-slate-900 mb-3">👥 こんな人におすすめ</h3>
+        <h3 className="mb-3 text-sm font-bold text-slate-950">こんな人におすすめ</h3>
         <ul className="space-y-2">
           {audiences.map((audience, index) => (
-            <li key={index} className="text-sm text-slate-700 flex items-start gap-2">
-              <span className="text-primary shrink-0">✓</span>
+            <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
+              <span className="shrink-0 text-sky-700">✓</span>
               <span>{audience}</span>
             </li>
           ))}
@@ -151,9 +151,9 @@ export function ComparisonTable({
         </thead>
         <tbody>
           {rows.map((row, rowIndex) => (
-            <tr 
-              key={rowIndex} 
-              className={row.highlight ? "bg-blue-50" : rowIndex % 2 === 0 ? "bg-white" : "bg-slate-50"}
+            <tr
+              key={rowIndex}
+              className={row.highlight ? "bg-slate-100" : rowIndex % 2 === 0 ? "bg-white" : "bg-slate-50"}
             >
               <td className="border border-border px-4 py-3 text-sm font-medium text-slate-900">
                 {row.label}
@@ -161,7 +161,7 @@ export function ComparisonTable({
               {row.values.map((value, valueIndex) => (
                 <td 
                   key={valueIndex} 
-                  className={`border border-border px-4 py-3 text-sm ${row.highlight ? "font-bold text-primary" : "text-slate-700"}`}
+                  className={`border border-border px-4 py-3 text-sm ${row.highlight ? "font-semibold text-slate-950" : "text-slate-700"}`}
                 >
                   {value}
                 </td>
@@ -203,7 +203,7 @@ export function StepByStep({ steps }: { steps: { title: string; description: str
 export function QaSection({ qas }: { qas: { question: string; answer: string }[] }) {
   return (
     <div className="space-y-4 my-6">
-      <h3 className="text-lg font-bold text-foreground">💬 よくある質問</h3>
+      <h3 className="text-lg font-bold text-foreground">よくある質問</h3>
       {qas.map((qa, index) => (
         <Card key={index}>
           <CardContent className="pt-4">

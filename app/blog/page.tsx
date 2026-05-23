@@ -100,7 +100,7 @@ export default function BlogPage() {
                   <CardHeader>
                     <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span className="rounded bg-primary/10 px-2 py-1 text-primary">{getCategory(post.slug)}</span>
-                      <span className="rounded bg-green-100 px-2 py-1 font-semibold text-green-700">
+                      <span className="rounded bg-slate-100 px-2 py-1 font-semibold text-slate-700">
                         {post.publishedAt === post.updatedAt ? "新着" : "更新"}
                       </span>
                       <span className="flex items-center gap-1">

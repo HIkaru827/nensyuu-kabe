@@ -60,10 +60,10 @@ export default function ShakaiHokenPage() {
             note="社会保険は被扶養者認定と勤務先加入の2つの論点が混ざりやすいため、この記事では順番に切り分けています。"
           />
 
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="pt-6 space-y-3">
-              <h2 className="text-lg font-bold text-blue-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-blue-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>・ 130万円は、被扶養者認定の年間収入要件として使う数字です</li>
                 <li>・ 106万円は法律上の独立基準ではなく、月額 8.8万円の参考値です</li>
                 <li>・ 短時間労働者への適用は、週20時間、月額8.8万円、学生区分、企業規模などで決まります</li>
@@ -194,7 +194,7 @@ export default function ShakaiHokenPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="pt-6 text-center space-y-4">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">あなたの条件で整理する</h3>

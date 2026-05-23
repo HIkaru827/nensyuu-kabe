@@ -61,10 +61,10 @@ export default function KoukouseiBaitoFuyoPage() {
             note="103万円という古いイメージが残りやすいため、現行ルールで重要な123万円、130万円、160万円との違いを明示しています。"
           />
 
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-blue-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-blue-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>本人の所得税だけなら、今は103万円ではなく160万円が大きな目安です。</li>
                 <li>親の扶養控除を守りたいなら、給与収入123万円が目安です。</li>
                 <li>親の扶養控除は、原則としてその年12月31日時点で16歳以上の子が対象です。</li>
@@ -136,7 +136,7 @@ export default function KoukouseiBaitoFuyoPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">高校生バイトの年収ラインを確認する</h3>

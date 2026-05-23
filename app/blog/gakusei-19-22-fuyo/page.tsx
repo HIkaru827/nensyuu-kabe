@@ -61,10 +61,10 @@ export default function Gakusei1922FuyoPage() {
             note="123万円、150万円未満、160万円、188万円はそれぞれ意味が違います。この記事では年齢特例を前提に見分けています。"
           />
 
-          <Card className="border-violet-200 bg-violet-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-violet-950">先に結論</h2>
-              <ul className="space-y-2 text-sm text-violet-900">
+              <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>親の通常の扶養控除は、給与収入123万円までが目安です。</li>
                 <li>19歳以上23歳未満は、123万円超〜188万円で特定親族特別控除が段階適用され得ます。</li>
                 <li>本人の所得税は、給与収入160万円までなら発生しない設計です。</li>
@@ -142,7 +142,7 @@ export default function Gakusei1922FuyoPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">19歳から22歳の年収ラインを確認する</h3>

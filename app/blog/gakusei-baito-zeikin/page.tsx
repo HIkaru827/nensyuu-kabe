@@ -61,10 +61,10 @@ export default function GakuseiZeikinPage() {
             note="本人の税金、親の扶養、社会保険はそれぞれ基準が違います。この記事では学生向けに確認順をそろえています。"
           />
 
-          <Card className="border-emerald-200 bg-emerald-50">
+          <Card className="border-slate-200 bg-slate-50">
             <CardContent className="space-y-3 pt-6">
-              <h2 className="text-lg font-bold text-emerald-950">先に要点</h2>
-              <ul className="space-y-2 text-sm text-emerald-900">
+              <h2 className="text-lg font-bold text-slate-950">先に要点</h2>
+              <ul className="space-y-2 text-sm text-slate-700">
                 <li>学生本人の所得税は、給与収入160万円までなら発生しない設計です。</li>
                 <li>親の扶養控除は、原則として給与収入123万円までが目安です。</li>
                 <li>19歳以上23歳未満は、給与収入188万円まで特定親族特別控除の対象になり得ます。</li>
@@ -176,7 +176,7 @@ export default function GakuseiZeikinPage() {
           </Card>
           <ArticleMonetizationSection />
 
-          <Card className="border-primary bg-primary/5">
+          <Card className="border-slate-200 bg-slate-100/80">
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">現行法ベースでシミュレーターを見る</h3>
