@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useMemo, useState } from "react"
-import { AlertCircle, AlertTriangle, BookOpen, CheckCircle, Clock, ExternalLink, Info, TrendingUp } from "lucide-react"
+import { BookOpen, Clock, ExternalLink, Info, TrendingUp } from "lucide-react"
 import { JobAdSlot, AdSlot } from "@/components/ad-slot"
 import { GoogleAdSenseBanner } from "@/components/google-adsense"
 import { Button } from "@/components/ui/button"
@@ -15,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { buildResultCtaLinks } from "@/lib/affiliate-links"
 import {
   getSocialInsuranceDependentLimit,
@@ -59,7 +58,6 @@ function getStudentType(attribute: "daytime-student" | "evening-student" | "free
 }
 
 export function IncomeSimulator() {
-  const [mode, setMode] = useState<"simple" | "detailed">("simple")
   const [income, setIncome] = useState(100)
   const [age, setAge] = useState(20)
   const [ageInput, setAgeInput] = useState("20")
@@ -190,20 +188,10 @@ export function IncomeSimulator() {
   const statusConfig = useMemo(() => {
     const color = simulationResult.color
     return {
-      icon: color === "green" ? CheckCircle : color === "red" ? AlertCircle : AlertTriangle,
-      bgClass:
-        color === "green"
-          ? "bg-emerald-50 border-emerald-200"
-          : color === "red"
-            ? "bg-red-50 border-red-200"
-            : "bg-amber-50 border-amber-200",
-      textClass: color === "green" ? "text-emerald-700" : color === "red" ? "text-red-700" : "text-amber-700",
-      iconClass: color === "green" ? "text-emerald-500" : color === "red" ? "text-red-500" : "text-amber-500",
       barColor: color === "green" ? "bg-emerald-500" : color === "red" ? "bg-red-500" : "bg-amber-500",
     }
   }, [simulationResult.color])
 
-  const StatusIcon = statusConfig.icon
   const getPositionPercent = (value: number) => (value / 200) * 100
 
   const handleIncomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,270 +216,223 @@ export function IncomeSimulator() {
       <div className="mx-auto max-w-2xl space-y-2 text-center">
         <h1 className="text-3xl font-bold text-foreground sm:text-4xl">年収の壁シミュレーター</h1>
         <p className="text-sm text-muted-foreground sm:text-base">
-          まずは簡易判定で全体像をつかみ、必要なら詳細条件を追加してより具体的な試算まで進められます。
+          年収、年齢、勤務条件を入れると、手元に残るお金と扶養・社会保険への影響をまとめて確認できます。
         </p>
         <p className="text-xs font-semibold text-primary">2026年4月15日時点の公的情報を確認して更新</p>
       </div>
 
       <div className="lg:hidden">
-        {mode === "simple" ? (
-          <Card className={`border-2 ${statusConfig.bgClass}`}>
-            <CardContent className="space-y-2 pb-4 pt-4">
-              <div className="flex items-start gap-3">
-                <StatusIcon className={`mt-0.5 h-5 w-5 shrink-0 ${statusConfig.iconClass}`} />
-                <div className="space-y-1">
-                  <p className={`text-sm font-bold ${statusConfig.textClass}`}>{simulationResult.label}</p>
-                  <p className="text-sm text-foreground">{simulationResult.headline}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="border-primary/20 bg-primary/5">
-            <CardContent className="grid gap-3 pb-4 pt-4 sm:grid-cols-2">
-              <div>
-                <p className="text-xs font-semibold text-primary">
-                  {includeParentImpactInTakeHome ? "親への影響を含めた見込み" : "いまの見込み手取り"}
-                </p>
-                <p className="mt-1 text-xl font-bold text-foreground">
-                  {formatCurrency(displayedTakeHome)}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-primary">親の税負担増の目安</p>
-                <p className="mt-1 text-xl font-bold text-foreground">
-                  {formatCurrency(detailedResult.parentTaxDeltaEstimate)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="grid gap-3 pb-4 pt-4 sm:grid-cols-2">
+            <div>
+              <p className="text-xs font-semibold text-primary">
+                {includeParentImpactInTakeHome ? "親への影響を含めた見込み" : "いまの見込み手取り"}
+              </p>
+              <p className="mt-1 text-xl font-bold text-foreground">
+                {formatCurrency(displayedTakeHome)}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-primary">親の税負担増の目安</p>
+              <p className="mt-1 text-xl font-bold text-foreground">
+                {formatCurrency(detailedResult.parentTaxDeltaEstimate)}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-start">
         <Card className="border border-border shadow-md">
           <CardContent className="space-y-6 pt-6">
-            <Tabs value={mode} onValueChange={(value) => setMode(value as "simple" | "detailed")} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="simple">簡易版</TabsTrigger>
-                <TabsTrigger value="detailed">詳細版</TabsTrigger>
-              </TabsList>
+            <div className="space-y-6">
+              <div className="flex items-baseline justify-center gap-2">
+                <Input
+                  type="number"
+                  value={income}
+                  onChange={handleIncomeChange}
+                  min={0}
+                  max={300}
+                  className="h-auto w-28 border-none p-0 text-center text-5xl font-bold shadow-none [appearance:textfield] focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+                <span className="text-2xl font-medium text-muted-foreground">万円</span>
+              </div>
 
-              <div className="space-y-6">
-                <div className="flex items-baseline justify-center gap-2">
+              <div className="space-y-2">
+                <Label htmlFor="age">その年の12月31日時点の年齢</Label>
+                <div className="flex items-center gap-2">
                   <Input
+                    id="age"
                     type="number"
-                    value={income}
-                    onChange={handleIncomeChange}
-                    min={0}
-                    max={300}
-                    className="h-auto w-28 border-none p-0 text-center text-5xl font-bold shadow-none [appearance:textfield] focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    inputMode="numeric"
+                    value={ageInput}
+                    onChange={handleAgeChange}
+                    onBlur={commitAgeInput}
+                    min={15}
+                    max={30}
+                    className="w-20 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
-                  <span className="text-2xl font-medium text-muted-foreground">万円</span>
+                  <span className="text-sm text-muted-foreground">歳</span>
+                  {age >= 19 && age <= 22 && (
+                    <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+                      <Info className="h-3 w-3" />
+                      19歳以上23歳未満
+                    </span>
+                  )}
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="age">その年の12月31日時点の年齢</Label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="age"
-                      type="number"
-                      inputMode="numeric"
-                      value={ageInput}
-                      onChange={handleAgeChange}
-                      onBlur={commitAgeInput}
-                      min={15}
-                      max={30}
-                      className="w-20 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    />
-                    <span className="text-sm text-muted-foreground">歳</span>
-                    {age >= 19 && age <= 22 && (
-                      <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
-                        <Info className="h-3 w-3" />
-                        19歳以上23歳未満
-                      </span>
-                    )}
+              <div className="space-y-3">
+                <Label>属性</Label>
+                <RadioGroup value={attribute} onValueChange={setAttribute as (value: string) => void} className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="daytime-student" id="daytime-student" />
+                    <Label htmlFor="daytime-student" className="cursor-pointer font-normal">昼間学生</Label>
                   </div>
-                </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="evening-student" id="evening-student" />
+                    <Label htmlFor="evening-student" className="cursor-pointer font-normal">夜間・通信・定時制など</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="freeter" id="freeter" />
+                    <Label htmlFor="freeter" className="cursor-pointer font-normal">学生ではない</Label>
+                  </div>
+                </RadioGroup>
+              </div>
 
-                <div className="space-y-3">
-                  <Label>属性</Label>
-                  <RadioGroup value={attribute} onValueChange={setAttribute as (value: string) => void} className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="daytime-student" id="daytime-student" />
-                      <Label htmlFor="daytime-student" className="cursor-pointer font-normal">昼間学生</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="evening-student" id="evening-student" />
-                      <Label htmlFor="evening-student" className="cursor-pointer font-normal">夜間・通信・定時制など</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="freeter" id="freeter" />
-                      <Label htmlFor="freeter" className="cursor-pointer font-normal">学生ではない</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
+              <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+                税法上の年齢判定と、19歳以上23歳未満の社会保険判定は12月31日時点の年齢で見ています。勤務条件や親の税率を入れて、数字を出せる範囲まで試算します。
+              </div>
 
-                <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-                  税法上の年齢判定と、19歳以上23歳未満の社会保険判定は12月31日時点の年齢で見ています。詳細版では勤務条件や親の税率を入れて、数字を出せる範囲まで試算します。
+              <div className="pb-2">
+                <Slider value={[income]} onValueChange={(value) => setIncome(value[0])} min={0} max={200} step={1} className="w-full" />
+                <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+                  <span>0万円</span>
+                  <span>200万円</span>
                 </div>
+              </div>
 
-                <div className="pb-2">
-                  <Slider value={[income]} onValueChange={(value) => setIncome(value[0])} min={0} max={200} step={1} className="w-full" />
-                  <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-                    <span>0万円</span>
-                    <span>200万円</span>
-                  </div>
-                </div>
-
-                <div className="relative pb-2 pt-8">
-                  <div className="absolute left-0 right-0 top-0">
-                    {thresholdMarkers.map((threshold) => (
-                      <div key={threshold.amount} className="absolute -translate-x-1/2 flex flex-col items-center" style={{ left: `${getPositionPercent(threshold.amount)}%` }}>
-                        <span className="whitespace-nowrap text-xs font-medium text-muted-foreground">{threshold.label}</span>
-                        <span className="whitespace-nowrap text-[10px] text-muted-foreground/70">{threshold.description}</span>
-                        <div className="mt-1 h-2 w-px bg-border" />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="relative mt-8 flex h-3 overflow-hidden rounded-full">
-                    {bandSegments.map((segment) => (
-                      <div
-                        key={segment.label}
-                        className={`h-full ${segment.className}`}
-                        style={{ width: `${(segment.width / 200) * 100}%` }}
-                      />
-                    ))}
-                  </div>
-                  <div className="absolute left-0 h-3 overflow-hidden rounded-full" style={{ top: "calc(2rem + 0.5rem)", width: `${getPositionPercent(income)}%` }}>
-                    <div className={`h-full w-full transition-colors duration-300 ${statusConfig.barColor}`} />
-                  </div>
-                </div>
-                <div className="grid gap-2 sm:grid-cols-3">
-                  {bandSegments.map((segment) => (
-                    <div key={segment.label} className="flex items-center gap-2 rounded-md bg-muted/40 px-3 py-2">
-                      <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${segment.className}`} />
-                      <span className="text-xs text-muted-foreground">{segment.label}</span>
+              <div className="relative pb-2 pt-8">
+                <div className="absolute left-0 right-0 top-0">
+                  {thresholdMarkers.map((threshold) => (
+                    <div key={threshold.amount} className="absolute -translate-x-1/2 flex flex-col items-center" style={{ left: `${getPositionPercent(threshold.amount)}%` }}>
+                      <span className="whitespace-nowrap text-xs font-medium text-muted-foreground">{threshold.label}</span>
+                      <span className="whitespace-nowrap text-[10px] text-muted-foreground/70">{threshold.description}</span>
+                      <div className="mt-1 h-2 w-px bg-border" />
                     </div>
                   ))}
                 </div>
-
-                <TabsContent value="simple" className="mt-0" />
-
-                <TabsContent value="detailed" className="mt-0">
-                  <div className="space-y-4 rounded-xl border border-border bg-muted/30 p-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="weekly-hours">週の所定労働時間</Label>
-                        <Input id="weekly-hours" type="number" min={0} max={60} value={weeklyHours} onChange={(e) => setWeeklyHours(Math.max(0, Number(e.target.value) || 0))} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="monthly-salary">月額賃金</Label>
-                        <Input id="monthly-salary" type="number" min={0} value={monthlySalary} onChange={(e) => setMonthlySalary(Math.max(0, Number(e.target.value) || 0))} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>勤務先規模</Label>
-                        <Select value={companySize} onValueChange={(value) => setCompanySize(value as CompanySize)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="over_50">51人以上</SelectItem>
-                            <SelectItem value="under_51">50人以下</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>親の限界税率</Label>
-                        <Select value={String(parentTaxRate)} onValueChange={(value) => setParentTaxRate(Number(value) as ParentTaxRate)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="0.05">5%</SelectItem>
-                            <SelectItem value="0.1">10%</SelectItem>
-                            <SelectItem value="0.2">20%</SelectItem>
-                            <SelectItem value="0.23">23%</SelectItem>
-                            <SelectItem value="0.33">33%</SelectItem>
-                            <SelectItem value="0.4">40%</SelectItem>
-                            <SelectItem value="0.45">45%</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>扶養を外れた後の加入先</Label>
-                        <Select value={socialInsuranceRoute} onValueChange={(value) => setSocialInsuranceRoute(value as SocialInsuranceRoute)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="undecided">まだ決まっていない</SelectItem>
-                            <SelectItem value="employee">勤務先の社会保険</SelectItem>
-                            <SelectItem value="national">国民健康保険・国民年金</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>学生納付特例の対象確認</Label>
-                        <Select value={studentPensionSpecialStatus} onValueChange={(value) => setStudentPensionSpecialStatus(value as StudentPensionSpecialStatus)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="unknown">まだ確認していない</SelectItem>
-                            <SelectItem value="eligible">対象要件を満たす</SelectItem>
-                            <SelectItem value="not_eligible">対象外</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground">
-                          学生納付特例は前年所得などで決まります。未確認なら国民年金は確定額にしません。
-                        </p>
-                      </div>
-                    </div>
-                    {socialInsuranceRoute === "national" && (
-                      <div className="space-y-2">
-                        <Label htmlFor="national-health-insurance">国民健康保険料の年額</Label>
-                        <Input
-                          id="national-health-insurance"
-                          type="number"
-                          min={0}
-                          value={nationalHealthInsuranceAnnual}
-                          onChange={(e) => {
-                            const value = e.target.value
-                            setNationalHealthInsuranceAnnual(value === "" ? "" : Math.max(0, Number(value) || 0))
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </TabsContent>
+                <div className="relative mt-8 flex h-3 overflow-hidden rounded-full">
+                  {bandSegments.map((segment) => (
+                    <div
+                      key={segment.label}
+                      className={`h-full ${segment.className}`}
+                      style={{ width: `${(segment.width / 200) * 100}%` }}
+                    />
+                  ))}
+                </div>
+                <div className="absolute left-0 h-3 overflow-hidden rounded-full" style={{ top: "calc(2rem + 0.5rem)", width: `${getPositionPercent(income)}%` }}>
+                  <div className={`h-full w-full transition-colors duration-300 ${statusConfig.barColor}`} />
+                </div>
               </div>
-            </Tabs>
+              <div className="grid gap-2 sm:grid-cols-3">
+                {bandSegments.map((segment) => (
+                  <div key={segment.label} className="flex items-center gap-2 rounded-md bg-muted/40 px-3 py-2">
+                    <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${segment.className}`} />
+                    <span className="text-xs text-muted-foreground">{segment.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-4 rounded-xl border border-border bg-muted/30 p-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="weekly-hours">週の所定労働時間</Label>
+                    <Input id="weekly-hours" type="number" min={0} max={60} value={weeklyHours} onChange={(e) => setWeeklyHours(Math.max(0, Number(e.target.value) || 0))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="monthly-salary">月額賃金</Label>
+                    <Input id="monthly-salary" type="number" min={0} value={monthlySalary} onChange={(e) => setMonthlySalary(Math.max(0, Number(e.target.value) || 0))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>勤務先規模</Label>
+                    <Select value={companySize} onValueChange={(value) => setCompanySize(value as CompanySize)}>
+                      <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="over_50">51人以上</SelectItem>
+                        <SelectItem value="under_51">50人以下</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>親の限界税率</Label>
+                    <Select value={String(parentTaxRate)} onValueChange={(value) => setParentTaxRate(Number(value) as ParentTaxRate)}>
+                      <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0.05">5%</SelectItem>
+                        <SelectItem value="0.1">10%</SelectItem>
+                        <SelectItem value="0.2">20%</SelectItem>
+                        <SelectItem value="0.23">23%</SelectItem>
+                        <SelectItem value="0.33">33%</SelectItem>
+                        <SelectItem value="0.4">40%</SelectItem>
+                        <SelectItem value="0.45">45%</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>扶養を外れた後の加入先</Label>
+                    <Select value={socialInsuranceRoute} onValueChange={(value) => setSocialInsuranceRoute(value as SocialInsuranceRoute)}>
+                      <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="undecided">まだ決まっていない</SelectItem>
+                        <SelectItem value="employee">勤務先の社会保険</SelectItem>
+                        <SelectItem value="national">国民健康保険・国民年金</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>学生納付特例の対象確認</Label>
+                    <Select value={studentPensionSpecialStatus} onValueChange={(value) => setStudentPensionSpecialStatus(value as StudentPensionSpecialStatus)}>
+                      <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unknown">まだ確認していない</SelectItem>
+                        <SelectItem value="eligible">対象要件を満たす</SelectItem>
+                        <SelectItem value="not_eligible">対象外</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      学生納付特例は前年所得などで決まります。未確認なら国民年金は確定額にしません。
+                    </p>
+                  </div>
+                </div>
+                {socialInsuranceRoute === "national" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="national-health-insurance">国民健康保険料の年額</Label>
+                    <Input
+                      id="national-health-insurance"
+                      type="number"
+                      min={0}
+                      value={nationalHealthInsuranceAnnual}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        setNationalHealthInsuranceAnnual(value === "" ? "" : Math.max(0, Number(value) || 0))
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
         <div className="space-y-6 lg:sticky lg:top-24">
-          {mode === "simple" ? (
-            <Card className={`border-2 ${statusConfig.bgClass} shadow-md`}>
-              <CardContent className="space-y-3 pb-5 pt-5">
-                <div className="flex items-start gap-3">
-                  <StatusIcon className={`mt-0.5 h-6 w-6 shrink-0 ${statusConfig.iconClass}`} />
-                  <div className="space-y-1">
-                    <h2 className={`text-lg font-bold ${statusConfig.textClass}`}>{simulationResult.label}</h2>
-                    <p className="text-sm font-medium text-foreground/90">{simulationResult.headline}</p>
-                  </div>
-                </div>
-                <p className="whitespace-pre-line text-xs leading-relaxed text-muted-foreground">{simulationResult.description}</p>
-                <ul className="space-y-1 border-t border-current/10 pt-3">
-                  {simulationResult.advice.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <span className="shrink-0">-</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-4">
+          <div className="space-y-4">
               <Card className="border-blue-200 bg-blue-50 shadow-md">
                 <CardContent className="space-y-5 pb-5 pt-5">
                   <div className="flex items-start gap-3">
                     <Info className="mt-0.5 h-6 w-6 shrink-0 text-blue-600" />
                     <div className="space-y-1">
-                      <h2 className="text-lg font-bold text-blue-900">詳細試算</h2>
+                      <h2 className="text-lg font-bold text-blue-900">試算結果</h2>
                       <p className="text-sm text-blue-900">手元に残る金額を中心に、本人の税金、親への影響、社会保険をまとめて見られます。</p>
                     </div>
                   </div>
@@ -580,7 +521,6 @@ export function IncomeSimulator() {
                 </CardContent>
               </Card>
             </div>
-          )}
 
           <div className="space-y-3">
             {income >= socialInsuranceLimit && income < 160 && ctaLinks.highWage && ctaLinks.flexible && (
