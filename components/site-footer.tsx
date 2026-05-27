@@ -38,6 +38,16 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/editorial-policy" className="text-muted-foreground hover:text-primary transition-colors">
+                  編集方針
+                </Link>
+              </li>
+              <li>
+                <Link href="/site-map" className="text-muted-foreground hover:text-primary transition-colors">
+                  サイトマップ
+                </Link>
+              </li>
+              <li>
                 <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">
                   プライバシーポリシー
                 </Link>
