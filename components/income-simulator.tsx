@@ -312,10 +312,15 @@ export function IncomeSimulator() {
                 </div>
               </div>
 
-              <div className="relative pb-2 pt-8">
+              <div className="relative pb-2 pt-4 sm:pt-8">
                 <div className="absolute left-0 right-0 top-0">
                   {thresholdMarkers.map((threshold) => (
                     <div key={threshold.amount} className="absolute -translate-x-1/2 flex flex-col items-center" style={{ left: `${getPositionPercent(threshold.amount)}%` }}>
+                      <div className="h-3 w-px bg-border sm:hidden" />
+                    </div>
+                  ))}
+                  {thresholdMarkers.map((threshold) => (
+                    <div key={`${threshold.amount}-${threshold.description}`} className="absolute hidden -translate-x-1/2 flex-col items-center sm:flex" style={{ left: `${getPositionPercent(threshold.amount)}%` }}>
                       <span className="whitespace-nowrap text-xs font-medium text-muted-foreground">{threshold.label}</span>
                       <span className="whitespace-nowrap text-[10px] text-muted-foreground/70">{threshold.description}</span>
                       <div className="mt-1 h-2 w-px bg-border" />
@@ -334,6 +339,14 @@ export function IncomeSimulator() {
                 <div className="absolute left-0 h-3 overflow-hidden rounded-full" style={{ top: "calc(2rem + 0.5rem)", width: `${getPositionPercent(income)}%` }}>
                   <div className={`h-full w-full transition-colors duration-300 ${statusConfig.barColor}`} />
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:hidden">
+                {thresholdMarkers.map((threshold) => (
+                  <div key={`mobile-${threshold.amount}-${threshold.description}`} className="rounded-md bg-muted/40 px-3 py-2">
+                    <p className="text-xs font-semibold text-foreground">{threshold.label}</p>
+                    <p className="text-[11px] text-muted-foreground">{threshold.description}</p>
+                  </div>
+                ))}
               </div>
               <div className="grid gap-2 sm:grid-cols-3">
                 {bandSegments.map((segment) => (
