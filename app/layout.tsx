@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from "@/components/google-analytics"
-import { GoogleAdSenseScript } from "@/components/google-adsense"
 import { DEFAULT_KEYWORDS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 import "./globals.css"
 
@@ -95,11 +94,17 @@ export default function RootLayout({
 
   return (
     <html lang="ja">
+      <head>
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="font-sans antialiased">
         {children}
         <Analytics />
         {gaId && <GoogleAnalytics gaId={gaId} />}
-        <GoogleAdSenseScript client={adsenseClient} />
       </body>
     </html>
   )
