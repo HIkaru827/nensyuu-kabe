@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 export const metadata = {
   title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
   description:
-    "大学生アルバイトがいくらまで稼げるかを、本人の所得税160万円、親の扶養控除123万円、19歳以上23歳未満の特定親族特別控除188万円、社会保険の扱いに分けて整理します。",
+    "大学生アルバイトがいくらまで稼げるかを、本人の所得税178万円、親の扶養控除136万円、19歳以上23歳未満の特定親族特別控除197万円、社会保険の扱いに分けて整理します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/daigakusei-baito-fuyo",
   },
@@ -24,9 +24,9 @@ export default function DaigakuseiBaitoFuyoPage() {
     <>
       <ArticleStructuredData
         title="大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説"
-        description="大学生アルバイトがいくらまで稼げるかを、本人の所得税160万円、親の扶養控除123万円、19歳以上23歳未満の特定親族特別控除188万円、社会保険の扱いに分けて整理します。"
+        description="大学生アルバイトがいくらまで稼げるかを、本人の所得税178万円、親の扶養控除136万円、19歳以上23歳未満の特定親族特別控除197万円、社会保険の扱いに分けて整理します。"
         datePublished="2026-04-09T00:00:00Z"
-        dateModified="2026-04-09T00:00:00Z"
+        dateModified="2026-07-06T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -50,12 +50,12 @@ export default function DaigakuseiBaitoFuyoPage() {
               親の扶養・税金・社会保険を年収別に解説
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年4月9日時点の公的資料に基づき、大学生が確認すべき年収ラインを分けて整理しています。
+              2026年7月6日時点の公的資料に基づき、大学生が確認すべき年収ラインを分けて整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年4月15日"
+            checkedAt="2026年7月6日"
             audience="大学生バイトで親の扶養、本人の税金、社会保険をまとめて確認したい人"
             sources="国税庁、日本年金機構"
             note="大学生は19歳以上23歳未満の特例や学生区分が関わるため、年収だけで断定しない前提で整理しています。"
@@ -65,9 +65,9 @@ export default function DaigakuseiBaitoFuyoPage() {
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
               <ul className="space-y-2 text-sm text-slate-700">
-                <li>本人の所得税だけなら、給与収入160万円までが大きな目安です。</li>
-                <li>親の通常の扶養控除を守りたいなら、給与収入123万円までが目安です。</li>
-                <li>19歳以上23歳未満なら、123万円を超えても188万円まで特定親族特別控除が段階適用され得ます。</li>
+                <li>本人の所得税だけなら、給与収入178万円までが大きな目安です。</li>
+                <li>親の通常の扶養控除を守りたいなら、給与収入136万円までが目安です。</li>
+                <li>19歳以上23歳未満なら、136万円を超えても197万円まで特定親族特別控除が段階適用され得ます。</li>
                 <li>社会保険は税金と別判定です。学生区分や勤務条件も見ます。</li>
               </ul>
             </CardContent>
@@ -83,10 +83,11 @@ export default function DaigakuseiBaitoFuyoPage() {
                     <span>主な注意点</span>
                   </div>
                   {[
-                    ["123万円以下", "親の通常の扶養控除の対象になりやすい範囲です。"],
-                    ["123万円超〜160万円", "本人の所得税は原則0円でも、親の控除は特定親族特別控除の確認が必要です。"],
-                    ["160万円超〜188万円", "本人の所得税が発生し、親の控除も段階的に変わります。"],
-                    ["188万円超", "特定親族特別控除の対象外になり、親への影響が大きくなります。"],
+                    ["136万円以下", "親の通常の扶養控除の対象になりやすい範囲です。"],
+                    ["136万円超〜150万円未満", "特定親族特別控除の確認が必要です。社会保険の被扶養者要件も見ます。"],
+                    ["150万円以上〜178万円", "本人の所得税は原則0円見込みでも、社会保険の扶養は外れる可能性があります。"],
+                    ["178万円超〜197万円", "本人の所得税が発生し、親の控除も段階的に変わります。"],
+                    ["197万円超", "特定親族特別控除の対象外になり、親への影響が大きくなります。"],
                   ].map(([income, note]) => (
                     <div key={income} className="grid grid-cols-2 border-t border-border px-4 py-3 text-muted-foreground">
                       <span className="font-medium text-foreground">{income}</span>
@@ -97,24 +98,24 @@ export default function DaigakuseiBaitoFuyoPage() {
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">本人の税金は160万円を確認する</h2>
+                <h2 className="text-2xl font-bold text-foreground">本人の税金は178万円を確認する</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  令和7年分以後、給与所得控除の最低額は65万円です。低所得帯の基礎控除も踏まえると、
-                  給与収入160万円までなら所得税が発生しない設計です。
+                  令和8年分以後、令和8・9年分の給与所得控除の最低額は74万円です。低所得帯の基礎控除も踏まえると、
+                  給与収入178万円までなら所得税が発生しない設計です。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  ただし、住民税や社会保険は別の基準です。「160万円までなら全部安全」とまとめて考えない方が安心です。
+                  ただし、住民税や社会保険は別の基準です。「178万円までなら全部安全」とまとめて考えない方が安心です。
                 </p>
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">親の扶養は123万円と188万円を分ける</h2>
+                <h2 className="text-2xl font-bold text-foreground">親の扶養は136万円と197万円を分ける</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  親の通常の扶養控除は、子の合計所得金額58万円以下が目安です。給与収入だけなら、給与所得控除65万円を差し引くため、
-                  給与収入123万円までがひとつのラインになります。
+                  親の通常の扶養控除は、子の合計所得金額62万円以下が目安です。給与収入だけなら、給与所得控除74万円を差し引くため、
+                  給与収入136万円までがひとつのラインになります。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  大学生の多くが該当する19歳以上23歳未満では、123万円を超えても188万円まで特定親族特別控除が段階的に使える可能性があります。
+                  大学生の多くが該当する19歳以上23歳未満では、136万円を超えても197万円まで特定親族特別控除が段階的に使える可能性があります。
                 </p>
               </section>
 
@@ -133,8 +134,8 @@ export default function DaigakuseiBaitoFuyoPage() {
               <section className="space-y-3">
                 <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
                 <div className="space-y-3">
-                  <OfficialLink href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1177.htm" title="国税庁 特定親族特別控除" description="19歳以上23歳未満の控除と188万円までの段階適用を確認できます。" />
-                  <OfficialLink href="https://www.nenkin.go.jp/faq/kounen/tekiyoukakudai/tanjikan/shutokuyouken.html" title="日本年金機構 短時間労働者の加入要件" description="週20時間、月額賃金8.8万円、学生でないことなどを確認できます。" />
+                  <OfficialLink href="https://www.nta.go.jp/users/gensen/2026kiso/index.htm" title="国税庁 令和8年度税制改正" description="基礎控除、給与所得控除、扶養親族等の所得要件改正を確認できます。" />
+                  <OfficialLink href="https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/tanjikan.html" title="日本年金機構 短時間労働者の加入要件" description="週20時間、月額賃金8.8万円、学生でないことなどを確認できます。" />
                   <OfficialLink href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html" title="日本年金機構 19歳以上23歳未満の被扶養者認定" description="令和7年10月1日以後の150万円未満要件を確認できます。" />
                 </div>
               </section>

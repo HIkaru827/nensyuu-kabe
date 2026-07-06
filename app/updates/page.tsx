@@ -11,12 +11,21 @@ export const metadata = {
 
 const updates = [
   {
+    date: "2026年7月6日",
+    title: "学生バイト向けに2026年ルールと記事を拡充",
+    items: [
+      "令和8年分以後の所得税改正に合わせて、178万円・136万円・197万円の説明を更新",
+      "学生バイトの年収ライン、シフト調整、週20時間の社会保険、有給の給料方式の記事を追加",
+      "学生バイト年収ガイドとサイトマップの導線を更新",
+    ],
+  },
+  {
     date: "2026年4月15日",
     title: "運営情報と解説記事を拡充",
     items: [
       "トップページにサイトの目的、更新方針、おすすめ記事導線を追加",
       "運営者情報に編集方針、更新体制、読者への約束を追加",
-      "学生が123万円を超えた場合、掛け持ちバイト、社会保険ケース比較の記事を追加",
+      "学生の扶養、掛け持ちバイト、社会保険ケース比較の記事を追加",
     ],
   },
   {
@@ -42,9 +51,10 @@ export default function UpdatesPage() {
     { path: "/", purpose: "トップページの案内と導線を見直しました" },
     { path: "/about", purpose: "運営者情報、編集方針、更新体制を追記しました" },
     { path: "/updates", purpose: "更新履歴ページを新設しました" },
-    { path: "/student-baito", purpose: "確認日と参照元を明記しました" },
+    { path: "/student-baito", purpose: "学生バイト向けの年収ラインと関連記事導線を更新しました" },
     { path: "/blog", purpose: "記事一覧と新規記事への導線を整理しました" },
-    { path: "/blog/student-123man-parent-impact", purpose: "親への影響を整理した記事を追加しました" },
+    { path: "/blog/2026-student-income-wall", purpose: "2026年の学生バイト年収ラインを整理した記事を追加しました" },
+    { path: "/blog/student-123man-parent-impact", purpose: "親への影響を令和8年分以後の基準で整理しました" },
     { path: "/blog/kake-mochi-baito-fuyo", purpose: "掛け持ちバイト向けの記事を追加しました" },
     { path: "/blog/social-insurance-case-study", purpose: "ケース比較の記事を追加しました" },
   ]

@@ -48,7 +48,7 @@ export default function TermsPage() {
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   <strong>1. 情報の正確性について</strong><br />
-                  当サイトで提供する情報は、2025年度の税制に基づいた概算であり、実際の税額・社会保険料とは異なる場合があります。最終的な判断は、税務署・自治体・社会保険事務所等の公的機関でご確認ください。
+                  当サイトで提供する情報は、各ページに記載した確認日時点の公的資料に基づく概算であり、実際の税額・社会保険料とは異なる場合があります。最終的な判断は、税務署・自治体・年金事務所・加入中の健康保険等でご確認ください。
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   <strong>2. 損害賠償責任</strong><br />

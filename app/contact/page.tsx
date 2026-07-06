@@ -104,7 +104,7 @@ export default function ContactPage() {
                 <div className="space-y-1">
                   <p className="text-sm font-semibold text-foreground">Q. シミュレーション結果は正確ですか？</p>
                   <p className="text-sm text-muted-foreground">
-                    A. 2025年度の税制に基づいた概算です。最終的な判断は税務署・自治体でご確認ください。
+                    A. 各ページに記載した確認日時点の公的資料に基づく概算です。最終的な判断は税務署・自治体・年金事務所・加入中の健康保険等でご確認ください。
                   </p>
                 </div>
                 <div className="space-y-1">

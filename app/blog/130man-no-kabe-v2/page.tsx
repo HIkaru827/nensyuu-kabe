@@ -26,7 +26,7 @@ export default function Blog130ManV2Page() {
         title="130万円を超えるとどうなるか。被扶養者認定と勤務先加入を分けて確認"
         description="130万円を超えたときに何が起きるかを、被扶養者認定と勤務先での社会保険加入に分けて整理します。106万円だけでは判定できない点、学生や19歳以上23歳未満の扱いも現行ルールで説明します。"
         datePublished="2026-04-02T00:00:00Z"
-        dateModified="2026-04-02T00:00:00Z"
+        dateModified="2026-07-06T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -50,12 +50,12 @@ export default function Blog130ManV2Page() {
               被扶養者認定と勤務先加入を分けて確認
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年4月2日時点の公的資料に合わせて、年収だけでは断定できない点を明示して説明しています。
+              2026年7月6日時点の公的資料に合わせて、年収だけでは断定できない点を明示して説明しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年4月15日"
+            checkedAt="2026年7月6日"
             audience="130万円を超えるか迷っている学生・扶養内就業の人"
             sources="日本年金機構"
             note="130万円を超えた後の扱いは、被扶養者認定と勤務先加入で判断が分かれます。この記事ではそこを混同しないように整理しています。"

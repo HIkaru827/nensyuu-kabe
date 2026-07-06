@@ -66,17 +66,18 @@ export interface DetailedSimulationResult {
 }
 
 export const INCOME_THRESHOLDS = {
-  RESIDENT_TAX_START: 1_100_000,
-  INCOME_TAX_START: 1_600_000,
-  DEPENDENT_FULL: 1_230_000,
-  SPECIAL_DEPENDENT_MAX: 1_880_000,
+  RESIDENT_TAX_START: 1_190_000,
+  INCOME_TAX_START: 1_780_000,
+  DEPENDENT_FULL: 1_360_000,
+  SPECIAL_DEPENDENT_MAX: 1_970_000,
   SOCIAL_INSURANCE_LIMIT_DEFAULT: 1_300_000,
   SOCIAL_INSURANCE_LIMIT_AGE_19_TO_22: 1_500_000,
   STANDARD_RESIDENT_TAX_RATE: 0.1,
-  EMPLOYMENT_INCOME_DEDUCTION_MIN: 650_000,
-  BASIC_DEDUCTION_INCOME_TAX_LOW: 950_000,
-  BASIC_DEDUCTION_INCOME_TAX_STANDARD: 580_000,
+  EMPLOYMENT_INCOME_DEDUCTION_MIN: 740_000,
+  BASIC_DEDUCTION_INCOME_TAX_LOW: 1_040_000,
+  BASIC_DEDUCTION_INCOME_TAX_STANDARD: 620_000,
   BASIC_DEDUCTION_RESIDENT_TAX: 430_000,
+  RESIDENT_TAX_NON_TAXABLE_INCOME: 450_000,
   NATIONAL_PENSION_MONTHLY_2026: 17_920,
 } as const
 
@@ -181,13 +182,13 @@ function generateDescription(zone: IncomeZone, age: number, studentType: Student
     case IncomeZone.SAFE_RESIDENT:
       return `所得税は0円の見込みですが、住民税は自治体の扱いで変わることがあります。${socialInsuranceText}`
     case IncomeZone.DEPENDENT_FULL:
-      return `所得税は160万円まで0円の見込みで、税法上の扶養も123万円以下の範囲内です。${socialInsuranceText}`
+      return `所得税は178万円まで0円の見込みで、税法上の扶養も136万円以下の範囲内です。${socialInsuranceText}`
     case IncomeZone.SPECIAL_DEPENDENT:
-      return `19歳以上23歳未満なら、188万円まで特定親族特別控除の対象になり得ます。${socialInsuranceText}`
+      return `19歳以上23歳未満なら、197万円まで特定親族特別控除の対象になり得ます。${socialInsuranceText}`
     case IncomeZone.TAX_FREE_REVIEW:
       return `所得税はまだ0円の見込みですが、税法上の扶養には影響している可能性があります。${socialInsuranceText}`
     case IncomeZone.TAXABLE:
-      return `160万円を超えると所得税がかかる見込みで、扶養の扱いも確認が必要です。${socialInsuranceText}`
+      return `178万円を超えると所得税がかかる見込みで、扶養の扱いも確認が必要です。${socialInsuranceText}`
   }
 }
 
@@ -195,7 +196,7 @@ function generateAdvice(annualIncome: number, age: number, studentType: StudentT
   const advice: string[] = []
 
   if (annualIncome <= INCOME_THRESHOLDS.DEPENDENT_FULL) {
-    advice.push("税法上の扶養は123万円以下の範囲内です。")
+    advice.push("税法上の扶養は136万円以下の範囲内です。")
   } else if (isSpecialTaxDependent(age) && annualIncome <= INCOME_THRESHOLDS.SPECIAL_DEPENDENT_MAX) {
     advice.push("19歳以上23歳未満のため、特定親族特別控除の対象になり得ます。")
   } else {
@@ -212,8 +213,20 @@ function generateAdvice(annualIncome: number, age: number, studentType: StudentT
 }
 
 function getEmploymentIncome(annualIncome: number): number {
-  if (annualIncome <= 1_900_000) {
+  if (annualIncome < 741_000) {
+    return 0
+  }
+  if (annualIncome < 2_191_000) {
     return Math.max(0, annualIncome - INCOME_THRESHOLDS.EMPLOYMENT_INCOME_DEDUCTION_MIN)
+  }
+  if (annualIncome < 2_193_000) {
+    return 1_451_000
+  }
+  if (annualIncome < 2_196_000) {
+    return 1_453_000
+  }
+  if (annualIncome < 2_200_000) {
+    return 1_456_000
   }
   if (annualIncome <= 3_600_000) {
     return Math.max(0, Math.floor(annualIncome - (annualIncome * 0.3 + 80_000)))
@@ -278,12 +291,12 @@ function getSpecialDependentResidentTaxDeduction(totalIncome: number): number {
 
 function getParentIncomeTaxDeduction(age: number, totalIncome: number): number {
   if (isSpecialTaxDependent(age)) return getSpecialDependentIncomeTaxDeduction(totalIncome)
-  return totalIncome <= 580_000 ? 380_000 : 0
+  return totalIncome <= 620_000 ? 380_000 : 0
 }
 
 function getParentResidentTaxDeduction(age: number, totalIncome: number): number {
   if (isSpecialTaxDependent(age)) return getSpecialDependentResidentTaxDeduction(totalIncome)
-  return totalIncome <= 580_000 ? 330_000 : 0
+  return totalIncome <= 620_000 ? 330_000 : 0
 }
 
 function getFullParentIncomeTaxDeduction(age: number): number {
@@ -317,7 +330,10 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   const taxableIncomeForIncomeTax = Math.max(0, salaryIncome - incomeTaxBasicDeduction)
   const taxableIncomeForResidentTax = Math.max(0, salaryIncome - INCOME_THRESHOLDS.BASIC_DEDUCTION_RESIDENT_TAX)
   const incomeTaxEstimate = computeIncomeTax(taxableIncomeForIncomeTax)
-  const residentTaxIncomeLevyEstimate = Math.floor(taxableIncomeForResidentTax * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE)
+  const residentTaxIncomeLevyEstimate =
+    salaryIncome <= INCOME_THRESHOLDS.RESIDENT_TAX_NON_TAXABLE_INCOME
+      ? 0
+      : Math.floor(taxableIncomeForResidentTax * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE)
 
   const parentIncomeTaxDeduction = getParentIncomeTaxDeduction(params.age, salaryIncome)
   const parentResidentTaxDeduction = getParentResidentTaxDeduction(params.age, salaryIncome)
@@ -353,8 +369,8 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
 
   const assumptions = [
     "給与収入のみとして計算しています。",
-    "所得税の基礎控除は2026年分の現行ルールを前提にしています。",
-    "住民税の試算は、所得割のみを標準的な10%で計算しています。",
+    "所得税は令和8年分以後の基礎控除・給与所得控除の改正を前提にしています。",
+    "住民税の試算は、所得割のみを標準的な10%で計算し、自治体ごとの差がある均等割は含めていません。",
     "親の住民税への影響は、標準的な10%で概算しています。",
     "親の所得税への影響は、選択した限界税率で概算しています。",
   ]

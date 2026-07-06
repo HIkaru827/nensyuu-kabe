@@ -50,12 +50,76 @@ function getStudentType(attribute: Attribute): StudentType {
 }
 
 function getIncomeTrackingBand(incomeMan: number): string {
-  if (incomeMan <= 103) return "000_103"
-  if (incomeMan <= 123) return "104_123"
-  if (incomeMan < 130) return "124_129"
-  if (incomeMan < 160) return "130_159"
-  if (incomeMan <= 188) return "160_188"
-  return "189_plus"
+  if (incomeMan <= 119) return "000_119"
+  if (incomeMan <= 130) return "120_130"
+  if (incomeMan <= 136) return "131_136"
+  if (incomeMan < 150) return "137_149"
+  if (incomeMan <= 178) return "150_178"
+  if (incomeMan <= 197) return "179_197"
+  return "198_plus"
+}
+
+function getIncomeStatus(incomeMan: number, age: number) {
+  const socialLimitMan = getSocialInsuranceDependentLimit(age) / 10_000
+  const isSpecialAge = age >= 19 && age <= 22
+
+  if (incomeMan <= 136) {
+    return {
+      label: "扶養内の目安",
+      title: "親の税扶養は大きく崩れにくい年収帯です",
+      description: "令和8年分以後の所得税では、給与収入136万円以下が扶養控除の目安です。",
+      tone: "border-emerald-200 bg-emerald-50 text-emerald-950",
+      bar: "bg-emerald-500",
+    }
+  }
+
+  if (isSpecialAge && incomeMan <= 197) {
+    if (incomeMan >= socialLimitMan) {
+      return {
+        label: "社保と親の控除を確認",
+        title: "19〜22歳は社会保険と特定親族特別控除を分けて見ましょう",
+        description: "197万円以下なら親の控除が段階的に残る可能性がありますが、社会保険の扶養は別に確認が必要です。",
+        tone: "border-rose-200 bg-rose-50 text-rose-950",
+        bar: "bg-rose-500",
+      }
+    }
+
+    return {
+      label: "親の控除を確認",
+      title: "19〜22歳は特定親族特別控除の範囲を確認しましょう",
+      description: "136万円を超えても197万円以下なら、親の控除が段階的に残る可能性があります。",
+      tone: "border-amber-200 bg-amber-50 text-amber-950",
+      bar: "bg-amber-500",
+    }
+  }
+
+  if (incomeMan < socialLimitMan) {
+    return {
+      label: "税扶養に注意",
+      title: "親の税扶養には影響が出る可能性があります",
+      description: "社会保険の扶養目安は下回っていますが、親の税金への影響を確認しましょう。",
+      tone: "border-amber-200 bg-amber-50 text-amber-950",
+      bar: "bg-amber-500",
+    }
+  }
+
+  if (incomeMan <= 178) {
+    return {
+      label: "社保を確認",
+      title: "所得税は0円見込みでも、社会保険は確認が必要です",
+      description: "勤務先の条件や加入先によって手取りが変わるため、早めに確認しましょう。",
+      tone: "border-rose-200 bg-rose-50 text-rose-950",
+      bar: "bg-rose-500",
+    }
+  }
+
+  return {
+    label: "働き方を再設計",
+    title: "税金・扶養・社会保険をセットで見直す年収帯です",
+    description: "中途半端に超えるより、時給や勤務時間を上げて手取りを伸ばす選択肢もあります。",
+    tone: "border-blue-200 bg-blue-50 text-blue-950",
+    bar: "bg-blue-500",
+  }
 }
 
 function getAgeTrackingBand(age: number): string {
@@ -74,59 +138,6 @@ function getMonthlySalaryBand(monthlySalary: number): string {
   if (monthlySalary < 88_000) return "under_88000"
   if (monthlySalary < 108_334) return "88000_108333"
   return "108334_plus"
-}
-
-function getIncomeStatus(incomeMan: number, age: number) {
-  const socialLimitMan = getSocialInsuranceDependentLimit(age) / 10_000
-  const isSpecialAge = age >= 19 && age <= 22
-
-  if (incomeMan <= 123) {
-    return {
-      label: "扶養内の目安",
-      title: "親の税扶養は大きく崩れにくい年収帯です",
-      description: "住民税や自治体の扱いは別途確認しつつ、まずは安心しやすいラインです。",
-      tone: "border-emerald-200 bg-emerald-50 text-emerald-950",
-      bar: "bg-emerald-500",
-    }
-  }
-
-  if (isSpecialAge && incomeMan <= 188) {
-    return {
-      label: "親の控除を確認",
-      title: "19〜22歳は特定親族特別控除の範囲を確認しましょう",
-      description: "親の控除が段階的に変わるため、年末前に家庭で共有しておくと安心です。",
-      tone: "border-amber-200 bg-amber-50 text-amber-950",
-      bar: "bg-amber-500",
-    }
-  }
-
-  if (incomeMan < socialLimitMan) {
-    return {
-      label: "税扶養に注意",
-      title: "親の税扶養には影響が出る可能性があります",
-      description: "社会保険の扶養目安は下回っていますが、親の税金への影響を確認しましょう。",
-      tone: "border-amber-200 bg-amber-50 text-amber-950",
-      bar: "bg-amber-500",
-    }
-  }
-
-  if (incomeMan < 160) {
-    return {
-      label: "社保を確認",
-      title: "社会保険の扶養を外れる可能性が高い年収帯です",
-      description: "勤務先の条件や加入先によって手取りが変わるため、早めに確認しましょう。",
-      tone: "border-rose-200 bg-rose-50 text-rose-950",
-      bar: "bg-rose-500",
-    }
-  }
-
-  return {
-    label: "働き方を再設計",
-    title: "税金・扶養・社会保険をセットで見直す年収帯です",
-    description: "中途半端に超えるより、時給や勤務時間を上げて手取りを伸ばす選択肢もあります。",
-    tone: "border-blue-200 bg-blue-50 text-blue-950",
-    bar: "bg-blue-500",
-  }
 }
 
 export function IncomeSimulator() {
@@ -199,11 +210,11 @@ export function IncomeSimulator() {
   )
 
   const thresholdMarkers = [
-    { amount: 110, label: "110万円", text: "住民税の目安" },
-    { amount: 123, label: "123万円", text: "親の税扶養" },
+    { amount: 119, label: "119万円", text: "住民税の目安" },
+    { amount: 136, label: "136万円", text: "親の税扶養" },
     { amount: socialInsuranceLimit / 10_000, label: formatManYen(socialInsuranceLimit), text: "社保扶養の目安" },
-    { amount: 160, label: "160万円", text: "所得税の目安" },
-    ...(age >= 19 && age <= 22 ? [{ amount: 188, label: "188万円", text: "特定親族特別控除" }] : []),
+    { amount: 178, label: "178万円", text: "所得税の目安" },
+    ...(age >= 19 && age <= 22 ? [{ amount: 197, label: "197万円", text: "特定親族特別控除" }] : []),
   ]
 
   const handleIncomeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -572,7 +583,7 @@ export function IncomeSimulator() {
 
           {showAffiliateUi && (
             <div className="space-y-3">
-              {income >= socialInsuranceLimit / 10_000 && income < 160 && ctaLinks.highWage && ctaLinks.flexible && (
+              {income >= socialInsuranceLimit / 10_000 && income < 178 && ctaLinks.highWage && ctaLinks.flexible && (
                 <>
                   <Button className="h-11 w-full gap-2 font-semibold" asChild>
                     <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow">
@@ -595,7 +606,7 @@ export function IncomeSimulator() {
                   </a>
                 </Button>
               )}
-              {income >= 160 && ctaLinks.career && (
+              {income >= 178 && ctaLinks.career && (
                 <Button className="h-11 w-full gap-2 font-semibold" asChild>
                   <a href={ctaLinks.career} target="_blank" rel="noopener noreferrer nofollow">
                     <TrendingUp className="h-4 w-4" />

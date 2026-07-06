@@ -120,7 +120,7 @@ export default function AboutPage() {
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold text-foreground">免責事項</h2>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    当サイトで提供する情報は、2025年度の税制に基づいた概算です。実際の税額・社会保険料は、個人の状況や自治体により異なります。最終的な判断は、税務署・自治体・社会保険事務所等の公的機関でご確認ください。
+                    当サイトで提供する情報は、各ページに記載した確認日時点の公的資料に基づく概算です。実際の税額・社会保険料は、個人の状況や自治体により異なります。最終的な判断は、税務署・自治体・年金事務所・加入中の健康保険等でご確認ください。
                   </p>
                 </div>
               </div>

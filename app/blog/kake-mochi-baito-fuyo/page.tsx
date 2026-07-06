@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 export const metadata = {
   title: "掛け持ちバイトで扶養はどう判定する？収入の合算と見落としやすい点",
   description:
-    "掛け持ちバイトで扶養判定を見るときの収入の合算方法と、103万円・123万円・130万円の違いを整理します。源泉徴収票が複数ある場合の見方もまとめています。",
+    "掛け持ちバイトで扶養判定を見るときの収入の合算方法と、103万円・130万円・136万円・178万円の違いを整理します。源泉徴収票が複数ある場合の見方もまとめています。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/blog/kake-mochi-baito-fuyo",
   },
@@ -23,9 +23,9 @@ export default function KakeMochiBaitoFuyoPage() {
     <>
       <ArticleStructuredData
         title="掛け持ちバイトで扶養はどう判定する？収入の合算と見落としやすい点"
-        description="掛け持ちバイトで扶養判定を見るときの収入の合算方法と、103万円・123万円・130万円の違いを整理します。源泉徴収票が複数ある場合の見方もまとめています。"
+        description="掛け持ちバイトで扶養判定を見るときの収入の合算方法と、103万円・130万円・136万円・178万円の違いを整理します。源泉徴収票が複数ある場合の見方もまとめています。"
         datePublished="2026-04-15T00:00:00Z"
-        dateModified="2026-04-15T00:00:00Z"
+        dateModified="2026-07-06T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -49,7 +49,7 @@ export default function KakeMochiBaitoFuyoPage() {
               収入の合算と見落としやすい点
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年4月15日時点の公的資料を確認し、複数勤務先があるときの見方を整理しています。
+              2026年7月6日時点の公的資料を確認し、複数勤務先があるときの見方を整理しています。
             </p>
           </div>
 
@@ -58,7 +58,7 @@ export default function KakeMochiBaitoFuyoPage() {
               <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
               <ul className="space-y-2 text-sm text-slate-700">
                 <li>掛け持ちバイトでは、勤務先ごとではなく年間の収入を合算して見るのが基本です。</li>
-                <li>1社では103万円未満でも、2社合計で123万円や130万円を超えることがあります。</li>
+                <li>1社では103万円未満でも、2社合計で130万円や136万円を超えることがあります。</li>
                 <li>税金、親の扶養、社会保険は基準が違うため、同じ合計収入でも影響の出方が異なります。</li>
                 <li>年末調整を受けない勤務先があると、本人が確定申告や住民税の確認をする必要があります。</li>
               </ul>
@@ -79,13 +79,13 @@ export default function KakeMochiBaitoFuyoPage() {
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">税金で見るなら123万円と160万円を分ける</h2>
+                <h2 className="text-2xl font-bold text-foreground">税金で見るなら136万円と178万円を分ける</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  本人の所得税は160万円、親の扶養控除は123万円が目安です。
+                  令和8年分以後は、本人の所得税は178万円、親の扶養控除は136万円が目安です。
                   掛け持ちだから特別な計算になるわけではなく、複数の給与収入を合算したうえで判定します。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  たとえば、2社の合計が125万円なら、親の扶養控除には影響し得ますが、本人の所得税はなお発生しない設計になることがあります。
+                  たとえば、2社の合計が140万円なら、親の扶養控除には影響し得ますが、本人の所得税はなお発生しない設計になることがあります。
                   ここを混同すると、必要以上にシフトを減らしてしまうことがあります。
                 </p>
               </section>
@@ -130,7 +130,7 @@ export default function KakeMochiBaitoFuyoPage() {
                 <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
                   <ol className="space-y-2">
                     <li>1. すべての勤務先の年間収入見込みを合算する。</li>
-                    <li>2. 123万円、160万円、130万円のどの基準に近いか整理する。</li>
+                    <li>2. 130万円、136万円、178万円のどの基準に近いか整理する。</li>
                     <li>3. 年末調整をどの勤務先で受けるか確認する。</li>
                     <li>4. 社会保険は勤務条件と学生区分も合わせて確認する。</li>
                   </ol>
@@ -155,15 +155,15 @@ export default function KakeMochiBaitoFuyoPage() {
                     </div>
                   </a>
                   <a
-                    href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1180.htm"
+                    href="https://www.nta.go.jp/users/gensen/2026kiso/index.htm"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block rounded-lg border border-border p-4 hover:border-primary"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="text-sm font-semibold text-foreground">国税庁 扶養控除</p>
-                        <p className="text-xs text-muted-foreground">親の扶養控除の基本要件を確認できます。</p>
+                        <p className="text-sm font-semibold text-foreground">国税庁 令和8年度税制改正</p>
+                        <p className="text-xs text-muted-foreground">扶養親族等の所得要件と給与所得控除の改正を確認できます。</p>
                       </div>
                       <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
                     </div>

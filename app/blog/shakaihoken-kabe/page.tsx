@@ -25,7 +25,7 @@ export default function ShakaiHokenPage() {
         title="社会保険の壁とは？130万円・106万円・150万円未満の関係を現行ルールで整理"
         description="社会保険の壁を、被扶養者認定、短時間労働者への適用、19歳以上23歳未満の150万円未満要件に分けて整理します。"
         datePublished="2026-04-02T00:00:00Z"
-        dateModified="2026-04-02T00:00:00Z"
+        dateModified="2026-07-06T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -49,12 +49,12 @@ export default function ShakaiHokenPage() {
               130万円・106万円・150万円未満の関係を現行ルールで整理
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年4月2日時点で確認した日本年金機構の公的情報に基づいて整理しています。
+              2026年7月6日時点で確認した日本年金機構の公的情報に基づいて整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年4月15日"
+            checkedAt="2026年7月6日"
             audience="106万円、130万円、150万円未満の違いを知りたい人"
             sources="日本年金機構"
             note="社会保険は被扶養者認定と勤務先加入の2つの論点が混ざりやすいため、この記事では順番に切り分けています。"

@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <ContentPageShell title="プライバシーポリシー" description="最終更新日：2026年4月15日">
+    <ContentPageShell title="プライバシーポリシー" description="最終更新日：2026年7月6日">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-3">
@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">6. 免責事項</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                当サイトで提供する情報は、2025年度の税制に基づいた概算であり、実際の税額とは異なる場合があります。最終的な判断は、税務署・自治体等の公的機関でご確認ください。
+                当サイトで提供する情報は、各ページに記載した確認日時点の公的資料に基づく概算であり、実際の税額・社会保険料とは異なる場合があります。最終的な判断は、税務署・自治体・年金事務所・加入中の健康保険等でご確認ください。
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 当サイトの情報をもとに生じたいかなる損害についても、当サイトは一切の責任を負いかねます。

@@ -76,7 +76,7 @@ export function ComplianceReviewArticle({
               </p>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>・ 所得税は国税庁の現行資料を基準に確認してください</li>
-                <li>・ 税法上の扶養判定は 123万円、19歳以上23歳未満は 188万円までの特定親族特別控除を確認してください</li>
+                <li>・ 税法上の扶養判定は 136万円、19歳以上23歳未満は 197万円までの特定親族特別控除を確認してください</li>
                 <li>・ 社会保険は年収だけでなく、週20時間、月額8.8万円、勤務先規模、学生区分も確認が必要です</li>
               </ul>
             </CardContent>

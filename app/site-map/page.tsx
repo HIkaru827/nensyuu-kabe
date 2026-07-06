@@ -16,10 +16,14 @@ const sections = [
   {
     title: "人気記事",
     links: [
-      { href: "/blog/103man-no-kabe", label: "160万円の壁とは？" },
+      { href: "/blog/2026-student-income-wall", label: "2026年の学生バイト年収の壁" },
+      { href: "/blog/student-baito-shift-checklist", label: "学生バイトのシフト調整チェックリスト" },
+      { href: "/blog/103man-no-kabe", label: "178万円の壁とは？" },
       { href: "/blog/130man-no-kabe", label: "130万円の壁とは？" },
       { href: "/blog/shakaihoken-kabe", label: "社会保険の壁とは？" },
       { href: "/blog/gakusei-baito-zeikin", label: "学生バイトの税金対策" },
+      { href: "/blog/weekly-20hours-social-insurance", label: "週20時間と学生バイトの社会保険" },
+      { href: "/blog/baito-yukyu-kyuryo", label: "バイト有給の給料はいくら？" },
       { href: "/blog/tokutei-fuyo", label: "特定親族特別控除とは？" },
     ],
   },

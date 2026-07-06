@@ -31,7 +31,13 @@ const formatDate = (dateString: string) =>
   }).format(new Date(dateString))
 
 const getCategory = (slug: string) => {
-  if (slug.includes("daigakusei") || slug.includes("koukousei") || slug.includes("gakusei")) {
+  if (
+    slug.includes("daigakusei") ||
+    slug.includes("koukousei") ||
+    slug.includes("gakusei") ||
+    slug.includes("student") ||
+    slug.includes("baito")
+  ) {
     return "学生バイト"
   }
   if (slug.includes("fuyo") || slug.includes("123man") || slug.includes("tokutei")) {
@@ -70,7 +76,7 @@ export default function BlogPage() {
               <CardContent className="space-y-2 p-5">
                 <h2 className="text-sm font-bold text-foreground">迷ったら年収ラインから</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  123万円、130万円、160万円、188万円のどれに近いかを見ると読みたい記事を選びやすくなります。
+                  119万円、130万円、136万円、178万円、197万円のどれに近いかを見ると読みたい記事を選びやすくなります。
                 </p>
               </CardContent>
             </Card>

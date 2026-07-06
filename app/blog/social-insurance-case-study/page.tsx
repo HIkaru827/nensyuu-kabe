@@ -25,7 +25,7 @@ export default function SocialInsuranceCaseStudyPage() {
         title="社会保険の壁をケース別に比較。学生・非学生・19歳以上23歳未満の違い"
         description="106万円、130万円、150万円未満の基準がどう分かれるかを、学生、非学生、19歳以上23歳未満のケース別に整理します。どこで判断が分かれるかをまとめた記事です。"
         datePublished="2026-04-15T00:00:00Z"
-        dateModified="2026-04-15T00:00:00Z"
+        dateModified="2026-07-06T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -49,7 +49,7 @@ export default function SocialInsuranceCaseStudyPage() {
               学生・非学生・19歳以上23歳未満の違い
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年4月15日時点の公的資料に基づき、同じ年収でも判断が変わる理由をケース別に整理しています。
+              2026年7月6日時点の公的資料に基づき、同じ年収でも判断が変わる理由をケース別に整理しています。
             </p>
           </div>
 
