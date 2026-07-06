@@ -3,82 +3,81 @@ import Link from "next/link"
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* About Section */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">年収の壁シミュレーター</h3>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              学生・アルバイト向けの年収シミュレーター。税金や社会保険の影響をすぐに判定します。
-            </p>
-          </div>
-
-          {/* Links Section */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">サイト情報</h3>
-            <ul className="space-y-2 text-xs">
-              <li>
-                <Link href="/student-baito" className="text-muted-foreground hover:text-primary transition-colors">
-                  学生バイト向け年収ガイド
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
-                  ブログ
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
-                  運営者情報
-                </Link>
-              </li>
-              <li>
-                <Link href="/updates" className="text-muted-foreground hover:text-primary transition-colors">
-                  更新履歴
-                </Link>
-              </li>
-              <li>
-                <Link href="/editorial-policy" className="text-muted-foreground hover:text-primary transition-colors">
-                  編集方針
-                </Link>
-              </li>
-              <li>
-                <Link href="/site-map" className="text-muted-foreground hover:text-primary transition-colors">
-                  サイトマップ
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">
-                  プライバシーポリシー
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
-                  利用規約
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  お問い合わせ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Disclaimer Section */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">免責事項</h3>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              当サイトの情報は令和7年度税制改正（2025年分以後適用）に基づいた概算です。最終判断は税務署・自治体でご確認ください。
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-border text-center">
-          <p className="text-xs text-muted-foreground">
-            © 2026 年収の壁シミュレーター (nenshuu-kabe.com). 無断転載を禁じます。
+      <div className="container mx-auto grid gap-8 px-4 py-8 md:grid-cols-3">
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-foreground">学生バイトお金ナビ</h2>
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            学生バイトの年収の壁、親の扶養、社会保険、有給休暇をまとめて確認できる情報サイトです。
           </p>
         </div>
+
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-foreground">主要ツール</h2>
+          <ul className="space-y-2 text-xs">
+            <li>
+              <Link href="/" className="text-muted-foreground transition-colors hover:text-primary">
+                年収の壁シミュレーター
+              </Link>
+            </li>
+            <li>
+              <Link href="/paid-leave" className="text-muted-foreground transition-colors hover:text-primary">
+                バイト有給シミュレーター
+              </Link>
+            </li>
+            <li>
+              <Link href="/student-baito" className="text-muted-foreground transition-colors hover:text-primary">
+                学生バイト年収ガイド
+              </Link>
+            </li>
+            <li>
+              <Link href="/blog" className="text-muted-foreground transition-colors hover:text-primary">
+                ブログ
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-foreground">サイト情報</h2>
+          <ul className="space-y-2 text-xs">
+            <li>
+              <Link href="/about" className="text-muted-foreground transition-colors hover:text-primary">
+                運営者情報
+              </Link>
+            </li>
+            <li>
+              <Link href="/editorial-policy" className="text-muted-foreground transition-colors hover:text-primary">
+                編集方針
+              </Link>
+            </li>
+            <li>
+              <Link href="/site-map" className="text-muted-foreground transition-colors hover:text-primary">
+                サイトマップ
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacy-policy" className="text-muted-foreground transition-colors hover:text-primary">
+                プライバシーポリシー
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="text-muted-foreground transition-colors hover:text-primary">
+                利用規約
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="text-muted-foreground transition-colors hover:text-primary">
+                お問い合わせ
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="border-t border-border px-4 py-4 text-center">
+        <p className="text-xs text-muted-foreground">
+          © 2026 学生バイトお金ナビ. 掲載内容は一般的な目安です。最終判断は勤務先・税務署・自治体などで確認してください。
+        </p>
       </div>
     </footer>
   )

@@ -1,26 +1,25 @@
 "use client"
 
 import type React from "react"
-
-import { useMemo, useState } from "react"
-import { BookOpen, ChevronDown, Clock, ExternalLink, Info, TrendingUp } from "lucide-react"
-import { JobAdSlot, AdSlot } from "@/components/ad-slot"
+import { useMemo, useRef, useState } from "react"
+import Link from "next/link"
+import { BriefcaseBusiness, CalendarCheck, ExternalLink, Info, TrendingUp } from "lucide-react"
+import { AdSlot, JobAdSlot } from "@/components/ad-slot"
 import { GoogleAdSenseBanner } from "@/components/google-adsense"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { buildResultCtaLinks } from "@/lib/affiliate-links"
+import { trackSimulatorEvent } from "@/lib/client-analytics"
 import {
   getSocialInsuranceDependentLimit,
   simulateDetailedIncome,
-  simulateIncome,
   type CompanySize,
   type ParentTaxRate,
   type SocialInsuranceRoute,
@@ -28,17 +27,9 @@ import {
   type StudentType,
 } from "@/lib/income-simulator"
 
-interface ThresholdInfo {
-  amount: number
-  label: string
-  description: string
-}
+type Attribute = "daytime-student" | "evening-student" | "freeter"
 
-const THRESHOLDS: ThresholdInfo[] = [
-  { amount: 110, label: "110万円", description: "住民税所得割の目安" },
-  { amount: 123, label: "123万円", description: "税法上の扶養" },
-  { amount: 160, label: "160万円", description: "所得税" },
-]
+const parentTaxRates: ParentTaxRate[] = [0.05, 0.1, 0.2, 0.23, 0.33, 0.4, 0.45]
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("ja-JP", {
@@ -48,49 +39,121 @@ function formatCurrency(value: number): string {
   }).format(value)
 }
 
-function formatManEn(value: number): string {
-  return `${Math.floor(value / 10_000)}万円`
+function formatManYen(value: number): string {
+  return `${Math.round(value / 10_000)}万円`
 }
 
-function getStudentType(attribute: "daytime-student" | "evening-student" | "freeter"): StudentType {
+function getStudentType(attribute: Attribute): StudentType {
   if (attribute === "daytime-student") return "day"
   if (attribute === "evening-student") return "night"
   return "none"
 }
 
+function getIncomeTrackingBand(incomeMan: number): string {
+  if (incomeMan <= 103) return "000_103"
+  if (incomeMan <= 123) return "104_123"
+  if (incomeMan < 130) return "124_129"
+  if (incomeMan < 160) return "130_159"
+  if (incomeMan <= 188) return "160_188"
+  return "189_plus"
+}
+
+function getAgeTrackingBand(age: number): string {
+  if (age <= 18) return "under_19"
+  if (age <= 22) return "19_22"
+  return "23_plus"
+}
+
+function getWeeklyHoursBand(hours: number): string {
+  if (hours < 20) return "under_20"
+  if (hours < 30) return "20_29"
+  return "30_plus"
+}
+
+function getMonthlySalaryBand(monthlySalary: number): string {
+  if (monthlySalary < 88_000) return "under_88000"
+  if (monthlySalary < 108_334) return "88000_108333"
+  return "108334_plus"
+}
+
+function getIncomeStatus(incomeMan: number, age: number) {
+  const socialLimitMan = getSocialInsuranceDependentLimit(age) / 10_000
+  const isSpecialAge = age >= 19 && age <= 22
+
+  if (incomeMan <= 123) {
+    return {
+      label: "扶養内の目安",
+      title: "親の税扶養は大きく崩れにくい年収帯です",
+      description: "住民税や自治体の扱いは別途確認しつつ、まずは安心しやすいラインです。",
+      tone: "border-emerald-200 bg-emerald-50 text-emerald-950",
+      bar: "bg-emerald-500",
+    }
+  }
+
+  if (isSpecialAge && incomeMan <= 188) {
+    return {
+      label: "親の控除を確認",
+      title: "19〜22歳は特定親族特別控除の範囲を確認しましょう",
+      description: "親の控除が段階的に変わるため、年末前に家庭で共有しておくと安心です。",
+      tone: "border-amber-200 bg-amber-50 text-amber-950",
+      bar: "bg-amber-500",
+    }
+  }
+
+  if (incomeMan < socialLimitMan) {
+    return {
+      label: "税扶養に注意",
+      title: "親の税扶養には影響が出る可能性があります",
+      description: "社会保険の扶養目安は下回っていますが、親の税金への影響を確認しましょう。",
+      tone: "border-amber-200 bg-amber-50 text-amber-950",
+      bar: "bg-amber-500",
+    }
+  }
+
+  if (incomeMan < 160) {
+    return {
+      label: "社保を確認",
+      title: "社会保険の扶養を外れる可能性が高い年収帯です",
+      description: "勤務先の条件や加入先によって手取りが変わるため、早めに確認しましょう。",
+      tone: "border-rose-200 bg-rose-50 text-rose-950",
+      bar: "bg-rose-500",
+    }
+  }
+
+  return {
+    label: "働き方を再設計",
+    title: "税金・扶養・社会保険をセットで見直す年収帯です",
+    description: "中途半端に超えるより、時給や勤務時間を上げて手取りを伸ばす選択肢もあります。",
+    tone: "border-blue-200 bg-blue-50 text-blue-950",
+    bar: "bg-blue-500",
+  }
+}
+
 export function IncomeSimulator() {
   const showAffiliateUi = process.env.NEXT_PUBLIC_ENABLE_AFFILIATE_UI === "true"
   const showVisibleAds = process.env.NEXT_PUBLIC_ENABLE_VISIBLE_ADS === "true"
-  const [income, setIncome] = useState(100)
+  const [income, setIncome] = useState(120)
   const [age, setAge] = useState(20)
-  const [ageInput, setAgeInput] = useState("20")
-  const [attribute, setAttribute] = useState<"daytime-student" | "evening-student" | "freeter">("daytime-student")
+  const [attribute, setAttribute] = useState<Attribute>("daytime-student")
   const [weeklyHours, setWeeklyHours] = useState(20)
-  const [monthlySalary, setMonthlySalary] = useState(90_000)
+  const [monthlySalary, setMonthlySalary] = useState(100_000)
   const [companySize, setCompanySize] = useState<CompanySize>("over_50")
   const [parentTaxRate, setParentTaxRate] = useState<ParentTaxRate>(0.1)
   const [socialInsuranceRoute, setSocialInsuranceRoute] = useState<SocialInsuranceRoute>("undecided")
   const [studentPensionSpecialStatus, setStudentPensionSpecialStatus] = useState<StudentPensionSpecialStatus>("unknown")
   const [nationalHealthInsuranceAnnual, setNationalHealthInsuranceAnnual] = useState<number | "">("")
   const [includeParentImpactInTakeHome, setIncludeParentImpactInTakeHome] = useState(false)
-  const [showAdvancedInputs, setShowAdvancedInputs] = useState(false)
+  const interactionCountRef = useRef(0)
 
   const studentType = getStudentType(attribute)
-
-  const simulationResult = useMemo(
-    () =>
-      simulateIncome({
-        annualIncome: income * 10_000,
-        age,
-        studentType,
-      }),
-    [income, age, studentType],
-  )
+  const annualIncome = income * 10_000
+  const socialInsuranceLimit = getSocialInsuranceDependentLimit(age)
+  const status = useMemo(() => getIncomeStatus(income, age), [age, income])
 
   const detailedResult = useMemo(
     () =>
       simulateDetailedIncome({
-        annualIncome: income * 10_000,
+        annualIncome,
         age,
         studentType,
         weeklyHours,
@@ -103,57 +166,23 @@ export function IncomeSimulator() {
           typeof nationalHealthInsuranceAnnual === "number" ? nationalHealthInsuranceAnnual : undefined,
       }),
     [
-      income,
       age,
+      annualIncome,
+      companySize,
+      monthlySalary,
+      nationalHealthInsuranceAnnual,
+      parentTaxRate,
+      socialInsuranceRoute,
+      studentPensionSpecialStatus,
       studentType,
       weeklyHours,
-      monthlySalary,
-      companySize,
-      parentTaxRate,
-      studentPensionSpecialStatus,
-      socialInsuranceRoute,
-      nationalHealthInsuranceAnnual,
     ],
   )
 
-  const socialInsuranceLimit = useMemo(() => getSocialInsuranceDependentLimit(age) / 10_000, [age])
-  const displayedTakeHome = useMemo(() => {
-    return includeParentImpactInTakeHome
-      ? detailedResult.selfTakeHomeAfterKnownBurdenEstimate - detailedResult.parentTaxDeltaEstimate
-      : detailedResult.selfTakeHomeAfterKnownBurdenEstimate
-  }, [detailedResult.parentTaxDeltaEstimate, detailedResult.selfTakeHomeAfterKnownBurdenEstimate, includeParentImpactInTakeHome])
-  const detailedBreakdown = useMemo(() => {
-    const baseItems = [
-      {
-        label: "年収",
-        value: formatCurrency(income * 10_000),
-        tone: "text-foreground",
-      },
-      {
-        label: "本人の税金",
-        value: `- ${formatCurrency(detailedResult.selfTaxBurdenEstimate)}`,
-        tone: "text-rose-700",
-      },
-    ]
+  const displayedTakeHome = includeParentImpactInTakeHome
+    ? detailedResult.selfTakeHomeAfterKnownBurdenEstimate - detailedResult.parentTaxDeltaEstimate
+    : detailedResult.selfTakeHomeAfterKnownBurdenEstimate
 
-    if (typeof detailedResult.socialInsuranceBurdenEstimate === "number") {
-      baseItems.push({
-        label: "入力済みの社会保険負担",
-        value: `- ${formatCurrency(detailedResult.socialInsuranceBurdenEstimate)}`,
-        tone: "text-rose-700",
-      })
-    }
-
-    if (includeParentImpactInTakeHome) {
-      baseItems.push({
-        label: "親の税負担増の目安",
-        value: `- ${formatCurrency(detailedResult.parentTaxDeltaEstimate)}`,
-        tone: "text-amber-800",
-      })
-    }
-
-    return baseItems
-  }, [detailedResult.parentTaxDeltaEstimate, detailedResult.selfTaxBurdenEstimate, detailedResult.socialInsuranceBurdenEstimate, includeParentImpactInTakeHome, income])
   const ctaLinks = useMemo(
     () =>
       buildResultCtaLinks({
@@ -168,479 +197,428 @@ export function IncomeSimulator() {
       }),
     [],
   )
-  const thresholdMarkers = useMemo(
-    () => [
-      THRESHOLDS[0],
-      THRESHOLDS[1],
-      { amount: socialInsuranceLimit, label: `${socialInsuranceLimit}万円`, description: "社会保険の扶養" },
-      THRESHOLDS[2],
-    ],
-    [socialInsuranceLimit],
-  )
-  const bandSegments = useMemo(() => {
-    const greenWidth = Math.min(123, 200)
-    const amberWidth = Math.max(0, Math.min(socialInsuranceLimit, 200) - greenWidth)
-    const redWidth = Math.max(0, 200 - greenWidth - amberWidth)
 
-    return [
-      { label: "扶養内の目安", width: greenWidth, className: "bg-emerald-200" },
-      { label: "確認ゾーン", width: amberWidth, className: "bg-amber-200" },
-      { label: "負担増に注意", width: redWidth, className: "bg-rose-200" },
-    ].filter((segment) => segment.width > 0)
-  }, [socialInsuranceLimit])
+  const thresholdMarkers = [
+    { amount: 110, label: "110万円", text: "住民税の目安" },
+    { amount: 123, label: "123万円", text: "親の税扶養" },
+    { amount: socialInsuranceLimit / 10_000, label: formatManYen(socialInsuranceLimit), text: "社保扶養の目安" },
+    { amount: 160, label: "160万円", text: "所得税の目安" },
+    ...(age >= 19 && age <= 22 ? [{ amount: 188, label: "188万円", text: "特定親族特別控除" }] : []),
+  ]
 
-  const statusConfig = useMemo(() => {
-    const color = simulationResult.color
-    return {
-      barColor: color === "green" ? "bg-emerald-500" : color === "red" ? "bg-red-500" : "bg-amber-500",
-    }
-  }, [simulationResult.color])
-
-  const getPositionPercent = (value: number) => (value / 200) * 100
-
-  const handleIncomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number.parseInt(e.target.value, 10)
-    setIncome(Number.isNaN(value) ? 0 : Math.min(300, Math.max(0, value)))
+  const handleIncomeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.target.value)
+    setIncome(Number.isFinite(value) ? Math.min(300, Math.max(0, value)) : 0)
   }
 
-  const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAgeInput(e.target.value)
-  }
+  const trackIncomeSimulatorInteraction = (
+    interactionType: string,
+    nextIncome = income,
+    overrides: Partial<{
+      age: number
+      attribute: Attribute
+      weeklyHours: number
+      monthlySalary: number
+      companySize: CompanySize
+      parentTaxRate: ParentTaxRate
+      socialInsuranceRoute: SocialInsuranceRoute
+      studentPensionSpecialStatus: StudentPensionSpecialStatus
+      includeParentImpactInTakeHome: boolean
+    }> = {},
+  ) => {
+    interactionCountRef.current += 1
 
-  const commitAgeInput = () => {
-    const value = Number.parseInt(ageInput, 10)
-    const normalizedAge = Number.isNaN(value) ? age : Math.min(30, Math.max(15, value))
+    const trackedAge = overrides.age ?? age
+    const trackedAttribute = overrides.attribute ?? attribute
+    const trackedWeeklyHours = overrides.weeklyHours ?? weeklyHours
+    const trackedMonthlySalary = overrides.monthlySalary ?? monthlySalary
+    const trackedCompanySize = overrides.companySize ?? companySize
+    const trackedParentTaxRate = overrides.parentTaxRate ?? parentTaxRate
+    const trackedSocialInsuranceRoute = overrides.socialInsuranceRoute ?? socialInsuranceRoute
+    const trackedStudentPensionSpecialStatus =
+      overrides.studentPensionSpecialStatus ?? studentPensionSpecialStatus
+    const trackedIncludeParentImpact =
+      overrides.includeParentImpactInTakeHome ?? includeParentImpactInTakeHome
+    const trackedStatus = getIncomeStatus(nextIncome, trackedAge)
 
-    setAge(normalizedAge)
-    setAgeInput(String(normalizedAge))
+    trackSimulatorEvent("income_simulator_interaction", {
+      simulator_name: "income_wall",
+      interaction_type: interactionType,
+      interaction_count: interactionCountRef.current,
+      income_man: nextIncome,
+      income_band: getIncomeTrackingBand(nextIncome),
+      status_label: trackedStatus.label,
+      age_band: getAgeTrackingBand(trackedAge),
+      student_attribute: trackedAttribute,
+      weekly_hours_band: getWeeklyHoursBand(trackedWeeklyHours),
+      monthly_salary_band: getMonthlySalaryBand(trackedMonthlySalary),
+      company_size: trackedCompanySize,
+      parent_tax_rate: trackedParentTaxRate,
+      social_insurance_route: trackedSocialInsuranceRoute,
+      student_pension_special_status: trackedStudentPensionSpecialStatus,
+      parent_impact_included: trackedIncludeParentImpact,
+    })
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-4 lg:space-y-6">
-      <div className="mx-auto max-w-2xl space-y-1.5 text-center">
-        <h1 className="text-3xl font-bold text-foreground sm:text-4xl">年収の壁シミュレーター</h1>
-        <p className="text-sm text-muted-foreground sm:text-base">
-          年収、年齢、勤務条件を入れると、手元に残るお金と扶養・社会保険への影響をまとめて確認できます。
+    <div className="mx-auto w-full max-w-5xl space-y-5">
+      <section className="space-y-3 text-center">
+        <Badge variant="secondary" className="mx-auto">学生バイト向け</Badge>
+        <h1 className="text-3xl font-bold tracking-normal text-foreground md:text-4xl">
+          年収の壁シミュレーター
+        </h1>
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+          年収、年齢、勤務条件を入れると、親の扶養・社会保険・本人の税金への影響をまとめて確認できます。
         </p>
-        <p className="text-xs font-semibold text-primary">2026年4月15日時点の公的情報を確認して更新</p>
-      </div>
+      </section>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-start">
-        <Card className="border border-border shadow-md">
-          <CardContent className="space-y-4 pt-4">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+        <Card className="shadow-sm">
+          <CardContent className="space-y-5 p-5">
             <div className="space-y-4">
               <div className="flex items-baseline justify-center gap-2">
                 <Input
+                  data-testid="income-input"
                   type="number"
                   value={income}
-                  onChange={handleIncomeChange}
+                  onChange={handleIncomeInput}
+                  onBlur={() => trackIncomeSimulatorInteraction("income_input_commit")}
                   min={0}
                   max={300}
-                  className="h-auto w-28 border-none p-0 text-center text-5xl font-bold shadow-none [appearance:textfield] focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  className="h-auto w-32 border-none p-0 text-center text-5xl font-bold shadow-none [appearance:textfield] focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
                 <span className="text-2xl font-medium text-muted-foreground">万円</span>
               </div>
 
-              <div className="pb-1">
-                <Slider value={[income]} onValueChange={(value) => setIncome(value[0])} min={0} max={200} step={1} className="w-full" />
-                <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+              <div className="space-y-2">
+                <Slider
+                  data-testid="income-slider"
+                  value={[income]}
+                  onValueChange={(value) => setIncome(value[0])}
+                  onValueCommit={(value) => trackIncomeSimulatorInteraction("income_slider_commit", value[0])}
+                  min={0}
+                  max={220}
+                  step={1}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>0万円</span>
-                  <span>200万円</span>
+                  <span>220万円</span>
                 </div>
               </div>
 
-              <div className="relative pb-2 pt-4">
-                <div className="absolute left-0 right-0 top-0">
-                  {thresholdMarkers.map((threshold) => (
-                    <div key={threshold.amount} className="absolute -translate-x-1/2 flex flex-col items-center" style={{ left: `${getPositionPercent(threshold.amount)}%` }}>
-                      <div className="h-3 w-px bg-border" />
+              <div className="relative pt-3">
+                <div className="h-3 overflow-hidden rounded-full bg-muted">
+                  <div className={`h-full transition-all ${status.bar}`} style={{ width: `${Math.min(100, (income / 220) * 100)}%` }} />
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  {thresholdMarkers.map((marker) => (
+                    <div key={`${marker.label}-${marker.text}`} className="rounded-md border border-border bg-muted/30 px-3 py-2">
+                      <p className="text-xs font-bold text-foreground">{marker.label}</p>
+                      <p className="text-[11px] text-muted-foreground">{marker.text}</p>
                     </div>
                   ))}
                 </div>
-                <div className="relative mt-5 flex h-3 overflow-hidden rounded-full">
-                  {bandSegments.map((segment) => (
-                    <div
-                      key={segment.label}
-                      className={`h-full ${segment.className}`}
-                      style={{ width: `${(segment.width / 200) * 100}%` }}
-                    />
-                  ))}
-                </div>
-                <div className="absolute left-0 h-3 overflow-hidden rounded-full" style={{ top: "calc(1.25rem)", width: `${getPositionPercent(income)}%` }}>
-                  <div className={`h-full w-full transition-colors duration-300 ${statusConfig.barColor}`} />
-                </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {thresholdMarkers.map((threshold) => (
-                  <div key={`mobile-${threshold.amount}-${threshold.description}`} className="rounded-md bg-muted/40 px-3 py-2">
-                    <p className="text-xs font-semibold text-foreground">{threshold.label}</p>
-                    <p className="text-[11px] text-muted-foreground">{threshold.description}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="grid gap-2 sm:grid-cols-3">
-                {bandSegments.map((segment) => (
-                  <div key={segment.label} className="flex items-center gap-2 rounded-md bg-muted/40 px-3 py-2">
-                    <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${segment.className}`} />
-                    <span className="text-xs text-muted-foreground">{segment.label}</span>
-                  </div>
-                ))}
-              </div>
+            </div>
 
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="text-xs font-semibold text-primary">
-                      {includeParentImpactInTakeHome ? "親への影響を含めた見込み" : "いまの見込み手取り"}
-                    </p>
-                    <p className="text-2xl font-bold text-foreground">{formatCurrency(displayedTakeHome)}</p>
-                    <p className="text-xs text-muted-foreground">親の税負担増の目安: {formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
-                  </div>
-                  <label className="flex shrink-0 items-center gap-2 rounded-md border border-primary/20 bg-background px-2 py-1.5">
-                    <span className="text-[11px] font-semibold text-foreground">親も含める</span>
-                    <Switch
-                      checked={includeParentImpactInTakeHome}
-                      onCheckedChange={setIncludeParentImpactInTakeHome}
-                      aria-label="親への影響を含める"
-                    />
-                  </label>
-                </div>
-              </div>
+            <Separator />
 
-              <Collapsible open={showAdvancedInputs} onOpenChange={setShowAdvancedInputs}>
-                <CollapsibleTrigger asChild>
-                  <Button variant="outline" className="h-10 w-full justify-between bg-background">
-                    <span>{showAdvancedInputs ? "勤務条件を閉じる" : "勤務条件を追加して精度を上げる"}</span>
-                    <ChevronDown className={`h-4 w-4 transition-transform ${showAdvancedInputs ? "rotate-180" : ""}`} />
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="pt-3">
-                  <div className="space-y-4 rounded-xl border border-border bg-muted/30 p-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="age">その年の12月31日時点の年齢</Label>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            id="age"
-                            type="number"
-                            inputMode="numeric"
-                            value={ageInput}
-                            onChange={handleAgeChange}
-                            onBlur={commitAgeInput}
-                            min={15}
-                            max={30}
-                            className="w-20 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          />
-                          <span className="text-sm text-muted-foreground">歳</span>
-                          {age >= 19 && age <= 22 && (
-                            <span className="flex items-center gap-1 text-xs font-medium text-emerald-600">
-                              <Info className="h-3 w-3" />
-                              19歳以上23歳未満
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="space-y-2 sm:col-span-2">
-                        <Label>属性</Label>
-                        <RadioGroup value={attribute} onValueChange={setAttribute as (value: string) => void} className="grid gap-2 sm:grid-cols-3">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="daytime-student" id="daytime-student" />
-                            <Label htmlFor="daytime-student" className="cursor-pointer font-normal">昼間学生</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="evening-student" id="evening-student" />
-                            <Label htmlFor="evening-student" className="cursor-pointer font-normal">夜間・通信・定時制など</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="freeter" id="freeter" />
-                            <Label htmlFor="freeter" className="cursor-pointer font-normal">学生ではない</Label>
-                          </div>
-                        </RadioGroup>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="weekly-hours">週の所定労働時間</Label>
-                        <Input id="weekly-hours" type="number" min={0} max={60} value={weeklyHours} onChange={(e) => setWeeklyHours(Math.max(0, Number(e.target.value) || 0))} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="monthly-salary">月額賃金</Label>
-                        <Input id="monthly-salary" type="number" min={0} value={monthlySalary} onChange={(e) => setMonthlySalary(Math.max(0, Number(e.target.value) || 0))} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>勤務先規模</Label>
-                        <Select value={companySize} onValueChange={(value) => setCompanySize(value as CompanySize)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="over_50">51人以上</SelectItem>
-                            <SelectItem value="under_51">50人以下</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>親の限界税率</Label>
-                        <Select value={String(parentTaxRate)} onValueChange={(value) => setParentTaxRate(Number(value) as ParentTaxRate)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="0.05">5%</SelectItem>
-                            <SelectItem value="0.1">10%</SelectItem>
-                            <SelectItem value="0.2">20%</SelectItem>
-                            <SelectItem value="0.23">23%</SelectItem>
-                            <SelectItem value="0.33">33%</SelectItem>
-                            <SelectItem value="0.4">40%</SelectItem>
-                            <SelectItem value="0.45">45%</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>扶養を外れた後の加入先</Label>
-                        <Select value={socialInsuranceRoute} onValueChange={(value) => setSocialInsuranceRoute(value as SocialInsuranceRoute)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="undecided">まだ決まっていない</SelectItem>
-                            <SelectItem value="employee">勤務先の社会保険</SelectItem>
-                            <SelectItem value="national">国民健康保険・国民年金</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label>学生納付特例の対象確認</Label>
-                        <Select value={studentPensionSpecialStatus} onValueChange={(value) => setStudentPensionSpecialStatus(value as StudentPensionSpecialStatus)}>
-                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="unknown">まだ確認していない</SelectItem>
-                            <SelectItem value="eligible">対象要件を満たす</SelectItem>
-                            <SelectItem value="not_eligible">対象外</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground">
-                          学生納付特例は前年所得などで決まります。未確認なら国民年金は確定額にしません。
-                        </p>
-                      </div>
-                    </div>
-                    {socialInsuranceRoute === "national" && (
-                      <div className="space-y-2">
-                        <Label htmlFor="national-health-insurance">国民健康保険料の年額</Label>
-                        <Input
-                          id="national-health-insurance"
-                          type="number"
-                          min={0}
-                          value={nationalHealthInsuranceAnnual}
-                          onChange={(e) => {
-                            const value = e.target.value
-                            setNationalHealthInsuranceAnnual(value === "" ? "" : Math.max(0, Number(value) || 0))
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-              <div className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-900">
-                年齢判定は12月31日時点です。勤務条件を追加すると、社会保険や親への影響をより細かく見られます。
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="age">その年の12月31日時点の年齢</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  min={15}
+                  max={30}
+                  value={age}
+                  onChange={(event) => setAge(Math.min(30, Math.max(15, Number(event.target.value) || 15)))}
+                  onBlur={() => trackIncomeSimulatorInteraction("age_input_commit", income, { age })}
+                />
               </div>
+              <div className="space-y-2">
+                <Label>属性</Label>
+                <Select
+                  value={attribute}
+                  onValueChange={(value) => {
+                    const nextAttribute = value as Attribute
+                    setAttribute(nextAttribute)
+                    trackIncomeSimulatorInteraction("attribute_change", income, { attribute: nextAttribute })
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="daytime-student">昼間学生</SelectItem>
+                    <SelectItem value="evening-student">夜間・通信・定時制など</SelectItem>
+                    <SelectItem value="freeter">学生ではない</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="weekly-hours">週の勤務時間</Label>
+                <Input
+                  id="weekly-hours"
+                  type="number"
+                  min={0}
+                  max={80}
+                  value={weeklyHours}
+                  onChange={(event) => setWeeklyHours(Math.max(0, Number(event.target.value) || 0))}
+                  onBlur={() => trackIncomeSimulatorInteraction("weekly_hours_input_commit", income, { weeklyHours })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="monthly-salary">月額賃金</Label>
+                <Input
+                  id="monthly-salary"
+                  type="number"
+                  min={0}
+                  value={monthlySalary}
+                  onChange={(event) => setMonthlySalary(Math.max(0, Number(event.target.value) || 0))}
+                  onBlur={() =>
+                    trackIncomeSimulatorInteraction("monthly_salary_input_commit", income, { monthlySalary })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>勤務先規模</Label>
+                <Select
+                  value={companySize}
+                  onValueChange={(value) => {
+                    const nextCompanySize = value as CompanySize
+                    setCompanySize(nextCompanySize)
+                    trackIncomeSimulatorInteraction("company_size_change", income, { companySize: nextCompanySize })
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="over_50">51人以上</SelectItem>
+                    <SelectItem value="under_51">50人以下</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>親の所得税率の目安</Label>
+                <Select
+                  value={String(parentTaxRate)}
+                  onValueChange={(value) => {
+                    const nextParentTaxRate = Number(value) as ParentTaxRate
+                    setParentTaxRate(nextParentTaxRate)
+                    trackIncomeSimulatorInteraction("parent_tax_rate_change", income, {
+                      parentTaxRate: nextParentTaxRate,
+                    })
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {parentTaxRates.map((rate) => (
+                      <SelectItem key={rate} value={String(rate)}>
+                        {Math.round(rate * 100)}%
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>扶養を外れた後の加入先</Label>
+                <Select
+                  value={socialInsuranceRoute}
+                  onValueChange={(value) => {
+                    const nextSocialInsuranceRoute = value as SocialInsuranceRoute
+                    setSocialInsuranceRoute(nextSocialInsuranceRoute)
+                    trackIncomeSimulatorInteraction("social_insurance_route_change", income, {
+                      socialInsuranceRoute: nextSocialInsuranceRoute,
+                    })
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="undecided">まだ決まっていない</SelectItem>
+                    <SelectItem value="employee">勤務先の社会保険</SelectItem>
+                    <SelectItem value="national">国民健康保険・国民年金</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>学生納付特例</Label>
+                <Select
+                  value={studentPensionSpecialStatus}
+                  onValueChange={(value) => {
+                    const nextStatus = value as StudentPensionSpecialStatus
+                    setStudentPensionSpecialStatus(nextStatus)
+                    trackIncomeSimulatorInteraction("student_pension_special_status_change", income, {
+                      studentPensionSpecialStatus: nextStatus,
+                    })
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="unknown">未確認</SelectItem>
+                    <SelectItem value="eligible">対象見込み</SelectItem>
+                    <SelectItem value="not_eligible">対象外</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {socialInsuranceRoute === "national" && (
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="national-health-insurance">国民健康保険料の年額が分かる場合</Label>
+                  <Input
+                    id="national-health-insurance"
+                    type="number"
+                    min={0}
+                    value={nationalHealthInsuranceAnnual}
+                    onChange={(event) => {
+                      const value = event.target.value
+                      setNationalHealthInsuranceAnnual(value === "" ? "" : Math.max(0, Number(value) || 0))
+                    }}
+                    onBlur={() => trackIncomeSimulatorInteraction("national_health_insurance_input_commit")}
+                  />
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
-        <div className="space-y-6 lg:sticky lg:top-24">
-          <div className="space-y-4">
-              <Card className="border-blue-200 bg-blue-50 shadow-md">
-                <CardContent className="space-y-5 pb-5 pt-5">
-                  <div className="flex items-start gap-3">
-                    <Info className="mt-0.5 h-6 w-6 shrink-0 text-blue-600" />
-                    <div className="space-y-1">
-                      <h2 className="text-lg font-bold text-blue-900">試算結果</h2>
-                      <p className="text-sm text-blue-900">手元に残る金額を中心に、本人の税金、親への影響、社会保険をまとめて見られます。</p>
-                    </div>
-                  </div>
-                  <div className="rounded-xl border border-blue-200 bg-white/90 p-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="space-y-1">
-                        <p className="text-xs font-semibold text-primary">
-                          {includeParentImpactInTakeHome ? "親への影響を含めた見込み" : "あなたの手元に残るお金"}
-                        </p>
-                        <p className="text-3xl font-bold text-foreground">
-                          {formatCurrency(displayedTakeHome)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          年収から本人の税金と、入力済みの社会保険負担を引いた見込みです。
-                          {includeParentImpactInTakeHome ? " 親の税負担増の目安も差し引いています。" : ""}
-                        </p>
-                      </div>
-                      <label className="flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2">
-                        <div className="space-y-0.5">
-                          <p className="text-xs font-semibold text-blue-900">親への影響も含める</p>
-                          <p className="text-[11px] text-blue-800">返す前提でも見たいときだけオン</p>
-                        </div>
-                        <Switch
-                          checked={includeParentImpactInTakeHome}
-                          onCheckedChange={setIncludeParentImpactInTakeHome}
-                          aria-label="親への影響を含める"
-                        />
-                      </label>
-                    </div>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {detailedBreakdown.map((item) => (
-                        <div key={item.label} className="rounded-lg border border-blue-100 bg-blue-50/40 p-3">
-                          <p className="text-xs text-muted-foreground">{item.label}</p>
-                          <p className={`text-lg font-bold ${item.tone}`}>{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <Separator />
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-lg bg-white/80 p-3">
-                      <p className="text-xs text-muted-foreground">本人の所得税</p>
-                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.incomeTaxEstimate)}</p>
-                    </div>
-                    <div className="rounded-lg bg-white/80 p-3">
-                      <p className="text-xs text-muted-foreground">本人の住民税所得割</p>
-                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.residentTaxIncomeLevyEstimate)}</p>
-                    </div>
-                    <div className="rounded-lg bg-white/80 p-3">
-                      <p className="text-xs text-muted-foreground">給与所得</p>
-                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.salaryIncome)}</p>
-                    </div>
-                    <div className="rounded-lg bg-white/80 p-3">
-                      <p className="text-xs text-muted-foreground">課税所得</p>
-                      <p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.taxableIncomeForIncomeTax)}</p>
-                    </div>
-                    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 sm:col-span-2">
-                      <p className="text-xs text-amber-800">親の税負担増の目安</p>
-                      <p className="text-xl font-bold text-amber-950">{formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
-                      <p className="mt-1 text-xs text-amber-900">
-                        あなたの給与から自動で引かれるものではありません。親に返すかどうかを話すときの目安です。
-                      </p>
-                    </div>
-                  </div>
-                  <Separator />
-                  <div className="space-y-3">
-                    <div>
-                      <h3 className="text-base font-bold text-foreground">社会保険</h3>
-                      <p className="mt-1 text-sm font-semibold text-foreground">{detailedResult.socialInsuranceStatusLabel}</p>
-                      <p className="text-sm text-muted-foreground">{detailedResult.socialInsuranceStatusDescription}</p>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">扶養年収基準</p><p className="text-base font-semibold text-foreground">{formatManEn(detailedResult.socialInsuranceDependentLimit)}</p></div>
-                      <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">短時間労働者の主条件</p><p className="text-base font-semibold text-foreground">{detailedResult.shortHoursSocialInsuranceApplies ? "主条件を満たす見込み" : "追加条件を確認"}</p></div>
-                      {typeof detailedResult.nationalPensionAnnualEstimate === "number" && <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">国民年金</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.nationalPensionAnnualEstimate)}</p></div>}
-                      {typeof detailedResult.socialInsuranceBurdenEstimate === "number" && <div className="rounded-lg bg-white/80 p-3"><p className="text-xs text-muted-foreground">加算できた社会保険負担</p><p className="text-base font-semibold text-foreground">{formatCurrency(detailedResult.socialInsuranceBurdenEstimate)}</p></div>}
-                    </div>
-                  </div>
-                  <Separator />
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-bold text-foreground">試算の前提</h3>
-                    <ul className="space-y-1 text-xs text-muted-foreground">
-                      {detailedResult.assumptions.map((item) => <li key={item} className="flex gap-2"><span>-</span><span>{item}</span></li>)}
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+        <div className="space-y-4 lg:sticky lg:top-20">
+          <Card className={`${status.tone} shadow-sm`}>
+            <CardContent className="space-y-3 p-5">
+              <div className="flex items-start gap-3">
+                <Info className="mt-0.5 h-6 w-6 shrink-0" />
+                <div className="space-y-1">
+                  <Badge variant="outline" className="border-current text-current">{status.label}</Badge>
+                  <h2 className="text-lg font-bold">{status.title}</h2>
+                  <p className="text-sm leading-relaxed opacity-85">{status.description}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardContent className="space-y-4 p-5">
+              <div className="space-y-1">
+                <p className="text-xs font-semibold text-primary">
+                  {includeParentImpactInTakeHome ? "親への影響も含めた見込み" : "本人の手元に残る見込み"}
+                </p>
+                <p className="text-3xl font-bold text-foreground">{formatCurrency(displayedTakeHome)}</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  本人の税金と、入力済みの社会保険負担を反映した概算です。
+                </p>
+              </div>
+
+              <label className="flex items-center justify-between gap-3 rounded-md border border-border bg-muted/30 px-3 py-2">
+                <span className="text-xs font-semibold text-foreground">親の税負担増も差し引く</span>
+                <Switch
+                  checked={includeParentImpactInTakeHome}
+                  onCheckedChange={(checked) => {
+                    setIncludeParentImpactInTakeHome(checked)
+                    trackIncomeSimulatorInteraction("parent_impact_toggle", income, {
+                      includeParentImpactInTakeHome: checked,
+                    })
+                  }}
+                  aria-label="親への影響を含めた見込みにする"
+                />
+              </label>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-md border border-border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">本人の税金</p>
+                  <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.selfTaxBurdenEstimate)}</p>
+                </div>
+                <div className="rounded-md border border-border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">親への影響</p>
+                  <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
+                </div>
+                <div className="rounded-md border border-border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">社保扶養目安</p>
+                  <p className="text-lg font-bold text-foreground">{formatManYen(socialInsuranceLimit)}</p>
+                </div>
+                <div className="rounded-md border border-border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">社保負担入力分</p>
+                  <p className="text-lg font-bold text-foreground">
+                    {formatCurrency(detailedResult.socialInsuranceBurdenEstimate ?? 0)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs leading-relaxed text-blue-950">
+                年収だけでなく、週の勤務時間、月額賃金、勤務先規模で社会保険の扱いが変わることがあります。
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-3">
+            <Button asChild variant="outline" className="justify-start bg-background">
+              <Link href="/paid-leave">
+                <CalendarCheck className="mr-2 h-4 w-4" />
+                バイト有給も確認する
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="justify-start bg-background">
+              <Link href="/student-baito">
+                <BriefcaseBusiness className="mr-2 h-4 w-4" />
+                学生バイトガイドへ
+              </Link>
+            </Button>
+          </div>
 
           {showAffiliateUi && (
             <div className="space-y-3">
-              {income >= socialInsuranceLimit && income < 160 && ctaLinks.highWage && ctaLinks.flexible && (
+              {income >= socialInsuranceLimit / 10_000 && income < 160 && ctaLinks.highWage && ctaLinks.flexible && (
                 <>
-                  <Button className="h-12 w-full gap-2 text-base font-semibold" size="lg" asChild>
+                  <Button className="h-11 w-full gap-2 font-semibold" asChild>
                     <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow">
-                      <TrendingUp className="h-5 w-5" />
+                      <TrendingUp className="h-4 w-4" />
                       高時給バイトを探す
                     </a>
                   </Button>
-                  <Button variant="outline" className="h-12 w-full gap-2 bg-background text-base font-semibold" size="lg" asChild>
+                  <Button variant="outline" className="h-11 w-full gap-2 bg-background font-semibold" asChild>
                     <a href={ctaLinks.flexible} target="_blank" rel="noopener noreferrer nofollow">
-                      <Clock className="h-5 w-5" />
                       短時間・単発バイトを探す
                     </a>
                   </Button>
                 </>
               )}
-              {income < socialInsuranceLimit && ctaLinks.recommended && (
-                <Button className="h-12 w-full gap-2 text-base font-semibold" size="lg" asChild>
+              {income < socialInsuranceLimit / 10_000 && ctaLinks.recommended && (
+                <Button className="h-11 w-full gap-2 font-semibold" asChild>
                   <a href={ctaLinks.recommended} target="_blank" rel="noopener noreferrer nofollow">
-                    <TrendingUp className="h-5 w-5" />
-                    扶養内で働けるバイトを探す
+                    <TrendingUp className="h-4 w-4" />
+                    扶養内で働きやすいバイトを探す
                   </a>
                 </Button>
               )}
               {income >= 160 && ctaLinks.career && (
-                <Button className="h-12 w-full gap-2 text-base font-semibold" size="lg" asChild>
+                <Button className="h-11 w-full gap-2 font-semibold" asChild>
                   <a href={ctaLinks.career} target="_blank" rel="noopener noreferrer nofollow">
-                    <TrendingUp className="h-5 w-5" />
+                    <TrendingUp className="h-4 w-4" />
                     年収アップしやすいバイトを探す
                   </a>
                 </Button>
               )}
             </div>
           )}
-
-          <footer className="space-y-1 pt-2 text-center">
-            <p className="text-xs text-muted-foreground">この結果は参考用です。</p>
-            <p className="text-xs text-muted-foreground">最終確認は公的案内や勤務先の担当窓口で行ってください。</p>
-          </footer>
         </div>
       </div>
 
-      <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
-        <CardContent className="space-y-4 pb-5 pt-5">
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-emerald-700" />
-            <h3 className="text-base font-bold text-foreground">一次情報</h3>
-          </div>
-          <div className="space-y-2">
-            <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm" target="_blank" rel="noopener noreferrer">
-              <Card className="cursor-pointer bg-white/80 transition-all hover:border-primary">
-                <CardContent className="pb-3 pt-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="mb-1 text-xs font-semibold text-primary">所得税</p>
-                      <p className="text-sm font-bold text-foreground">国税庁 給与所得控除</p>
-                    </div>
-                    <ExternalLink className="ml-2 h-5 w-5 shrink-0 text-muted-foreground" />
-                  </div>
-                </CardContent>
-              </Card>
-            </a>
-            <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1177.htm" target="_blank" rel="noopener noreferrer">
-              <Card className="cursor-pointer bg-white/80 transition-all hover:border-primary">
-                <CardContent className="pb-3 pt-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="mb-1 text-xs font-semibold text-blue-600">扶養・控除</p>
-                      <p className="text-sm font-bold text-foreground">国税庁 特定親族特別控除</p>
-                    </div>
-                    <ExternalLink className="ml-2 h-5 w-5 shrink-0 text-muted-foreground" />
-                  </div>
-                </CardContent>
-              </Card>
-            </a>
-            <a href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html" target="_blank" rel="noopener noreferrer">
-              <Card className="cursor-pointer bg-white/80 transition-all hover:border-primary">
-                <CardContent className="pb-3 pt-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="mb-1 text-xs font-semibold text-green-600">社会保険</p>
-                      <p className="text-sm font-bold text-foreground">日本年金機構 19歳以上23歳未満の被扶養者認定</p>
-                    </div>
-                    <ExternalLink className="ml-2 h-5 w-5 shrink-0 text-muted-foreground" />
-                  </div>
-                </CardContent>
-              </Card>
-            </a>
-          </div>
-        </CardContent>
-      </Card>
-
       {showAffiliateUi && (
         <JobAdSlot
-          title="仕事を探す"
+          title="条件に合うバイトを探す"
           jobs={[
-            { name: "Townwork", url: process.env.NEXT_PUBLIC_A8_TOWNWORK, description: "求人数が多い", tag: "定番" },
-            { name: "Machbaito", url: process.env.NEXT_PUBLIC_A8_MACHBAITO, description: "祝い金あり求人も", tag: "祝い金" },
-            { name: "Baitoru", url: process.env.NEXT_PUBLIC_A8_BAITORU, description: "求人情報が豊富" },
-            { name: "Arbeit EX", url: process.env.NEXT_PUBLIC_A8_ARBEIT_EX, description: "比較しやすい" },
-          ].filter((job): job is { name: string; url: string; description: string; tag?: string } => Boolean(job.url && job.url.trim() && job.url !== "#"))}
+            { name: "Townwork", url: process.env.NEXT_PUBLIC_A8_TOWNWORK, description: "求人数が多く、地域で探しやすい", tag: "定番" },
+            { name: "Machbaito", url: process.env.NEXT_PUBLIC_A8_MACHBAITO, description: "祝い金つき求人を探したい人向け", tag: "祝い金" },
+            { name: "Baitoru", url: process.env.NEXT_PUBLIC_A8_BAITORU, description: "職場の雰囲気を見ながら探しやすい" },
+            { name: "Arbeit EX", url: process.env.NEXT_PUBLIC_A8_ARBEIT_EX, description: "複数サイトを比較しやすい" },
+          ].filter((job): job is { name: string; url: string; description: string; tag?: string } =>
+            Boolean(job.url && job.url.trim() && job.url !== "#"),
+          )}
         />
       )}
 

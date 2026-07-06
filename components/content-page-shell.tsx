@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { SiteHeader } from "@/components/site-header"
 
 interface ContentPageShellProps {
   title: string
@@ -13,18 +13,18 @@ export function ContentPageShell({ title, description, children }: ContentPageSh
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-background py-12 px-4">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="text-center space-y-2">
+      <main className="min-h-screen bg-background px-4 py-12">
+        <div className="mx-auto max-w-4xl space-y-6">
+          <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-foreground">{title}</h1>
             {description && <p className="text-sm text-muted-foreground">{description}</p>}
           </div>
 
           {children}
 
-          <div className="text-center pt-6">
-            <Link href="/" className="text-primary hover:underline text-sm">
-              ← シミュレーターに戻る
+          <div className="pt-6 text-center">
+            <Link href="/" className="text-sm text-primary hover:underline">
+              年収の壁シミュレーターへ戻る
             </Link>
           </div>
         </div>

@@ -14,9 +14,9 @@ export function WebsiteStructuredData() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE_NAME,
-    alternateName: "親に怒られない年収をすぐに判定",
+    alternateName: "学生バイトの扶養・税金・有給シミュレーター",
     description:
-      "103万円・106万円・130万円・160万円の年収の壁を比較しながら、扶養や社会保険の影響を確認できるシミュレーター。",
+      "学生バイト向けに、年収の壁、親の扶養、社会保険、有給休暇をまとめて確認できる情報サイトです。",
     url: SITE_URL,
     inLanguage: "ja-JP",
     potentialAction: {
@@ -36,7 +36,7 @@ export function WebApplicationStructuredData() {
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      "扶養・税金・社会保険の壁を年収別に比較し、学生バイトや家計への影響を30秒で確認できる無料シミュレーター。",
+      "学生バイトの年収の壁、有給付与日数、親の扶養や社会保険への影響を確認できる無料シミュレーターです。",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     browserRequirements: "JavaScript required",
@@ -48,10 +48,10 @@ export function WebApplicationStructuredData() {
     },
     featureList: [
       "年収の壁シミュレーション",
-      "所得税の目安表示",
-      "社会保険の影響確認",
       "親の扶養への影響確認",
-      "学生バイト向け解説記事",
+      "社会保険の扶養目安",
+      "学生バイト向け有給シミュレーション",
+      "関連記事とバイト関連カテゴリへの導線",
     ],
   }
 
@@ -65,7 +65,7 @@ export function BlogListStructuredData() {
     name: `ブログ | ${SITE_NAME}`,
     url: `${SITE_URL}/blog`,
     description:
-      "年収の壁、扶養、社会保険、学生バイトの税金をわかりやすく解説した記事一覧。",
+      "学生バイトの年収の壁、扶養、社会保険、有給、税金について解説した記事一覧です。",
     mainEntity: {
       "@type": "ItemList",
       itemListElement: BLOG_POSTS.map((post, index) => ({
@@ -174,7 +174,7 @@ export function OrganizationStructuredData() {
     url: SITE_URL,
     logo: `${SITE_URL}/icon.svg`,
     description:
-      "年収の壁、扶養、社会保険の基準をわかりやすく解説する情報サイト。",
+      "学生バイトの年収の壁、扶養、社会保険、有給をわかりやすく整理する情報サイトです。",
   }
 
   return <JsonLd data={data} />

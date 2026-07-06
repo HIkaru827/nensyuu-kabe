@@ -8,16 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BLOG_POSTS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  title: "ブログ | 年収の壁・扶養・社会保険の解説",
+  title: "ブログ | 学生バイトの扶養・税金・社会保険の解説",
   description:
-    "年収の壁、扶養、社会保険、学生バイトの税金について詳しく解説する記事一覧です。公開中の記事をすべて一覧できます。",
+    "学生バイトの年収の壁、親の扶養、社会保険、有給、税金について解説した記事一覧です。",
   alternates: {
     canonical: `${SITE_URL}/blog`,
   },
   openGraph: {
     title: `ブログ | ${SITE_NAME}`,
-    description:
-      "103万円・123万円・130万円・160万円・188万円の壁をわかりやすく整理した記事一覧。",
+    description: "学生バイトの年収の壁、扶養、社会保険、有給、税金を整理した記事一覧です。",
     url: `${SITE_URL}/blog`,
     type: "website",
     images: [DEFAULT_OG_IMAGE],
@@ -60,34 +59,34 @@ export default function BlogPage() {
       <main className="min-h-screen bg-background px-4 py-12">
         <div className="mx-auto max-w-4xl space-y-8">
           <div className="space-y-3 text-center">
-            <h1 className="text-3xl font-bold text-foreground">年収の壁・扶養・社会保険のブログ</h1>
-            <p className="mx-auto max-w-2xl text-sm text-muted-foreground">
-              学生バイト、扶養、社会保険、親の税金への影響まで、検索されやすいテーマを整理して公開しています。
+            <h1 className="text-3xl font-bold text-foreground">学生バイトのお金ブログ</h1>
+            <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              年収の壁、親の扶養、社会保険、有給、税金について、学生バイト向けに整理しています。
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             <Card>
-              <CardContent className="space-y-2 pt-5">
-                <h2 className="text-sm font-bold text-foreground">記事の選び方</h2>
+              <CardContent className="space-y-2 p-5">
+                <h2 className="text-sm font-bold text-foreground">迷ったら年収ラインから</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  まず気になる基準で記事を選び、そのあとシミュレーターで年収や扶養の影響を確認する流れがおすすめです。
+                  123万円、130万円、160万円、188万円のどれに近いかを見ると読みたい記事を選びやすくなります。
                 </p>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="space-y-2 pt-5">
-                <h2 className="text-sm font-bold text-foreground">読み方のコツ</h2>
+              <CardContent className="space-y-2 p-5">
+                <h2 className="text-sm font-bold text-foreground">税金と社保は別ルール</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  本人の税金、親の扶養、社会保険は別基準です。どの基準の話かを分けて読むと判断しやすくなります。
+                  親の扶養、本人の所得税、社会保険の扶養は基準が違います。記事ごとに分けて確認できます。
                 </p>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="space-y-2 pt-5">
-                <h2 className="text-sm font-bold text-foreground">最新の確認</h2>
+              <CardContent className="space-y-2 p-5">
+                <h2 className="text-sm font-bold text-foreground">シミュレーターと併用</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  公開日だけでなく更新日も表示しています。制度変更の影響があるテーマから優先して読めます。
+                  記事で全体像をつかみ、年収の壁シミュレーターや有給シミュレーターで自分のケースを確認しましょう。
                 </p>
               </CardContent>
             </Card>
@@ -99,16 +98,18 @@ export default function BlogPage() {
                 <Card className="cursor-pointer transition-colors hover:border-primary">
                   <CardHeader>
                     <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <span className="rounded bg-primary/10 px-2 py-1 text-primary">{getCategory(post.slug)}</span>
-                      <span className="rounded bg-slate-100 px-2 py-1 font-semibold text-slate-700">
-                        {post.publishedAt === post.updatedAt ? "新着" : "更新"}
+                      <span className="rounded-md bg-primary/10 px-2 py-1 font-semibold text-primary">
+                        {getCategory(post.slug)}
+                      </span>
+                      <span className="rounded-md bg-muted px-2 py-1 font-semibold text-muted-foreground">
+                        {post.publishedAt === post.updatedAt ? "公開" : "更新"}
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(post.updatedAt)}
                       </span>
                     </div>
-                    <CardTitle className="flex items-center justify-between text-xl transition-colors hover:text-primary">
+                    <CardTitle className="flex items-center justify-between gap-4 text-xl transition-colors hover:text-primary">
                       {post.title}
                       <ArrowRight className="h-5 w-5 shrink-0" />
                     </CardTitle>
@@ -123,12 +124,6 @@ export default function BlogPage() {
 
           <div className="pt-2 text-center text-xs text-muted-foreground">
             公開中の記事数: {BLOG_POSTS.length}
-          </div>
-
-          <div className="pt-4 text-center">
-            <Link href="/" className="text-sm text-primary hover:underline">
-              シミュレーターに戻る
-            </Link>
           </div>
         </div>
       </main>

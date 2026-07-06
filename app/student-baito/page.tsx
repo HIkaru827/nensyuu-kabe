@@ -1,33 +1,29 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Calculator, ExternalLink } from "lucide-react"
+import { ArrowRight, Calculator, CalendarCheck, ExternalLink } from "lucide-react"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { StudentAffiliateHub } from "@/components/student-affiliate-hub"
 import { BreadcrumbStructuredData, FAQStructuredData } from "@/components/structured-data"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  DEFAULT_OG_IMAGE,
-  SITE_NAME,
-  SITE_URL,
-  STUDENT_BAITO_PAGE,
-} from "@/lib/seo"
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, STUDENT_BAITO_PAGE } from "@/lib/seo"
 
 const faqItems = [
   {
-    question: "学生バイトはいくらまでなら親の扶養で安心ですか？",
+    question: "学生バイトはいくらまでなら親の扶養内ですか？",
     answer:
-      "まずは年収130万円以内を目安にすると、社会保険の扶養から外れるリスクを抑えやすいです。親の税金への影響は年齢や制度により変わるため、123万円と188万円も確認しましょう。",
+      "税金上の扶養では123万円前後、社会保険の扶養では130万円または150万円未満が目安になります。年齢や勤務条件で変わるため、シミュレーターで確認してください。",
   },
   {
-    question: "160万円の壁は学生にも関係ありますか？",
+    question: "19歳から22歳の学生は188万円まで大丈夫ですか？",
     answer:
-      "はい。160万円は主に本人の所得税を考えるときの目安です。ただし、親の扶養や社会保険は別の基準で判断されるため、160万円だけで判断しない方が安全です。",
+      "188万円は特定親族特別控除を考えるときの上限目安です。親の控除は段階的に変わるため、単純に188万円まで何も影響がないわけではありません。",
   },
   {
-    question: "19歳から22歳の学生は188万円まで稼いでも大丈夫ですか？",
+    question: "有給で支払われた分も年収に入りますか？",
     answer:
-      "188万円は特定親族特別控除の上限目安です。親の控除が段階的に変わる可能性があるため、親と事前に確認してからシフトを増やすのがおすすめです。",
+      "有給で支払われる賃金も給与収入に含めて考えます。年末前に有給を使う場合も、年間収入の見込みを確認しておくと安心です。",
   },
 ]
 
@@ -49,10 +45,36 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "学生バイトはいくらまで稼げる？",
-    description: "扶養・税金・社会保険の年収ラインを学生向けに整理。",
+    description: "扶養・税金・社会保険・有給を学生バイト向けに整理します。",
     images: [DEFAULT_OG_IMAGE],
   },
 }
+
+const thresholdCards = [
+  ["110万円", "住民税の所得割が気になり始める目安です。自治体ごとの差もあります。"],
+  ["123万円", "親の税扶養を考えるときの大きな目安です。"],
+  ["130万円", "社会保険の扶養を外れるか確認したいラインです。"],
+  ["160万円", "本人の所得税を考えるときの新しい目安です。"],
+  ["188万円", "19〜22歳の特定親族特別控除で確認したい上限目安です。"],
+]
+
+const articleLinks = [
+  {
+    href: "/blog/gakusei-baito-zeikin",
+    title: "学生バイトの税金対策",
+    text: "160万円・123万円・188万円の違いを整理します。",
+  },
+  {
+    href: "/blog/130man-no-kabe-v2",
+    title: "130万円の壁を超えるとどうなる？",
+    text: "社会保険料と手取りの変化を確認できます。",
+  },
+  {
+    href: "/blog/tokutei-fuyo",
+    title: "特定親族特別控除とは？",
+    text: "19〜22歳の学生がいる家庭向けの控除を解説します。",
+  },
+]
 
 export default function StudentBaitoPage() {
   return (
@@ -60,51 +82,41 @@ export default function StudentBaitoPage() {
       <BreadcrumbStructuredData
         items={[
           { name: "ホーム", url: SITE_URL },
-          { name: "学生バイト向け年収ガイド", url: `${SITE_URL}${STUDENT_BAITO_PAGE.path}` },
+          { name: "学生バイト年収ガイド", url: `${SITE_URL}${STUDENT_BAITO_PAGE.path}` },
         ]}
       />
       <FAQStructuredData faqs={faqItems} />
       <SiteHeader />
-      <main className="min-h-screen bg-background px-4 py-12">
-        <article className="mx-auto max-w-4xl space-y-8">
+      <main className="min-h-screen bg-background px-4 py-10">
+        <article className="mx-auto max-w-5xl space-y-10">
           <section className="space-y-5 text-center">
-            <p className="text-xs font-semibold text-primary">学生アルバイト向けSEOランディング</p>
+            <p className="text-xs font-semibold text-primary">学生バイト向けガイド</p>
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-5xl">
               学生バイトはいくらまで稼げる？
-              <br />
-              扶養・税金・社会保険の年収ガイド
             </h1>
             <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              「親の扶養から外れたくない」「130万円を超えるとどうなるか不安」
-              という学生向けに、見るべき年収ラインをシンプルに整理しました。
+              親の扶養、本人の税金、社会保険、有給は別々のルールで動きます。まずは主要な年収ラインを押さえて、シミュレーターで自分のケースを確認しましょう。
             </p>
-            <div className="mx-auto flex max-w-md flex-col gap-3 sm:flex-row">
+            <div className="mx-auto flex max-w-lg flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="flex-1">
                 <Link href="/">
                   <Calculator className="mr-2 h-4 w-4" />
-                  年収をシミュレーション
+                  年収の壁を確認
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="flex-1">
-                <Link href="/blog/gakusei-baito-zeikin">詳しい税金記事へ</Link>
+                <Link href="/paid-leave">
+                  <CalendarCheck className="mr-2 h-4 w-4" />
+                  有給を確認
+                </Link>
               </Button>
-            </div>
-            <div className="mx-auto max-w-2xl rounded-lg border border-border bg-muted/40 px-4 py-3 text-left text-xs leading-relaxed text-muted-foreground">
-              <p>確認日: 2026年4月15日</p>
-              <p>主な参照先: 国税庁、日本年金機構、公的案内</p>
-              <p>年収だけで断定しにくい論点は、本文中で追加条件を明記しています。</p>
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-4">
-            {[
-              ["103万円", "旧来の所得税の目安として検索されやすいライン"],
-              ["130万円", "社会保険の扶養で特に注意したいライン"],
-              ["160万円", "本人の所得税を考えるときの新しい目安"],
-              ["188万円", "19〜22歳の特定親族特別控除で見る上限目安"],
-            ].map(([amount, text]) => (
+          <section className="grid gap-3 md:grid-cols-5">
+            {thresholdCards.map(([amount, text]) => (
               <Card key={amount}>
-                <CardContent className="space-y-2 pt-5">
+                <CardContent className="space-y-2 p-4">
                   <p className="text-2xl font-bold text-primary">{amount}</p>
                   <p className="text-xs leading-relaxed text-muted-foreground">{text}</p>
                 </CardContent>
@@ -113,68 +125,45 @@ export default function StudentBaitoPage() {
           </section>
 
           <Card>
-            <CardContent className="space-y-6 pt-6">
+            <CardContent className="space-y-6 p-6">
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">
-                  まずは「130万円以内」か「160万円以上」を考える
-                </h2>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  学生アルバイトで迷いやすいのは、所得税・親の扶養・社会保険の基準が別々に動くことです。
-                  特に130万円を超えると社会保険の扶養から外れる可能性が出るため、
-                  中途半端に超えるよりも、130万円以内に抑えるか、しっかり働いて手取り増を狙うかを早めに決めるのが現実的です。
-                </p>
-              </section>
-
-              <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">
-                  親の扶養は「123万円」と「188万円」もセットで見る
-                </h2>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  親の税金への影響を考えるときは、学生本人の所得税だけで判断しないことが大切です。
-                  通常の扶養控除では給与収入123万円前後が目安になり、19歳から22歳の人は特定親族特別控除により
-                  188万円まで段階的に扱われる可能性があります。
-                </p>
-              </section>
-
-              <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">学生バイト向けの判断フロー</h2>
-                <ol className="space-y-3 text-sm text-muted-foreground">
-                  <li>1. まず年収見込みをシミュレーターに入れる</li>
-                  <li>2. 130万円を超えるか確認する</li>
-                  <li>3. 19〜22歳なら123万円と188万円のラインも親と確認する</li>
-                  <li>4. 年末前にシフトを調整するか、しっかり働く方向に切り替える</li>
+                <h2 className="text-2xl font-bold text-foreground">最初に見るべき順番</h2>
+                <ol className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                  <li>1. 年収見込みを出して、123万円・130万円・160万円・188万円のどこに近いかを見る。</li>
+                  <li>2. 週の勤務時間、月額賃金、勤務先規模を確認して、社会保険の可能性を見る。</li>
+                  <li>3. 有給が発生している場合は、使った分も給与収入に含めて年収を見直す。</li>
+                  <li>4. 年末前に親と共有し、シフトを抑えるか、しっかり働いて手取りを伸ばすか決める。</li>
                 </ol>
+              </section>
+
+              <section className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-md border border-border bg-muted/30 p-4">
+                  <h3 className="text-sm font-bold text-foreground">扶養内で抑えたい人</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    年収を早めに見積もり、繁忙期や有給取得分も含めて調整しましょう。掛け持ちバイトは合算で見ます。
+                  </p>
+                </div>
+                <div className="rounded-md border border-border bg-muted/30 p-4">
+                  <h3 className="text-sm font-bold text-foreground">しっかり稼ぎたい人</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    社会保険や親への影響を把握したうえで、時給が高い仕事や長く働きやすい職場を選ぶと判断しやすくなります。
+                  </p>
+                </div>
               </section>
             </CardContent>
           </Card>
 
           <section className="grid gap-4 md:grid-cols-3">
-            {[
-              {
-                href: "/blog/gakusei-baito-zeikin",
-                title: "学生バイトの税金対策",
-                text: "160万円・123万円・188万円の違いを詳しく確認できます。",
-              },
-              {
-                href: "/blog/130man-no-kabe-v2",
-                title: "130万円の壁を超えると？",
-                text: "社会保険料と手取りの変化を確認できます。",
-              },
-              {
-                href: "/blog/tokutei-fuyo",
-                title: "特定親族特別控除とは？",
-                text: "19〜22歳の学生が特に確認したい制度です。",
-              },
-            ].map((item) => (
+            {articleLinks.map((item) => (
               <Link key={item.href} href={item.href}>
                 <Card className="h-full transition-colors hover:border-primary">
-                  <CardContent className="flex h-full flex-col justify-between gap-4 pt-5">
+                  <CardContent className="flex h-full flex-col justify-between gap-4 p-5">
                     <div className="space-y-2">
                       <h3 className="font-bold text-foreground">{item.title}</h3>
                       <p className="text-sm leading-relaxed text-muted-foreground">{item.text}</p>
                     </div>
                     <span className="inline-flex items-center text-sm font-semibold text-primary">
-                      記事を見る
+                      記事を読む
                       <ArrowRight className="ml-1 h-4 w-4" />
                     </span>
                   </CardContent>
@@ -183,38 +172,40 @@ export default function StudentBaitoPage() {
             ))}
           </section>
 
+          <StudentAffiliateHub />
+
           <Card className="bg-muted/40">
-            <CardContent className="space-y-3 pt-5">
+            <CardContent className="space-y-3 p-5">
               <h2 className="text-lg font-bold text-foreground">参考にした公的情報</h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                税制の細かい判定は年度や家庭状況で変わるため、最終判断は税務署・自治体・勤務先で確認してください。
+                制度の細かい判定は年度や家庭の状況で変わります。最終確認は税務署、自治体、勤務先、健康保険組合などで行ってください。
               </p>
               <div className="space-y-2 text-sm">
                 <a
-                  href="https://www.keisan.nta.go.jp/r3yokuaru_sp/scat2/scat22/scat228/scid120.html"
+                  href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1180.htm"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-primary hover:underline"
                 >
-                  国税庁: 勤労学生控除とは
+                  国税庁 扶養控除
                   <ExternalLink className="h-3 w-3" />
                 </a>
                 <a
-                  href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1180_qa.htm"
+                  href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1177.htm"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-primary hover:underline"
                 >
-                  国税庁: 扶養控除
+                  国税庁 特定親族特別控除
                   <ExternalLink className="h-3 w-3" />
                 </a>
                 <a
-                  href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html"
+                  href="https://www.check-roudou.mhlw.go.jp/qa/roudousya/yukyu/q1.html"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-primary hover:underline"
                 >
-                  日本年金機構: 19歳以上23歳未満の被扶養者認定
+                  厚生労働省 年次有給休暇Q&A
                   <ExternalLink className="h-3 w-3" />
                 </a>
               </div>

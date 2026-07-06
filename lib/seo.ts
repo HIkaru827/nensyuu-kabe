@@ -1,28 +1,30 @@
 export const SITE_URL = "https://nenshuu-kabe.com"
-export const SITE_NAME = "年収の壁シミュレーター"
+export const SITE_NAME = "学生バイトお金ナビ"
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/site-share-card.png`
 
 export const DEFAULT_KEYWORDS = [
+  "学生バイト",
+  "学生 バイト 扶養",
+  "学生 バイト 有給",
   "年収の壁",
   "103万円の壁",
   "106万円の壁",
   "130万円の壁",
   "160万円の壁",
-  "扶養",
+  "親の扶養",
   "特定親族特別控除",
   "社会保険",
-  "学生バイト",
   "大学生 バイト 扶養",
   "高校生 バイト 扶養",
-  "親の扶養 学生",
-  "年収シミュレーター",
+  "バイト 有給 シミュレーター",
+  "年収の壁 シミュレーター",
 ]
 
 export const STUDENT_BAITO_PAGE = {
   path: "/student-baito",
   title: "学生バイトはいくらまで稼げる？扶養・税金・社会保険の年収ガイド",
   description:
-    "学生アルバイト向けに、103万円・130万円・160万円・188万円の年収の壁と、親の扶養・税金・社会保険への影響を整理。",
+    "学生バイト向けに、103万円・130万円・160万円・188万円の年収ラインと、親の扶養・税金・社会保険への影響を整理します。",
   keywords: [
     "学生バイト いくらまで",
     "学生バイト 扶養",
@@ -34,39 +36,56 @@ export const STUDENT_BAITO_PAGE = {
   ],
 } as const
 
+export const PAID_LEAVE_PAGE = {
+  path: "/paid-leave",
+  title: "バイト有給シミュレーター｜学生バイトの付与日数・有給日の給料目安",
+  description:
+    "学生バイト向けに、入社日・契約上の所定労働日数・出勤率から有給の付与見込み、次の付与日、通常賃金・平均賃金・標準報酬日額による給料目安をシミュレーションできます。",
+  keywords: [
+    "バイト 有給 シミュレーター",
+    "学生バイト 有給",
+    "アルバイト 有給 何日",
+    "有給 給料 何割",
+    "有給 平均賃金",
+    "週3 バイト 有給",
+    "パート 有給 比例付与",
+    "有給 時給換算",
+  ],
+} as const
+
 export const BLOG_POSTS = [
   {
     slug: "4-6gatsu-hatarakisugi",
-    title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険の違い",
+    title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険",
     description:
-      "この話は原則として税金ではなく社会保険料の話です。学生バイトにどこまで当てはまるかを公的資料ベースで整理。",
+      "4月から6月の働き方が社会保険料にどう関係するか、学生バイト向けに整理します。",
     publishedAt: "2026-04-20T00:00:00Z",
     updatedAt: "2026-04-20T00:00:00Z",
     priority: 0.9,
   },
   {
     slug: "student-123man-parent-impact",
-    title: "学生が123万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
+    title: "学生が123万円を超えたら親に何が起きる？扶養控除と特定親族特別控除",
     description:
-      "学生の給与収入が123万円を超えたときに、親の税金へどんな影響が出るかをケース別に整理。19〜22歳の特例も確認できます。",
+      "学生の給与収入が123万円を超えたとき、親の税金へどんな影響が出るかをケース別に整理します。",
     publishedAt: "2026-04-15T00:00:00Z",
     updatedAt: "2026-04-15T00:00:00Z",
     priority: 0.9,
   },
   {
     slug: "kake-mochi-baito-fuyo",
-    title: "掛け持ちバイトで扶養はどう判定する？収入の合算と見落としやすい点",
+    title: "掛け持ちバイトの扶養判定はどう見る？収入の合算と注意点",
     description:
-      "掛け持ちアルバイトで扶養判定を見るときの収入の合算方法、103万円・123万円・130万円の違い、親への影響を解説。",
+      "複数のアルバイトをしている学生向けに、収入の合算方法と扶養判定の注意点を解説します。",
     publishedAt: "2026-04-15T00:00:00Z",
     updatedAt: "2026-04-15T00:00:00Z",
     priority: 0.88,
   },
   {
     slug: "social-insurance-case-study",
-    title: "社会保険の壁をケース別に比較。学生・非学生・19歳以上23歳未満の違い",
+    title: "社会保険の壁をケース別に比較｜学生・非学生・19歳以上23歳未満の違い",
     description:
-      "106万円、130万円、150万円未満の基準がどう分かれるかを、学生、非学生、19歳以上23歳未満のケース別に整理。",
+      "106万円、130万円、150万円未満の基準がどう分かれるかを学生バイト向けに整理します。",
     publishedAt: "2026-04-15T00:00:00Z",
     updatedAt: "2026-04-15T00:00:00Z",
     priority: 0.88,
@@ -75,7 +94,7 @@ export const BLOG_POSTS = [
     slug: "daigakusei-baito-fuyo",
     title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
     description:
-      "大学生アルバイト向けに、所得税160万円、親の扶養123万円、特定親族特別控除188万円、社会保険の注意点を整理。",
+      "大学生アルバイト向けに、所得税、親の扶養、特定親族特別控除、社会保険の注意点を整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
     updatedAt: "2026-04-09T00:00:00Z",
     priority: 0.9,
@@ -84,43 +103,52 @@ export const BLOG_POSTS = [
     slug: "koukousei-baito-fuyo",
     title: "高校生バイトはいくらまでなら扶養内？103万円・123万円・130万円の違い",
     description:
-      "高校生アルバイト向けに、103万円、123万円、130万円、160万円の違いを税金・扶養・社会保険に分けて解説。",
+      "高校生アルバイト向けに、税金、扶養、社会保険の年収ラインをわかりやすく整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
     updatedAt: "2026-04-09T00:00:00Z",
     priority: 0.88,
   },
   {
     slug: "gakusei-19-22-fuyo",
-    title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険の注意点",
+    title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険",
     description:
-      "19歳以上23歳未満の学生向けに、123万円、150万円未満、160万円、188万円の基準を分けて整理。",
+      "19歳以上23歳未満の学生向けに、123万円・150万円未満・160万円・188万円の基準を整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
     updatedAt: "2026-04-09T00:00:00Z",
     priority: 0.88,
   },
   {
     slug: "103man-no-kabe",
-    title: "160万円の壁とは？103万円からどう変わったかを解説",
+    title: "160万円の壁とは？103万円から何が変わったかを解説",
     description:
-      "103万円の壁が160万円に変わった背景、所得税の基準、扶養や社会保険への影響をわかりやすく整理。",
+      "103万円の壁から160万円の壁へ変わった背景と、所得税・扶養・社会保険への影響を整理します。",
     publishedAt: "2026-01-18T00:00:00Z",
     updatedAt: "2026-04-02T00:00:00Z",
     priority: 0.9,
   },
   {
-    slug: "130man-no-kabe-v2",
-    title: "130万円の壁を超えるとどうなる？働き損を避ける考え方",
+    slug: "130man-no-kabe",
+    title: "130万円の壁とは？社会保険の扶養を外れる目安を解説",
     description:
-      "130万円を超えたときの社会保険料、手取りの変化、シフト調整と年収アップの判断軸を解説。",
+      "130万円の壁の基本、扶養を外れた場合の手取り変化、シフト調整の考え方を解説します。",
+    publishedAt: "2026-01-18T00:00:00Z",
+    updatedAt: "2026-04-02T00:00:00Z",
+    priority: 0.85,
+  },
+  {
+    slug: "130man-no-kabe-v2",
+    title: "130万円の壁を超えるとどうなる？損しにくい働き方の考え方",
+    description:
+      "130万円を超えたときの社会保険料、手取りの変化、シフト調整と年収アップの判断軸を解説します。",
     publishedAt: "2026-01-18T00:00:00Z",
     updatedAt: "2026-04-02T00:00:00Z",
     priority: 0.85,
   },
   {
     slug: "gakusei-baito-zeikin",
-    title: "学生バイトの税金対策 160万円・123万円・188万円の基準を解説",
+    title: "学生バイトの税金対策｜160万円・123万円・188万円の基準を解説",
     description:
-      "学生アルバイト向けに、所得税160万円ライン、扶養判定123万円目安、19〜22歳の188万円基準を整理。",
+      "学生アルバイト向けに、所得税160万円ライン、扶養判定123万円、19〜22歳の188万円基準を整理します。",
     publishedAt: "2026-01-29T00:00:00Z",
     updatedAt: "2026-04-02T00:00:00Z",
     priority: 0.85,
@@ -129,7 +157,7 @@ export const BLOG_POSTS = [
     slug: "tokutei-fuyo",
     title: "特定親族特別控除とは？19歳から22歳の新ルールを解説",
     description:
-      "19歳から22歳の子どもがいる家庭向けに、特定親族特別控除の対象条件と年収ごとの影響を解説。",
+      "19歳以上23歳未満の子どもがいる家庭向けに、特定親族特別控除の条件と年収ごとの影響を解説します。",
     publishedAt: "2026-04-02T00:00:00Z",
     updatedAt: "2026-04-02T00:00:00Z",
     priority: 0.8,
@@ -138,7 +166,7 @@ export const BLOG_POSTS = [
     slug: "shakaihoken-kabe",
     title: "社会保険の壁とは？106万円・130万円の違いを整理",
     description:
-      "106万円と130万円の社会保険の壁の違い、扶養判定、手取りへの影響を初心者向けに解説。",
+      "106万円と130万円の社会保険の壁の違い、扶養判定、手取りへの影響を学生バイト向けに解説します。",
     publishedAt: "2026-04-02T00:00:00Z",
     updatedAt: "2026-04-02T00:00:00Z",
     priority: 0.8,
@@ -146,12 +174,13 @@ export const BLOG_POSTS = [
 ] as const
 
 export const STATIC_PAGES = [
-  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-04-02T00:00:00Z" },
-  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-04-09T00:00:00Z" },
+  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-04-20T00:00:00Z" },
   { path: "/editorial-policy", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
-  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
+  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-04-15T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-01-18T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-03-08T00:00:00Z" },

@@ -1,14 +1,26 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { SITE_NAME, SITE_URL } from "@/lib/seo"
 
 const sections = [
   {
     title: "主要ページ",
     links: [
-      { href: "/", label: "トップページ / 年収シミュレーター" },
-      { href: "/student-baito", label: "学生バイト向け年収ガイド" },
-      { href: "/blog", label: "記事一覧" },
+      { href: "/", label: "年収の壁シミュレーター" },
+      { href: "/paid-leave", label: "バイト有給シミュレーター" },
+      { href: "/student-baito", label: "学生バイト年収ガイド" },
+      { href: "/blog", label: "ブログ一覧" },
+    ],
+  },
+  {
+    title: "人気記事",
+    links: [
+      { href: "/blog/103man-no-kabe", label: "160万円の壁とは？" },
+      { href: "/blog/130man-no-kabe", label: "130万円の壁とは？" },
+      { href: "/blog/shakaihoken-kabe", label: "社会保険の壁とは？" },
+      { href: "/blog/gakusei-baito-zeikin", label: "学生バイトの税金対策" },
+      { href: "/blog/tokutei-fuyo", label: "特定親族特別控除とは？" },
     ],
   },
   {
@@ -22,33 +34,22 @@ const sections = [
       { href: "/terms", label: "利用規約" },
     ],
   },
-  {
-    title: "主要記事",
-    links: [
-      { href: "/blog/103man-no-kabe", label: "160万円の壁とは？" },
-      { href: "/blog/130man-no-kabe", label: "130万円の壁とは何か" },
-      { href: "/blog/130man-no-kabe-v2", label: "130万円を超えるとどうなるか" },
-      { href: "/blog/shakaihoken-kabe", label: "社会保険の壁とは？" },
-      { href: "/blog/gakusei-baito-zeikin", label: "学生バイトの税金" },
-      { href: "/blog/tokutei-fuyo", label: "特定親族特別控除とは何か" },
-    ],
-  },
 ]
 
 export const metadata = {
-  title: "サイトマップ | 年収の壁シミュレーター",
-  description: "年収の壁シミュレーターの主要ページと記事一覧です。",
+  title: `サイトマップ | ${SITE_NAME}`,
+  description: "学生バイトお金ナビの主要ページと記事一覧です。",
   alternates: {
-    canonical: "https://nenshuu-kabe.com/site-map",
+    canonical: `${SITE_URL}/site-map`,
   },
 }
 
 export default function SiteMapPage() {
   return (
-    <ContentPageShell title="サイトマップ" description="主要ページと記事への導線をまとめています">
+    <ContentPageShell title="サイトマップ" description="主要ページと記事へのリンクをまとめています。">
       {sections.map((section) => (
         <Card key={section.title}>
-          <CardContent className="space-y-4 pt-6">
+          <CardContent className="space-y-4 p-6">
             <h2 className="text-lg font-bold text-foreground">{section.title}</h2>
             <ul className="space-y-2">
               {section.links.map((link) => (
