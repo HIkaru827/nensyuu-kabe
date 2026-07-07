@@ -55,6 +55,42 @@ export const PAID_LEAVE_PAGE = {
 
 export const BLOG_POSTS = [
   {
+    slug: "student-money-management",
+    title: "学生バイトの給与口座・学生カードの整え方｜給料管理と使いすぎ防止",
+    description:
+      "学生バイト向けに、給与口座、生活費管理、学生カード、リボ払い・延滞・口座売買の注意点を公式情報ベースで整理します。",
+    publishedAt: "2026-07-07T00:00:00Z",
+    updatedAt: "2026-07-07T00:00:00Z",
+    priority: 0.9,
+  },
+  {
+    slug: "student-phone-bill",
+    title: "学生バイトのスマホ代を下げる見直し方｜料金プラン・格安スマホの注意点",
+    description:
+      "学生バイト向けに、スマホ代を下げるための料金プラン確認、データ使用量、格安スマホ・SIMの注意点、契約トラブル時の相談先を整理します。",
+    publishedAt: "2026-07-07T00:00:00Z",
+    updatedAt: "2026-07-07T00:00:00Z",
+    priority: 0.9,
+  },
+  {
+    slug: "student-skill-up-baito",
+    title: "学生バイトの資格・学習で時給を上げる考え方｜塾講師・事務・IT系の選び方",
+    description:
+      "学生バイト向けに、塾講師、事務、IT系などへつなげる学習・資格の選び方、求人比較、実質時給の見方を公式情報ベースで整理します。",
+    publishedAt: "2026-07-07T00:00:00Z",
+    updatedAt: "2026-07-07T00:00:00Z",
+    priority: 0.9,
+  },
+  {
+    slug: "student-living-costs",
+    title: "学生バイトの一人暮らし固定費の見直し方｜家計簿・引っ越し・サブスク整理",
+    description:
+      "学生バイト向けに、一人暮らしの家賃、通信費、光熱費、サブスク、引っ越し費用を見直す順番と契約トラブルの注意点を整理します。",
+    publishedAt: "2026-07-07T00:00:00Z",
+    updatedAt: "2026-07-07T00:00:00Z",
+    priority: 0.9,
+  },
+  {
     slug: "2026-student-income-wall",
     title: "2026年の学生バイト年収の壁｜119万・130万・136万・150万・178万・197万円を整理",
     description:
@@ -210,14 +246,14 @@ export const BLOG_POSTS = [
 ] as const
 
 export const STATIC_PAGES = [
-  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
-  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-07T00:00:00Z" },
+  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-07T00:00:00Z" },
   { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
-  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-07T00:00:00Z" },
   { path: "/editorial-policy", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
-  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
-  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-07T00:00:00Z" },
+  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-07T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },

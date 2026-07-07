@@ -16,6 +16,10 @@ const sections = [
   {
     title: "人気記事",
     links: [
+      { href: "/blog/student-money-management", label: "学生バイトの給与口座・学生カード" },
+      { href: "/blog/student-phone-bill", label: "学生バイトのスマホ代を下げる見直し方" },
+      { href: "/blog/student-skill-up-baito", label: "学生バイトの資格・学習で時給を上げる考え方" },
+      { href: "/blog/student-living-costs", label: "学生バイトの一人暮らし固定費の見直し方" },
       { href: "/blog/2026-student-income-wall", label: "2026年の学生バイト年収の壁" },
       { href: "/blog/student-baito-shift-checklist", label: "学生バイトのシフト調整チェックリスト" },
       { href: "/blog/103man-no-kabe", label: "178万円の壁とは？" },

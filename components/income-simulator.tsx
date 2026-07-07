@@ -283,6 +283,20 @@ export function IncomeSimulator() {
         </p>
       </section>
 
+      <section className="sticky top-14 z-30 -mx-4 border-y border-border bg-background/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-xs font-semibold text-primary">{status.label}</p>
+            <p className="text-sm font-bold text-foreground">
+              {formatManYen(annualIncome)} / 手元 {formatCurrency(displayedTakeHome)}
+            </p>
+          </div>
+          <a href="#income-result" className="shrink-0 rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground">
+            結果へ
+          </a>
+        </div>
+      </section>
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
         <Card className="shadow-sm">
           <CardContent className="space-y-5 p-5">
@@ -290,6 +304,7 @@ export function IncomeSimulator() {
               <div className="flex items-baseline justify-center gap-2">
                 <Input
                   data-testid="income-input"
+                  aria-label="年収（万円）"
                   type="number"
                   value={income}
                   onChange={handleIncomeInput}
@@ -304,6 +319,7 @@ export function IncomeSimulator() {
               <div className="space-y-2">
                 <Slider
                   data-testid="income-slider"
+                  aria-label="年収"
                   value={[income]}
                   onValueChange={(value) => setIncome(value[0])}
                   onValueCommit={(value) => trackIncomeSimulatorInteraction("income_slider_commit", value[0])}
@@ -337,15 +353,21 @@ export function IncomeSimulator() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="age">その年の12月31日時点の年齢</Label>
-                <Input
-                  id="age"
-                  type="number"
-                  min={15}
-                  max={30}
-                  value={age}
-                  onChange={(event) => setAge(Math.min(30, Math.max(15, Number(event.target.value) || 15)))}
-                  onBlur={() => trackIncomeSimulatorInteraction("age_input_commit", income, { age })}
-                />
+                <div className="relative">
+                  <Input
+                    id="age"
+                    type="number"
+                    min={15}
+                    max={30}
+                    value={age}
+                    onChange={(event) => setAge(Math.min(30, Math.max(15, Number(event.target.value) || 15)))}
+                    onBlur={() => trackIncomeSimulatorInteraction("age_input_commit", income, { age })}
+                    className="h-11 pr-10 text-base md:text-sm"
+                  />
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                    歳
+                  </span>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>属性</Label>
@@ -357,7 +379,7 @@ export function IncomeSimulator() {
                     trackIncomeSimulatorInteraction("attribute_change", income, { attribute: nextAttribute })
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="属性">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -369,28 +391,40 @@ export function IncomeSimulator() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="weekly-hours">週の勤務時間</Label>
-                <Input
-                  id="weekly-hours"
-                  type="number"
-                  min={0}
-                  max={80}
-                  value={weeklyHours}
-                  onChange={(event) => setWeeklyHours(Math.max(0, Number(event.target.value) || 0))}
-                  onBlur={() => trackIncomeSimulatorInteraction("weekly_hours_input_commit", income, { weeklyHours })}
-                />
+                <div className="relative">
+                  <Input
+                    id="weekly-hours"
+                    type="number"
+                    min={0}
+                    max={80}
+                    value={weeklyHours}
+                    onChange={(event) => setWeeklyHours(Math.max(0, Number(event.target.value) || 0))}
+                    onBlur={() => trackIncomeSimulatorInteraction("weekly_hours_input_commit", income, { weeklyHours })}
+                    className="h-11 pr-14 text-base md:text-sm"
+                  />
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                    時間/週
+                  </span>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="monthly-salary">月額賃金</Label>
-                <Input
-                  id="monthly-salary"
-                  type="number"
-                  min={0}
-                  value={monthlySalary}
-                  onChange={(event) => setMonthlySalary(Math.max(0, Number(event.target.value) || 0))}
-                  onBlur={() =>
-                    trackIncomeSimulatorInteraction("monthly_salary_input_commit", income, { monthlySalary })
-                  }
-                />
+                <div className="relative">
+                  <Input
+                    id="monthly-salary"
+                    type="number"
+                    min={0}
+                    value={monthlySalary}
+                    onChange={(event) => setMonthlySalary(Math.max(0, Number(event.target.value) || 0))}
+                    onBlur={() =>
+                      trackIncomeSimulatorInteraction("monthly_salary_input_commit", income, { monthlySalary })
+                    }
+                    className="h-11 pr-14 text-base md:text-sm"
+                  />
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                    円/月
+                  </span>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>勤務先規模</Label>
@@ -402,7 +436,7 @@ export function IncomeSimulator() {
                     trackIncomeSimulatorInteraction("company_size_change", income, { companySize: nextCompanySize })
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="勤務先規模">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -423,7 +457,7 @@ export function IncomeSimulator() {
                     })
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="親の所得税率の目安">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -447,7 +481,7 @@ export function IncomeSimulator() {
                     })
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="扶養を外れた後の加入先">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -469,7 +503,7 @@ export function IncomeSimulator() {
                     })
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="学生納付特例">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -482,24 +516,30 @@ export function IncomeSimulator() {
               {socialInsuranceRoute === "national" && (
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="national-health-insurance">国民健康保険料の年額が分かる場合</Label>
-                  <Input
-                    id="national-health-insurance"
-                    type="number"
-                    min={0}
-                    value={nationalHealthInsuranceAnnual}
-                    onChange={(event) => {
-                      const value = event.target.value
-                      setNationalHealthInsuranceAnnual(value === "" ? "" : Math.max(0, Number(value) || 0))
-                    }}
-                    onBlur={() => trackIncomeSimulatorInteraction("national_health_insurance_input_commit")}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="national-health-insurance"
+                      type="number"
+                      min={0}
+                      value={nationalHealthInsuranceAnnual}
+                      onChange={(event) => {
+                        const value = event.target.value
+                        setNationalHealthInsuranceAnnual(value === "" ? "" : Math.max(0, Number(value) || 0))
+                      }}
+                      onBlur={() => trackIncomeSimulatorInteraction("national_health_insurance_input_commit")}
+                      className="h-11 pr-14 text-base md:text-sm"
+                    />
+                    <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                      円/年
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
           </CardContent>
         </Card>
 
-        <div className="space-y-4 lg:sticky lg:top-20">
+        <div id="income-result" className="scroll-mt-24 space-y-4 lg:sticky lg:top-20">
           <Card className={`${status.tone} shadow-sm`}>
             <CardContent className="space-y-3 p-5">
               <div className="flex items-start gap-3">

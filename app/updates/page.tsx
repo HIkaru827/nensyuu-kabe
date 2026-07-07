@@ -11,6 +11,17 @@ export const metadata = {
 
 const updates = [
   {
+    date: "2026年7月7日",
+    title: "学生バイト向けのお金管理・通信費・学習・生活費記事を追加",
+    items: [
+      "給与口座・学生カードの整え方の記事を追加",
+      "スマホ代を下げる見直し方の記事を追加",
+      "資格・学習で時給を上げる考え方の記事を追加",
+      "一人暮らしの固定費を見直す記事を追加",
+      "学生バイト向けカテゴリカードの内部リンクを専用記事へ変更",
+    ],
+  },
+  {
     date: "2026年7月6日",
     title: "学生バイト向けに2026年ルールと記事を拡充",
     items: [
@@ -53,6 +64,10 @@ export default function UpdatesPage() {
     { path: "/updates", purpose: "更新履歴ページを新設しました" },
     { path: "/student-baito", purpose: "学生バイト向けの年収ラインと関連記事導線を更新しました" },
     { path: "/blog", purpose: "記事一覧と新規記事への導線を整理しました" },
+    { path: "/blog/student-money-management", purpose: "給与口座・学生カード・使いすぎ防止の記事を追加しました" },
+    { path: "/blog/student-phone-bill", purpose: "スマホ代と格安スマホの注意点の記事を追加しました" },
+    { path: "/blog/student-skill-up-baito", purpose: "資格・学習で時給を上げる考え方の記事を追加しました" },
+    { path: "/blog/student-living-costs", purpose: "一人暮らしの固定費とサブスク整理の記事を追加しました" },
     { path: "/blog/2026-student-income-wall", purpose: "2026年の学生バイト年収ラインを整理した記事を追加しました" },
     { path: "/blog/student-123man-parent-impact", purpose: "親への影響を令和8年分以後の基準で整理しました" },
     { path: "/blog/kake-mochi-baito-fuyo", purpose: "掛け持ちバイト向けの記事を追加しました" },

@@ -167,28 +167,28 @@ export function buildStudentAffiliateCards(env: Record<string, string | undefine
       description: "給料の受け取り、生活費の管理、学生向けカードをまとめて検討したい人向けです。",
       tag: "お金管理",
       href: getAffiliateHref(env.NEXT_PUBLIC_A8_BANK_ACCOUNT, env.NEXT_PUBLIC_A8_STUDENT_CARD),
-      internalHref: "/blog/gakusei-baito-zeikin",
+      internalHref: "/blog/student-money-management",
     },
     {
       label: "スマホ代を下げる",
       description: "毎月の固定費を落とすと、同じバイト時間でも手元に残るお金を増やしやすくなります。",
       tag: "通信費",
       href: getAffiliateHref(env.NEXT_PUBLIC_A8_SIM),
-      internalHref: "/student-baito",
+      internalHref: "/blog/student-phone-bill",
     },
     {
       label: "資格・学習で時給を上げる",
       description: "塾講師、事務、IT系など、少ない勤務時間で稼ぎやすい選択肢につなげます。",
       tag: "学習",
       href: getAffiliateHref(env.NEXT_PUBLIC_A8_LEARNING),
-      internalHref: "/blog/daigakusei-baito-fuyo",
+      internalHref: "/blog/student-skill-up-baito",
     },
     {
       label: "一人暮らしの固定費を見直す",
       description: "引っ越し、家計簿、サブスク整理など、バイト代の使い道まで広げられます。",
       tag: "生活費",
       href: getAffiliateHref(env.NEXT_PUBLIC_A8_MOVING, env.NEXT_PUBLIC_A8_MONEY_APP),
-      internalHref: "/student-baito",
+      internalHref: "/blog/student-living-costs",
     },
   ]
 
