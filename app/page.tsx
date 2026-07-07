@@ -45,21 +45,24 @@ const toolCards = [
     icon: WalletCards,
     title: "年収の壁シミュレーター",
     text: "扶養、本人の税金、社会保険の目安を年収から確認します。",
-    current: true,
+    badge: "表示中",
+    action: "このまま使う",
   },
   {
     href: "/paid-leave",
     icon: CalendarCheck,
     title: "バイト有給シミュレーター",
     text: "入社日と勤務日数から、有給日数と時給換算の目安を出します。",
-    current: false,
+    badge: "有給",
+    action: "有給を見る",
   },
   {
     href: "/student-baito",
     icon: GraduationCap,
     title: "学生バイト年収ガイド",
     text: "大学生・高校生向けに、扶養や税金の全体像を整理します。",
-    current: false,
+    badge: "ガイド",
+    action: "記事で整理",
   },
 ]
 
@@ -87,15 +90,15 @@ export default function Home() {
               {toolCards.map((item) => {
                 const Icon = item.icon
                 return (
-                  <Link key={item.title} href={item.href}>
-                    <Card className="h-full transition-colors hover:border-primary">
+                  <Link key={item.title} href={item.href} aria-label={`${item.title}を開く`}>
+                    <Card className="h-full transition-colors hover:border-primary hover:bg-muted/30">
                       <CardContent className="flex h-full flex-col gap-3 p-5">
                         <div className="flex items-center justify-between gap-3">
                           <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                             <Icon className="h-5 w-5" />
                           </span>
                           <span className="rounded-md bg-muted px-2 py-1 text-[11px] font-semibold text-muted-foreground">
-                            {item.current ? "表示中" : "追加済み"}
+                            {item.badge}
                           </span>
                         </div>
                         <div className="space-y-1">
@@ -103,7 +106,7 @@ export default function Home() {
                           <p className="text-sm leading-relaxed text-muted-foreground">{item.text}</p>
                         </div>
                         <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                          開く
+                          {item.action}
                           <ArrowRight className="h-4 w-4" />
                         </span>
                       </CardContent>

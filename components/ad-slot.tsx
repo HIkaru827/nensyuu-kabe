@@ -185,6 +185,7 @@ export function JobAdSlot({
   return (
     <div className="w-full space-y-2">
       <p className="text-xs text-muted-foreground text-center">{title}</p>
+      <p className="text-center text-[11px] text-muted-foreground">PR・広告リンクを含む場合があります</p>
       <Card className="border-2 border-primary/20 bg-primary/5">
         <CardContent className="p-4 space-y-3">
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -193,7 +194,7 @@ export function JobAdSlot({
                 key={index}
                 href={job.href}
                 target="_blank"
-                rel="noopener noreferrer nofollow"
+                rel="noopener noreferrer nofollow sponsored"
                 className="group rounded-lg border-2 border-border bg-background p-3 text-center transition-all hover:border-primary hover:shadow-md"
               >
                 {job.impressionPixelSrc && (

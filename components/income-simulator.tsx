@@ -623,16 +623,19 @@ export function IncomeSimulator() {
 
           {showAffiliateUi && (
             <div className="space-y-3">
+              <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                PR・広告リンクを含む場合があります。試算結果は広告の有無にかかわらず同じ基準で表示します。
+              </p>
               {income >= socialInsuranceLimit / 10_000 && income < 178 && ctaLinks.highWage && ctaLinks.flexible && (
                 <>
                   <Button className="h-11 w-full gap-2 font-semibold" asChild>
-                    <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow">
+                    <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow sponsored">
                       <TrendingUp className="h-4 w-4" />
                       高時給バイトを探す
                     </a>
                   </Button>
                   <Button variant="outline" className="h-11 w-full gap-2 bg-background font-semibold" asChild>
-                    <a href={ctaLinks.flexible} target="_blank" rel="noopener noreferrer nofollow">
+                    <a href={ctaLinks.flexible} target="_blank" rel="noopener noreferrer nofollow sponsored">
                       短時間・単発バイトを探す
                     </a>
                   </Button>
@@ -640,7 +643,7 @@ export function IncomeSimulator() {
               )}
               {income < socialInsuranceLimit / 10_000 && ctaLinks.recommended && (
                 <Button className="h-11 w-full gap-2 font-semibold" asChild>
-                  <a href={ctaLinks.recommended} target="_blank" rel="noopener noreferrer nofollow">
+                  <a href={ctaLinks.recommended} target="_blank" rel="noopener noreferrer nofollow sponsored">
                     <TrendingUp className="h-4 w-4" />
                     扶養内で働きやすいバイトを探す
                   </a>
@@ -648,7 +651,7 @@ export function IncomeSimulator() {
               )}
               {income >= 178 && ctaLinks.career && (
                 <Button className="h-11 w-full gap-2 font-semibold" asChild>
-                  <a href={ctaLinks.career} target="_blank" rel="noopener noreferrer nofollow">
+                  <a href={ctaLinks.career} target="_blank" rel="noopener noreferrer nofollow sponsored">
                     <TrendingUp className="h-4 w-4" />
                     年収アップしやすいバイトを探す
                   </a>

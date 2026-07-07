@@ -48,6 +48,7 @@ export function StudentAffiliateHub({
         }
       : {},
   )
+  const hasExternalCards = cards.some((card) => card.isExternal)
 
   return (
     <section className="mx-auto w-full max-w-5xl space-y-4">
@@ -55,6 +56,11 @@ export function StudentAffiliateHub({
         <p className="text-xs font-semibold text-primary">学生バイト向けカテゴリ</p>
         <h2 className="text-2xl font-bold text-foreground">{title}</h2>
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">{description}</p>
+        {hasExternalCards && (
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            PR・広告リンクを含む場合があります。制度説明や試算結果は広告の有無にかかわらず同じ基準で表示します。
+          </p>
+        )}
       </div>
       <div className="grid gap-3 md:grid-cols-5">
         {cards.map((card) => {
@@ -84,7 +90,7 @@ export function StudentAffiliateHub({
 
           if (card.isExternal) {
             return (
-              <a key={card.label} href={card.href} target="_blank" rel="noopener noreferrer nofollow">
+              <a key={card.label} href={card.href} target="_blank" rel="noopener noreferrer nofollow sponsored">
                 {content}
               </a>
             )

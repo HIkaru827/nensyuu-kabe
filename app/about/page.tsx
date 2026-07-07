@@ -3,8 +3,8 @@ import { Target, Users, TrendingUp, Shield } from "lucide-react"
 import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
-  title: "運営者情報 | 年収の壁シミュレーター",
-  description: "年収の壁シミュレーターの運営者情報。学生やアルバイト従事者が年収の壁を正しく理解し、最適な働き方を選択できるよう支援します。",
+  title: "運営者情報 | 学生バイトお金ナビ",
+  description: "学生バイトお金ナビの運営者情報。学生やアルバイト従事者が年収の壁、扶養、社会保険、有給を正しく理解できるよう支援します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/about",
   },
@@ -12,13 +12,13 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <ContentPageShell title="運営者情報" description="年収の壁シミュレーターについて">
+    <ContentPageShell title="運営者情報" description="学生バイトお金ナビについて">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">サイト名</h2>
               <p className="text-sm text-muted-foreground">
-                年収の壁シミュレーター
+                学生バイトお金ナビ（年収の壁・扶養・有給シミュレーター）
               </p>
             </section>
 
@@ -34,9 +34,21 @@ export default function AboutPage() {
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">運営者</h2>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p>年収の壁シミュレーター運営事務局</p>
+                <p>学生バイトお金ナビ編集部</p>
                 <p>
-                  学生アルバイトや扶養内就業の情報を調べるときに、税金と社会保険の基準が混ざって分かりにくいという課題を解消するために運営しています。
+                  学生アルバイトや扶養内就業の情報を調べるときに、税金、親の扶養、社会保険、有給休暇の基準が混ざって分かりにくいという課題を解消するために運営しています。
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-xl font-bold text-foreground">運営形態</h2>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>
+                  当サイトは、学生バイトのお金と働き方に関する情報を整理する個人運営の情報サイトです。記事やシミュレーターは、公開されている公的資料、公式情報、制度改正情報を確認しながら作成しています。
+                </p>
+                <p>
+                  税務・社会保険の個別判断や申告代行は行っていません。個別の事情がある場合は、税務署、自治体、年金事務所、勤務先、加入中の健康保険などの公式窓口で確認してください。
                 </p>
               </div>
             </section>
@@ -100,6 +112,7 @@ export default function AboutPage() {
                     <li>制度改正のあったテーマは、該当ページの更新日と参照先を見直します。</li>
                     <li>年収だけで断定できない論点は、断定表現を避けて追加確認の条件を明記します。</li>
                     <li>体験談や誤解しやすい論点は、ケース別の記事として分離して整理します。</li>
+                    <li>広告やアフィリエイトリンクの有無にかかわらず、制度説明では一次情報への導線を残します。</li>
                   </ul>
                 </div>
               </div>
@@ -132,7 +145,10 @@ export default function AboutPage() {
           <CardContent className="pt-6 space-y-4">
             <h2 className="text-lg font-bold text-foreground">広告掲載について</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              当サイトでは、サービス運営のため、第三者配信の広告サービス（A8.net、Google AdSense等）を利用しています。広告は、ユーザーの興味に応じて最適化されることがあります。
+              当サイトでは、サービス運営のため、第三者配信の広告サービス（Google AdSense、A8.net等）やアフィリエイトプログラムを利用する場合があります。広告は、ユーザーの興味に応じて最適化されることがあります。
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              記事内で紹介するサービスや求人サイトは、読者が次に確認しやすい選択肢として掲載するものであり、税金・扶養・社会保険の制度説明や試算結果を広告主の都合で変更することはありません。
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
               詳しくは<a href="/privacy-policy" className="text-primary hover:underline">プライバシーポリシー</a>をご確認ください。
@@ -147,6 +163,7 @@ export default function AboutPage() {
               <li>煽り見出しより、基準の違いが分かる見出しを優先します。</li>
               <li>広告の有無にかかわらず、一次情報への導線を残します。</li>
               <li>不明確な点は問い合わせで受け付け、必要に応じて記事へ反映します。</li>
+              <li>記事の前提、確認日、参照先をできるだけ明記し、古い情報が残らないよう更新履歴を残します。</li>
             </ul>
           </CardContent>
         </Card>
