@@ -1,3 +1,5 @@
+import { BAITO_REALITY_BLOG_POSTS } from "./baito-reality"
+
 export const SITE_URL = "https://nenshuu-kabe.com"
 export const SITE_NAME = "学生バイトお金ナビ"
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/site-share-card.png`
@@ -16,6 +18,9 @@ export const DEFAULT_KEYWORDS = [
   "社会保険",
   "大学生 バイト 扶養",
   "高校生 バイト 扶養",
+  "学生 バイト 診断",
+  "飲食 バイト 仕事内容",
+  "アパレル バイト 仕事内容",
   "バイト 有給 シミュレーター",
   "年収の壁 シミュレーター",
 ]
@@ -53,7 +58,25 @@ export const PAID_LEAVE_PAGE = {
   ],
 } as const
 
+export const BAITO_TYPE_DIAGNOSIS_PAGE = {
+  path: "/baito-type-diagnosis",
+  title: "学生バイトタイプ診断｜向いてるバイトを6問でチェック",
+  description:
+    "学生バイト向けに、接客、作業型、高時給、扶養内、雰囲気重視などのタイプから自分に合いそうなバイトを6問で確認できます。",
+  keywords: [
+    "学生 バイト 診断",
+    "学生バイト診断",
+    "大学生 バイト 向いてる",
+    "高校生 バイト 向いてる",
+    "自分に合う バイト",
+    "バイト 適性診断",
+    "飲食 バイト 仕事内容",
+    "アパレル バイト 仕事内容",
+  ],
+} as const
+
 export const BLOG_POSTS = [
+  ...BAITO_REALITY_BLOG_POSTS,
   {
     slug: "student-money-management",
     title: "学生バイトの給与口座・学生カードの整え方｜給料管理と使いすぎ防止",
@@ -246,14 +269,15 @@ export const BLOG_POSTS = [
 ] as const
 
 export const STATIC_PAGES = [
-  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-07T00:00:00Z" },
-  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-07T00:00:00Z" },
+  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: BAITO_TYPE_DIAGNOSIS_PAGE.path, priority: 0.94, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
-  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-07T00:00:00Z" },
+  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/editorial-policy", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
-  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-07T00:00:00Z" },
-  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-07T00:00:00Z" },
+  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },

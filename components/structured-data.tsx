@@ -19,11 +19,6 @@ export function WebsiteStructuredData() {
       "学生バイト向けに、年収の壁、親の扶養、社会保険、有給休暇をまとめて確認できる情報サイトです。",
     url: SITE_URL,
     inLanguage: "ja-JP",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${SITE_URL}/blog?keyword={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   }
 
   return <JsonLd data={data} />
@@ -58,6 +53,47 @@ export function WebApplicationStructuredData() {
   return <JsonLd data={data} />
 }
 
+export function BaitoDiagnosisStructuredData({
+  url,
+}: {
+  url: string
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "学生バイトタイプ診断",
+    url,
+    description:
+      "6つの質問で、学生バイトを選ぶ前に接客量、作業内容、時給、シフトの組みやすさを確認できる無料診断です。",
+    applicationCategory: "LifestyleApplication",
+    operatingSystem: "Web",
+    browserRequirements: "JavaScript required",
+    inLanguage: "ja-JP",
+    isAccessibleForFree: true,
+    audience: {
+      "@type": "Audience",
+      audienceType: "学生アルバイト",
+    },
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "JPY",
+    },
+    featureList: [
+      "学生バイトのタイプ診断",
+      "職種別ガイドへの案内",
+      "年収の壁と有給確認への導線",
+    ],
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  }
+
+  return <JsonLd data={data} />
+}
+
 export function BlogListStructuredData() {
   const data = {
     "@context": "https://schema.org",
@@ -80,6 +116,35 @@ export function BlogListStructuredData() {
   return <JsonLd data={data} />
 }
 
+export function ItemListStructuredData({
+  name,
+  url,
+  items,
+}: {
+  name: string
+  url: string
+  items: Array<{ name: string; url: string }>
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    url,
+    inLanguage: "ja-JP",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: item.url,
+        name: item.name,
+      })),
+    },
+  }
+
+  return <JsonLd data={data} />
+}
+
 export function ArticleStructuredData({
   title,
   description,
@@ -87,6 +152,9 @@ export function ArticleStructuredData({
   dateModified,
   url,
   imageUrl,
+  section,
+  keywords,
+  about,
 }: {
   title: string
   description: string
@@ -94,6 +162,9 @@ export function ArticleStructuredData({
   dateModified?: string
   url: string
   imageUrl?: string
+  section?: string
+  keywords?: readonly string[]
+  about?: readonly string[]
 }) {
   const data = {
     "@context": "https://schema.org",
@@ -109,6 +180,13 @@ export function ArticleStructuredData({
     url,
     image: [imageUrl || DEFAULT_OG_IMAGE],
     inLanguage: "ja-JP",
+    isAccessibleForFree: true,
+    articleSection: section,
+    keywords,
+    about: about?.map((name) => ({
+      "@type": "Thing",
+      name,
+    })),
     author: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -148,7 +226,7 @@ export function BreadcrumbStructuredData({
 export function FAQStructuredData({
   faqs,
 }: {
-  faqs: Array<{ question: string; answer: string }>
+  faqs: readonly { question: string; answer: string }[]
 }) {
   const data = {
     "@context": "https://schema.org",

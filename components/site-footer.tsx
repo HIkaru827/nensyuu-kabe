@@ -30,6 +30,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/baito-type-diagnosis" className="text-muted-foreground transition-colors hover:text-primary">
+                学生バイトタイプ診断
+              </Link>
+            </li>
+            <li>
               <Link href="/blog" className="text-muted-foreground transition-colors hover:text-primary">
                 ブログ
               </Link>

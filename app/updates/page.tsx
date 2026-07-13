@@ -11,6 +11,15 @@ export const metadata = {
 
 const updates = [
   {
+    date: "2026年7月12日",
+    title: "学生バイトタイプ診断と職種別ガイドを追加",
+    items: [
+      "6問で自分に合いそうなバイトを確認できる学生バイトタイプ診断を追加",
+      "飲食、カフェ、アパレル、コンビニ、スーパー、塾講師、倉庫、イベント、コールセンター、事務の職種別ガイドを追加",
+      "トップページ、ブログ一覧、学生バイト年収ガイド、サイトマップから診断と職種別ガイドへ移動できるように変更",
+    ],
+  },
+  {
     date: "2026年7月7日",
     title: "学生バイト向けのお金管理・通信費・学習・生活費記事を追加",
     items: [
@@ -63,7 +72,10 @@ export default function UpdatesPage() {
     { path: "/about", purpose: "運営者情報、編集方針、更新体制を追記しました" },
     { path: "/updates", purpose: "更新履歴ページを新設しました" },
     { path: "/student-baito", purpose: "学生バイト向けの年収ラインと関連記事導線を更新しました" },
+    { path: "/baito-type-diagnosis", purpose: "自分に合いそうなバイトと職種別ガイドを確認できる診断ページを追加しました" },
     { path: "/blog", purpose: "記事一覧と新規記事への導線を整理しました" },
+    { path: "/blog/baito-reality-restaurant", purpose: "飲食バイトの職種別ガイドを追加しました" },
+    { path: "/blog/baito-reality-apparel", purpose: "アパレルバイトの職種別ガイドを追加しました" },
     { path: "/blog/student-money-management", purpose: "給与口座・学生カード・使いすぎ防止の記事を追加しました" },
     { path: "/blog/student-phone-bill", purpose: "スマホ代と格安スマホの注意点の記事を追加しました" },
     { path: "/blog/student-skill-up-baito", purpose: "資格・学習で時給を上げる考え方の記事を追加しました" },

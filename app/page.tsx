@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, CalendarCheck, GraduationCap, WalletCards } from "lucide-react"
+import { ArrowRight, CalendarCheck, GraduationCap, Sparkles, WalletCards } from "lucide-react"
 import { IncomeSimulator } from "@/components/income-simulator"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -64,6 +64,14 @@ const toolCards = [
     badge: "ガイド",
     action: "記事で整理",
   },
+  {
+    href: "/baito-type-diagnosis",
+    icon: Sparkles,
+    title: "学生バイトタイプ診断",
+    text: "質問に答えて、自分に合いそうなバイトと職種別ガイドを確認します。",
+    badge: "診断",
+    action: "診断してみる",
+  },
 ]
 
 export default function Home() {
@@ -86,7 +94,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-3 md:grid-cols-4">
               {toolCards.map((item) => {
                 const Icon = item.icon
                 return (

@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { BAITO_REALITY_ARTICLES } from "@/lib/baito-reality"
 import { SITE_NAME, SITE_URL } from "@/lib/seo"
 
 const sections = [
@@ -10,8 +11,16 @@ const sections = [
       { href: "/", label: "年収の壁シミュレーター" },
       { href: "/paid-leave", label: "バイト有給シミュレーター" },
       { href: "/student-baito", label: "学生バイト年収ガイド" },
+      { href: "/baito-type-diagnosis", label: "学生バイトタイプ診断" },
       { href: "/blog", label: "ブログ一覧" },
     ],
+  },
+  {
+    title: "職種別バイトガイド",
+    links: BAITO_REALITY_ARTICLES.map((article) => ({
+      href: `/blog/${article.slug}`,
+      label: article.jobName,
+    })),
   },
   {
     title: "人気記事",

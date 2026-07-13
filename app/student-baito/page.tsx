@@ -1,12 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Calculator, CalendarCheck, ExternalLink } from "lucide-react"
+import { ArrowRight, Calculator, CalendarCheck, ExternalLink, Sparkles } from "lucide-react"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { StudentAffiliateHub } from "@/components/student-affiliate-hub"
 import { BreadcrumbStructuredData, FAQStructuredData } from "@/components/structured-data"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { BAITO_REALITY_ARTICLES } from "@/lib/baito-reality"
 import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, STUDENT_BAITO_PAGE } from "@/lib/seo"
 
 const faqItems = [
@@ -96,6 +97,12 @@ const articleLinks = [
   },
 ]
 
+const baitoRealityLinks = BAITO_REALITY_ARTICLES.slice(0, 4).map((article) => ({
+  href: `/blog/${article.slug}`,
+  title: article.jobName,
+  text: article.catchCopy,
+}))
+
 export default function StudentBaitoPage() {
   return (
     <>
@@ -117,7 +124,7 @@ export default function StudentBaitoPage() {
             <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
               親の扶養、本人の税金、社会保険、有給は別々のルールで動きます。まずは主要な年収ラインを押さえて、シミュレーターで自分のケースを確認しましょう。
             </p>
-            <div className="mx-auto flex max-w-lg flex-col gap-3 sm:flex-row">
+            <div className="mx-auto grid max-w-2xl gap-3 sm:grid-cols-3">
               <Button asChild size="lg" className="flex-1">
                 <Link href="/">
                   <Calculator className="mr-2 h-4 w-4" />
@@ -128,6 +135,12 @@ export default function StudentBaitoPage() {
                 <Link href="/paid-leave">
                   <CalendarCheck className="mr-2 h-4 w-4" />
                   有給を確認
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="flex-1">
+                <Link href="/baito-type-diagnosis">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  バイト診断
                 </Link>
               </Button>
             </div>
@@ -172,6 +185,34 @@ export default function StudentBaitoPage() {
               </section>
             </CardContent>
           </Card>
+
+          <section className="space-y-4">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-primary">バイト選びから考える</p>
+              <h2 className="text-2xl font-bold text-foreground">職種ごとの働き方も見る</h2>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                扶養や年収の壁は、時給とシフトの組み方で変わります。まずは職種ごとの働き方を見比べて、続けやすい候補を探しましょう。
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {baitoRealityLinks.map((item) => (
+                <Link key={item.href} href={item.href}>
+                  <Card className="h-full transition-colors hover:border-primary">
+                    <CardContent className="flex h-full flex-col justify-between gap-4 p-5">
+                      <div className="space-y-2">
+                        <h3 className="font-bold text-foreground">{item.title}</h3>
+                        <p className="text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+                      </div>
+                      <span className="inline-flex items-center text-sm font-semibold text-primary">
+                        記事を見る
+                        <ArrowRight className="ml-1 h-4 w-4" />
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
 
           <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {articleLinks.map((item) => (

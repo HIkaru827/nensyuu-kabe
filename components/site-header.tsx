@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BookOpen, Calculator, CalendarCheck, GraduationCap, Map } from "lucide-react"
+import { BookOpen, Calculator, CalendarCheck, GraduationCap, Map, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function SiteHeader() {
@@ -35,6 +35,12 @@ export function SiteHeader() {
             <Link href="/student-baito" aria-current={isActive("/student-baito") ? "page" : undefined} aria-label="学生バイトガイド">
               <GraduationCap className="h-4 w-4" />
               <span className="hidden md:inline">学生ガイド</span>
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant={isActive("/baito-type-diagnosis") ? "default" : "ghost"} className="h-11 min-w-11 gap-2 px-2 sm:px-3 md:h-9 md:min-w-0">
+            <Link href="/baito-type-diagnosis" aria-current={isActive("/baito-type-diagnosis") ? "page" : undefined} aria-label="学生バイトタイプ診断">
+              <Sparkles className="h-4 w-4" />
+              <span className="hidden md:inline">診断</span>
             </Link>
           </Button>
           <Button asChild size="sm" variant={isActive("/blog") ? "default" : "ghost"} className="h-11 min-w-11 gap-2 px-2 sm:px-3 md:h-9 md:min-w-0">

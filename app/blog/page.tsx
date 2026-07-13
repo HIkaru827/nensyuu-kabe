@@ -31,6 +31,9 @@ const formatDate = (dateString: string) =>
   }).format(new Date(dateString))
 
 const getCategory = (slug: string) => {
+  if (slug.includes("baito-reality")) {
+    return "職種別ガイド"
+  }
   if (slug.includes("yukyu")) {
     return "有給"
   }
@@ -68,11 +71,13 @@ const categorySummaries = [
   { id: "social-insurance", label: "社会保険", description: "130万円、週20時間、加入条件を見る" },
   { id: "paid-leave", label: "有給", description: "有給日数と有給日の給料を確認する" },
   { id: "student-life", label: "生活・お金", description: "スマホ代、給与口座、学習、生活費を見直す" },
+  { id: "baito-reality", label: "職種別ガイド", description: "仕事内容と向き不向きを職種ごとに見る" },
 ] as const
 
 function getCategoryId(slug: string): (typeof categorySummaries)[number]["id"] {
   const category = getCategory(slug)
 
+  if (category === "職種別ガイド") return "baito-reality"
   if (category === "扶養・税金" || category === "学生バイト") return "tax-dependent"
   if (category === "社会保険") return "social-insurance"
   if (category === "有給") return "paid-leave"
@@ -82,7 +87,7 @@ function getCategoryId(slug: string): (typeof categorySummaries)[number]["id"] {
 
 const featuredPosts = [
   "2026-student-income-wall",
-  "student-baito-shift-checklist",
+  "baito-reality-restaurant",
   "baito-yukyu-kyuryo",
 ]
   .map((slug) => sortedPosts.find((post) => post.slug === slug))
@@ -151,7 +156,7 @@ export default function BlogPage() {
             aria-label="記事カテゴリ"
             className="sticky top-14 z-20 -mx-4 border-y border-border bg-background/95 px-4 py-3 backdrop-blur md:static md:mx-0 md:rounded-md md:border"
           >
-            <div className="flex gap-2 overflow-x-auto pb-1 md:grid md:grid-cols-5 md:overflow-visible md:pb-0">
+            <div className="flex gap-2 overflow-x-auto pb-1 md:grid md:grid-cols-6 md:overflow-visible md:pb-0">
               {groupedPosts.map((category) => (
                 <a
                   key={category.id}
