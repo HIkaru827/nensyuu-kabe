@@ -2,13 +2,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
-  title: "利用規約 | 年収の壁シミュレーター",
-  description: "年収の壁シミュレーターの利用規約です。",
+  title: "利用規約 | 学生バイトお金ナビ",
+  description: "学生バイトお金ナビの利用規約です。2026年基準の税金・社会保険シミュレーターの利用条件と免責事項を記載しています。",
 }
 
 export default function TermsPage() {
   return (
-    <ContentPageShell title="利用規約" description="最終更新日：2026年1月18日">
+    <ContentPageShell title="利用規約" description="最終更新日：2026年7月25日／計算基準：2026年（令和8年）基準">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-3">
@@ -21,7 +21,10 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">第2条（サービス内容）</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                当サイトは、学生やアルバイト従事者向けに、年収による税金・社会保険の影響を概算で試算するシミュレーションサービスを無料で提供します。
+                当サイトは、学生やアルバイト従事者向けに、年収による税金・社会保険・有給休暇などの影響を概算で試算するシミュレーションサービスと、関連する記事コンテンツを無料で提供します。
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                年収の壁シミュレーターは、2026年（令和8年）基準の公的資料を確認し、給与収入のみのケースを中心に概算しています。制度改正や自治体・保険者ごとの差により、実際の結果と異なる場合があります。
               </p>
             </section>
 
@@ -48,14 +51,18 @@ export default function TermsPage() {
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   <strong>1. 情報の正確性について</strong><br />
-                  当サイトで提供する情報は、各ページに記載した確認日時点の公的資料に基づく概算であり、実際の税額・社会保険料とは異なる場合があります。最終的な判断は、税務署・自治体・年金事務所・加入中の健康保険等でご確認ください。
+                  当サイトで提供する情報は、各ページに記載した確認日時点の公的資料に基づく概算であり、実際の税額・社会保険料・有給休暇の扱いとは異なる場合があります。計算結果には、対象年度、確認日、主な根拠資料を表示しますが、最終的な判断は、税務署・自治体・年金事務所・勤務先・加入中の健康保険等でご確認ください。
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  <strong>2. 損害賠償責任</strong><br />
+                  <strong>2. 個別相談ではないこと</strong><br />
+                  当サイトは一般的な情報提供を目的としており、税務、社会保険、労務、法律に関する個別相談、申告代行、手続き代行を行うものではありません。家族構成、所得の種類、複数勤務先、自治体、健康保険組合、雇用契約の内容によって判断が変わる場合があります。
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  <strong>3. 損害賠償責任</strong><br />
                   当サイトの情報をもとに生じた、いかなる直接的・間接的損害についても、当サイトは一切の責任を負いかねます。
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  <strong>3. サービスの中断・終了</strong><br />
+                  <strong>4. サービスの中断・終了</strong><br />
                   当サイトは、予告なくサービスの内容を変更、中断、または終了することがあります。これによりユーザーに生じた損害について、当サイトは一切の責任を負いません。
                 </p>
               </div>

@@ -18,7 +18,9 @@ import { Switch } from "@/components/ui/switch"
 import { buildResultCtaLinks } from "@/lib/affiliate-links"
 import { trackSimulatorEvent } from "@/lib/client-analytics"
 import {
+  EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026,
   getSocialInsuranceDependentLimit,
+  INCOME_SIMULATION_BASIS,
   simulateDetailedIncome,
   type CompanySize,
   type ParentTaxRate,
@@ -193,6 +195,13 @@ export function IncomeSimulator() {
   const displayedTakeHome = includeParentImpactInTakeHome
     ? detailedResult.selfTakeHomeAfterKnownBurdenEstimate - detailedResult.parentTaxDeltaEstimate
     : detailedResult.selfTakeHomeAfterKnownBurdenEstimate
+  const socialInsuranceBurdenLabel =
+    socialInsuranceRoute === "employee"
+      ? "勤務先社保概算"
+      : socialInsuranceRoute === "national"
+        ? "国保・年金見込み"
+        : "社保負担見込み"
+  const employeeSocialInsuranceRateLabel = `${(EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026 * 100).toFixed(2)}%`
 
   const ctaLinks = useMemo(
     () =>
@@ -593,15 +602,63 @@ export function IncomeSimulator() {
                   <p className="text-lg font-bold text-foreground">{formatManYen(socialInsuranceLimit)}</p>
                 </div>
                 <div className="rounded-md border border-border bg-background p-3">
-                  <p className="text-xs text-muted-foreground">社保負担入力分</p>
+                  <p className="text-xs text-muted-foreground">{socialInsuranceBurdenLabel}</p>
                   <p className="text-lg font-bold text-foreground">
                     {formatCurrency(detailedResult.socialInsuranceBurdenEstimate ?? 0)}
                   </p>
                 </div>
               </div>
 
+              {socialInsuranceRoute === "employee" && (
+                <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-xs leading-relaxed text-emerald-950">
+                  <p className="font-semibold">勤務先の社会保険料を手元見込みに反映しています。</p>
+                  <p>
+                    月額賃金{formatCurrency(detailedResult.employeeSocialInsuranceAssumedMonthlySalary ?? 0)}をもとに、
+                    本人負担約{employeeSocialInsuranceRateLabel}で概算しています。
+                    目安は月{formatCurrency(detailedResult.employeeSocialInsuranceMonthlyEstimate ?? 0)}、
+                    年{formatCurrency(detailedResult.socialInsuranceBurdenEstimate ?? 0)}です。
+                  </p>
+                  <p className="mt-1 text-emerald-900/80">
+                    実際は標準報酬月額、都道府県、健康保険組合、勤務先の扱いで変わります。
+                  </p>
+                </div>
+              )}
+
               <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs leading-relaxed text-blue-950">
                 年収だけでなく、週の勤務時間、月額賃金、勤務先規模で社会保険の扱いが変わることがあります。
+              </div>
+
+              <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <p className="font-semibold text-foreground">対象年度</p>
+                    <p>{INCOME_SIMULATION_BASIS.targetYear}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">確認日</p>
+                    <p>{INCOME_SIMULATION_BASIS.checkedAt}</p>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-2">
+                  <p className="font-semibold text-foreground">根拠資料</p>
+                  <div className="flex flex-wrap gap-2">
+                    {INCOME_SIMULATION_BASIS.sources.map((source) => (
+                      <a
+                        key={source.url}
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-[11px] font-semibold text-primary hover:border-primary"
+                      >
+                        {source.label}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ))}
+                  </div>
+                  <Link href="/calculation-method" className="inline-flex text-[11px] font-semibold text-primary hover:underline">
+                    計算方法を詳しく見る
+                  </Link>
+                </div>
               </div>
             </CardContent>
           </Card>

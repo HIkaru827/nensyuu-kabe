@@ -13,6 +13,7 @@ const sections = [
       { href: "/student-baito", label: "学生バイト年収ガイド" },
       { href: "/baito-type-diagnosis", label: "学生バイトタイプ診断" },
       { href: "/blog", label: "ブログ一覧" },
+      { href: "/calculation-method", label: "計算方法" },
     ],
   },
   {
@@ -32,7 +33,7 @@ const sections = [
       { href: "/blog/2026-student-income-wall", label: "2026年の学生バイト年収の壁" },
       { href: "/blog/student-baito-shift-checklist", label: "学生バイトのシフト調整チェックリスト" },
       { href: "/blog/103man-no-kabe", label: "178万円の壁とは？" },
-      { href: "/blog/130man-no-kabe", label: "130万円の壁とは？" },
+      { href: "/blog/130man-no-kabe-v2", label: "130万円の壁を超えるとどうなる？" },
       { href: "/blog/shakaihoken-kabe", label: "社会保険の壁とは？" },
       { href: "/blog/gakusei-baito-zeikin", label: "学生バイトの税金対策" },
       { href: "/blog/weekly-20hours-social-insurance", label: "週20時間と学生バイトの社会保険" },
@@ -44,6 +45,7 @@ const sections = [
     title: "運営情報",
     links: [
       { href: "/about", label: "運営者情報" },
+      { href: "/calculation-method", label: "計算方法" },
       { href: "/editorial-policy", label: "編集方針" },
       { href: "/updates", label: "更新履歴" },
       { href: "/contact", label: "お問い合わせ" },

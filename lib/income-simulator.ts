@@ -61,9 +61,41 @@ export interface DetailedSimulationResult {
   socialInsuranceStatusLabel: string
   socialInsuranceStatusDescription: string
   nationalPensionAnnualEstimate?: number
+  employeeHealthInsuranceAnnualEstimate?: number
+  employeeChildSupportAnnualEstimate?: number
+  employeePensionAnnualEstimate?: number
+  employeeSocialInsuranceMonthlyEstimate?: number
+  employeeSocialInsuranceAssumedMonthlySalary?: number
   socialInsuranceBurdenEstimate?: number
   assumptions: string[]
 }
+
+export const INCOME_SIMULATION_BASIS = {
+  targetYear: "2026年（令和8年）基準",
+  checkedAt: "2026年7月25日",
+  sources: [
+    {
+      label: "国税庁 令和8年度税制改正",
+      url: "https://www.nta.go.jp/users/gensen/2026kiso/index.htm",
+    },
+    {
+      label: "厚生労働省 社会保険加入の要件",
+      url: "https://www.mhlw.go.jp/tekiyoukakudai/jugyouin/taisho/",
+    },
+    {
+      label: "協会けんぽ 令和8年度保険料額表",
+      url: "https://www.kyoukaikenpo.or.jp/about/business/insurance_rate/premium_prefectures/r08/index.html",
+    },
+    {
+      label: "日本年金機構 国民年金保険料",
+      url: "https://www.nenkin.go.jp/service/kokunen/hokenryo/hokenryo.html",
+    },
+    {
+      label: "日本年金機構 被扶養者認定の収入要件",
+      url: "https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html",
+    },
+  ],
+} as const
 
 export const INCOME_THRESHOLDS = {
   RESIDENT_TAX_START: 1_190_000,
@@ -80,6 +112,17 @@ export const INCOME_THRESHOLDS = {
   RESIDENT_TAX_NON_TAXABLE_INCOME: 450_000,
   NATIONAL_PENSION_MONTHLY_2026: 17_920,
 } as const
+
+const EMPLOYEE_HEALTH_INSURANCE_RATE_TOKYO_2026 = 0.0985
+const EMPLOYEE_CHILD_SUPPORT_RATE_2026 = 0.0023
+const EMPLOYEE_PENSION_RATE_2026 = 0.183
+const EMPLOYEE_SHARE_RATIO = 0.5
+
+export const EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026 =
+  (EMPLOYEE_HEALTH_INSURANCE_RATE_TOKYO_2026 +
+    EMPLOYEE_CHILD_SUPPORT_RATE_2026 +
+    EMPLOYEE_PENSION_RATE_2026) *
+  EMPLOYEE_SHARE_RATIO
 
 const SPECIAL_DEPENDENT_INCOME_TAX_TABLE = [
   { maxIncome: 850_000, deduction: 630_000 },
@@ -307,6 +350,32 @@ function getFullParentResidentTaxDeduction(age: number): number {
   return isSpecialTaxDependent(age) ? 450_000 : 330_000
 }
 
+function estimateEmployeeSocialInsurance(monthlySalary: number) {
+  const assumedMonthlySalary = Math.max(0, monthlySalary)
+  const employeeHealthInsuranceAnnualEstimate = Math.floor(
+    assumedMonthlySalary * EMPLOYEE_HEALTH_INSURANCE_RATE_TOKYO_2026 * EMPLOYEE_SHARE_RATIO * 12,
+  )
+  const employeeChildSupportAnnualEstimate = Math.floor(
+    assumedMonthlySalary * EMPLOYEE_CHILD_SUPPORT_RATE_2026 * EMPLOYEE_SHARE_RATIO * 12,
+  )
+  const employeePensionAnnualEstimate = Math.floor(
+    assumedMonthlySalary * EMPLOYEE_PENSION_RATE_2026 * EMPLOYEE_SHARE_RATIO * 12,
+  )
+  const annualEstimate =
+    employeeHealthInsuranceAnnualEstimate +
+    employeeChildSupportAnnualEstimate +
+    employeePensionAnnualEstimate
+
+  return {
+    assumedMonthlySalary,
+    employeeHealthInsuranceAnnualEstimate,
+    employeeChildSupportAnnualEstimate,
+    employeePensionAnnualEstimate,
+    annualEstimate,
+    monthlyEstimate: Math.round(annualEstimate / 12),
+  }
+}
+
 export function simulateIncome(params: SimulationParams): SimulationResult {
   const zone = determineZone(params.annualIncome, params.age)
   const { label, color } = getZoneInfo(zone)
@@ -376,6 +445,11 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   ]
 
   let nationalPensionAnnualEstimate: number | undefined
+  let employeeHealthInsuranceAnnualEstimate: number | undefined
+  let employeeChildSupportAnnualEstimate: number | undefined
+  let employeePensionAnnualEstimate: number | undefined
+  let employeeSocialInsuranceMonthlyEstimate: number | undefined
+  let employeeSocialInsuranceAssumedMonthlySalary: number | undefined
   let socialInsuranceBurdenEstimate: number | undefined
 
   if (params.socialInsuranceRoute === "national") {
@@ -396,7 +470,17 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
       assumptions.push("国民健康保険料は、金額を入力した場合のみ含めています。")
     }
   } else if (params.socialInsuranceRoute === "employee") {
-    assumptions.push("勤務先の健康保険・厚生年金保険料は、保険者ごとに料率が異なるため含めていません。")
+    const employeeSocialInsurance = estimateEmployeeSocialInsurance(params.monthlySalary)
+    employeeHealthInsuranceAnnualEstimate = employeeSocialInsurance.employeeHealthInsuranceAnnualEstimate
+    employeeChildSupportAnnualEstimate = employeeSocialInsurance.employeeChildSupportAnnualEstimate
+    employeePensionAnnualEstimate = employeeSocialInsurance.employeePensionAnnualEstimate
+    employeeSocialInsuranceMonthlyEstimate = employeeSocialInsurance.monthlyEstimate
+    employeeSocialInsuranceAssumedMonthlySalary = employeeSocialInsurance.assumedMonthlySalary
+    socialInsuranceBurdenEstimate = employeeSocialInsurance.annualEstimate
+    assumptions.push(
+      "勤務先の社会保険は、協会けんぽ東京支部の令和8年度料率を目安に、健康保険・子ども子育て支援金・厚生年金の本人負担分を概算しています。",
+    )
+    assumptions.push("実際の保険料は、標準報酬月額の等級、都道府県、健康保険組合、勤務先の扱いで変わります。")
   } else {
     assumptions.push("加入先が未定のため、具体的な社会保険料は加算していません。")
   }
@@ -425,6 +509,11 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     socialInsuranceStatusLabel,
     socialInsuranceStatusDescription,
     nationalPensionAnnualEstimate,
+    employeeHealthInsuranceAnnualEstimate,
+    employeeChildSupportAnnualEstimate,
+    employeePensionAnnualEstimate,
+    employeeSocialInsuranceMonthlyEstimate,
+    employeeSocialInsuranceAssumedMonthlySalary,
     socialInsuranceBurdenEstimate,
     assumptions,
   }

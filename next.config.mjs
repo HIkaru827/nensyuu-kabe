@@ -15,6 +15,16 @@ const nextConfig = {
   // experimental: {
   //   optimizeCss: true, // CSS最適化
   // },
+
+  async redirects() {
+    return [
+      {
+        source: '/blog/130man-no-kabe',
+        destination: '/blog/130man-no-kabe-v2',
+        statusCode: 301,
+      },
+    ]
+  },
   
   // HTTP ヘッダーのセキュリティ強化
   async headers() {

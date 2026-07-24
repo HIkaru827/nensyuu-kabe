@@ -51,6 +51,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/calculation-method" className="text-muted-foreground transition-colors hover:text-primary">
+                計算方法
+              </Link>
+            </li>
+            <li>
               <Link href="/editorial-policy" className="text-muted-foreground transition-colors hover:text-primary">
                 編集方針
               </Link>

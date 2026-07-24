@@ -222,15 +222,6 @@ export const BLOG_POSTS = [
     priority: 0.9,
   },
   {
-    slug: "130man-no-kabe",
-    title: "130万円の壁とは？社会保険の扶養を外れる目安を解説",
-    description:
-      "130万円の壁の基本、扶養を外れた場合の手取り変化、シフト調整の考え方を解説します。",
-    publishedAt: "2026-01-18T00:00:00Z",
-    updatedAt: "2026-04-02T00:00:00Z",
-    priority: 0.85,
-  },
-  {
     slug: "130man-no-kabe-v2",
     title: "130万円の壁を超えるとどうなる？損しにくい働き方の考え方",
     description:
@@ -273,12 +264,13 @@ export const STATIC_PAGES = [
   { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: BAITO_TYPE_DIAGNOSIS_PAGE.path, priority: 0.94, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
-  { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
+  { path: "/calculation-method", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/editorial-policy", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
   { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },
-  { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },
+  { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-25T00:00:00Z" },
 ] as const

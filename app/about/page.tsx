@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Target, Users, TrendingUp, Shield } from "lucide-react"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { INCOME_SIMULATION_BASIS } from "@/lib/income-simulator"
 
 export const metadata = {
   title: "運営者情報 | 学生バイトお金ナビ",
@@ -50,6 +51,25 @@ export default function AboutPage() {
                 <p>
                   税務・社会保険の個別判断や申告代行は行っていません。個別の事情がある場合は、税務署、自治体、年金事務所、勤務先、加入中の健康保険などの公式窓口で確認してください。
                 </p>
+              </div>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-xl font-bold text-foreground">確認している基準</h2>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>
+                  年収の壁シミュレーターは、{INCOME_SIMULATION_BASIS.targetYear}として、{INCOME_SIMULATION_BASIS.checkedAt}時点で確認した公的資料をもとに見直しています。
+                  計算の前提や含めていない項目は、<a href="/calculation-method" className="text-primary hover:underline">計算方法ページ</a>にまとめています。
+                </p>
+                <ul className="list-disc space-y-1 pl-5">
+                  {INCOME_SIMULATION_BASIS.sources.slice(0, 4).map((source) => (
+                    <li key={source.url}>
+                      <a href={source.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        {source.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </section>
 
