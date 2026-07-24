@@ -83,6 +83,14 @@ export const INCOME_SIMULATION_BASIS = {
       url: "https://www.mhlw.go.jp/tekiyoukakudai/jugyouin/taisho/",
     },
     {
+      label: "国税庁 扶養控除等申告書",
+      url: "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/gensen/annai/1648_01.htm",
+    },
+    {
+      label: "日本年金機構 被扶養者に異動があったときの手続き",
+      url: "https://www.nenkin.go.jp/service/kounen/tekiyo/hihokensha1/20141202.html",
+    },
+    {
       label: "協会けんぽ 令和8年度保険料額表",
       url: "https://www.kyoukaikenpo.or.jp/about/business/insurance_rate/premium_prefectures/r08/index.html",
     },

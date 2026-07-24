@@ -3,7 +3,18 @@
 import type React from "react"
 import { useMemo, useRef, useState } from "react"
 import Link from "next/link"
-import { BriefcaseBusiness, CalendarCheck, ExternalLink, Info, TrendingUp } from "lucide-react"
+import {
+  BriefcaseBusiness,
+  CalendarCheck,
+  CheckCircle2,
+  ClipboardList,
+  Copy,
+  ExternalLink,
+  Info,
+  MessageCircle,
+  Share2,
+  TrendingUp,
+} from "lucide-react"
 import { AdSlot, JobAdSlot } from "@/components/ad-slot"
 import { GoogleAdSenseBanner } from "@/components/google-adsense"
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +32,7 @@ import {
   EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026,
   getSocialInsuranceDependentLimit,
   INCOME_SIMULATION_BASIS,
+  INCOME_THRESHOLDS,
   simulateDetailedIncome,
   type CompanySize,
   type ParentTaxRate,
@@ -32,6 +44,27 @@ import {
 type Attribute = "daytime-student" | "evening-student" | "freeter"
 
 const parentTaxRates: ParentTaxRate[] = [0.05, 0.1, 0.2, 0.23, 0.33, 0.4, 0.45]
+const DEFAULT_SHARE_URL = "https://nenshuu-kabe.com/"
+
+interface ActionItem {
+  title: string
+  description: string
+}
+
+interface JobSuggestion {
+  title: string
+  description: string
+  href: string
+  tag: string
+  isExternal: boolean
+}
+
+interface ResultCtaLinks {
+  recommended?: string
+  highWage?: string
+  flexible?: string
+  career?: string
+}
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("ja-JP", {
@@ -142,6 +175,227 @@ function getMonthlySalaryBand(monthlySalary: number): string {
   return "108334_plus"
 }
 
+function buildProcedureItems({
+  annualIncome,
+  incomeMan,
+  socialInsuranceLimit,
+  shortHoursSocialInsuranceApplies,
+  socialInsuranceRoute,
+  age,
+}: {
+  annualIncome: number
+  incomeMan: number
+  socialInsuranceLimit: number
+  shortHoursSocialInsuranceApplies: boolean
+  socialInsuranceRoute: SocialInsuranceRoute
+  age: number
+}): ActionItem[] {
+  const items: ActionItem[] = []
+  const socialLimitMan = Math.round(socialInsuranceLimit / 10_000)
+
+  if (annualIncome > INCOME_THRESHOLDS.DEPENDENT_FULL) {
+    items.push({
+      title: "親の年末調整の扶養欄を確認",
+      description:
+        age >= 19 && age <= 22
+          ? "136万円を超えても197万円以下なら特定親族特別控除の対象になり得ます。親の勤務先へ年収見込みを共有してください。"
+          : "税法上の扶養控除から外れる可能性があります。親の勤務先で扶養控除等申告書の異動が必要か確認してもらいましょう。",
+    })
+  } else {
+    items.push({
+      title: "給与明細と年収見込みを保存",
+      description: "大きな手続きは発生しにくい年収帯ですが、年末前に累計給与と12月までの見込みを親へ共有できるようにしておきましょう。",
+    })
+  }
+
+  if (annualIncome >= socialInsuranceLimit) {
+    items.push({
+      title: "親の健康保険の被扶養者認定を確認",
+      description: `社会保険の扶養目安${socialLimitMan}万円に達しています。親の勤務先または加入中の健康保険で、被扶養者異動届や収入見込みの確認が必要か相談してください。`,
+    })
+  }
+
+  if (shortHoursSocialInsuranceApplies || socialInsuranceRoute === "employee") {
+    items.push({
+      title: "勤務先で社会保険加入の対象か確認",
+      description: "週20時間以上、月額賃金、学生区分、勤務先規模などで加入可否が変わります。雇用契約書の所定労働時間も確認しましょう。",
+    })
+  }
+
+  if (socialInsuranceRoute === "national") {
+    items.push({
+      title: "国民健康保険・国民年金の手続きを確認",
+      description: "扶養から外れて勤務先社保に入らない場合は、市区町村の国民健康保険と、20歳以上なら国民年金や学生納付特例の確認が必要です。",
+    })
+  }
+
+  if (annualIncome > INCOME_THRESHOLDS.INCOME_TAX_START) {
+    items.push({
+      title: "源泉徴収票と確定申告の要否を確認",
+      description: "所得税が発生する可能性があります。掛け持ちバイトがある場合は、源泉徴収票を集めて確定申告や住民税申告の要否を確認してください。",
+    })
+  }
+
+  if (items.length === 1 && incomeMan <= 136) {
+    items.push({
+      title: "12月前にシフト予定を見直す",
+      description: "年末の追加シフトや有給取得で年収見込みが変わることがあります。11月頃にもう一度入力して確認しましょう。",
+    })
+  }
+
+  return items
+}
+
+function buildParentSharePoints({
+  incomeMan,
+  displayedTakeHome,
+  parentTaxDeltaEstimate,
+  socialInsuranceLimit,
+  socialInsuranceStatusLabel,
+  weeklyHours,
+  monthlySalary,
+  companySize,
+}: {
+  incomeMan: number
+  displayedTakeHome: number
+  parentTaxDeltaEstimate: number
+  socialInsuranceLimit: number
+  socialInsuranceStatusLabel: string
+  weeklyHours: number
+  monthlySalary: number
+  companySize: CompanySize
+}): ActionItem[] {
+  return [
+    {
+      title: `今年の年収見込みは${incomeMan}万円`,
+      description: `本人の手元見込みは${formatCurrency(displayedTakeHome)}です。年末までの追加シフトや有給で変わる可能性があります。`,
+    },
+    {
+      title: `親の税負担への影響は概算${formatCurrency(parentTaxDeltaEstimate)}`,
+      description: "親の所得税率や勤務先の年末調整で変わるため、親の会社へ年収見込みを共有して確認してもらうのが安全です。",
+    },
+    {
+      title: `社会保険の扶養目安は${formatManYen(socialInsuranceLimit)}`,
+      description: `${socialInsuranceStatusLabel}。親の健康保険と、勤務先での社会保険加入は別々に確認します。`,
+    },
+    {
+      title: "勤務条件も一緒に伝える",
+      description: `週${weeklyHours}時間、月額賃金${formatCurrency(monthlySalary)}、勤務先規模は${companySize === "over_50" ? "51人以上" : "50人以下"}として試算しています。`,
+    },
+  ]
+}
+
+function buildJobSuggestions({
+  annualIncome,
+  socialInsuranceLimit,
+  shortHoursSocialInsuranceApplies,
+  ctaLinks,
+}: {
+  annualIncome: number
+  socialInsuranceLimit: number
+  shortHoursSocialInsuranceApplies: boolean
+  ctaLinks: ResultCtaLinks
+}): JobSuggestion[] {
+  if (shortHoursSocialInsuranceApplies || annualIncome > INCOME_THRESHOLDS.INCOME_TAX_START) {
+    return [
+      {
+        title: "年収を伸ばす前提で探す",
+        description: "社会保険料を払っても手取りを伸ばしやすい、高時給・長期・経験が積める求人を優先します。",
+        href: ctaLinks.career ?? ctaLinks.highWage ?? "/baito-type-diagnosis",
+        tag: "年収アップ",
+        isExternal: Boolean(ctaLinks.career ?? ctaLinks.highWage),
+      },
+      {
+        title: "職種別に向き不向きを確認",
+        description: "飲食、アパレル、塾講師、事務など、続けやすい職種を診断から絞ります。",
+        href: "/baito-type-diagnosis",
+        tag: "診断",
+        isExternal: false,
+      },
+    ]
+  }
+
+  if (annualIncome >= socialInsuranceLimit) {
+    return [
+      {
+        title: "中途半端な超過を避ける",
+        description: "短時間・単発で調整するか、高時給でしっかり超えるかを比較しやすい求人を見ます。",
+        href: ctaLinks.flexible ?? ctaLinks.highWage ?? "/student-baito",
+        tag: "調整",
+        isExternal: Boolean(ctaLinks.flexible ?? ctaLinks.highWage),
+      },
+      {
+        title: "シフト調整しやすいバイト",
+        description: "年末前に勤務日数を調整しやすい求人や、短時間勤務を選びやすい職場を優先します。",
+        href: ctaLinks.flexible ?? ctaLinks.recommended ?? "/blog/student-baito-shift-checklist",
+        tag: "扶養調整",
+        isExternal: Boolean(ctaLinks.flexible ?? ctaLinks.recommended),
+      },
+    ]
+  }
+
+  return [
+    {
+      title: "扶養内で働きやすいバイト",
+      description: "週の勤務時間を増やしすぎず、テスト期間や年末に調整しやすい求人を優先します。",
+      href: ctaLinks.recommended ?? ctaLinks.flexible ?? "/student-baito",
+      tag: "扶養内",
+      isExternal: Boolean(ctaLinks.recommended ?? ctaLinks.flexible),
+    },
+    {
+      title: "少ない時間で時給を上げる",
+      description: "塾講師、事務、IT補助など、勤務時間を抑えて収入を作りやすい職種も候補です。",
+      href: ctaLinks.highWage ?? "/blog/student-skill-up-baito",
+      tag: "高時給",
+      isExternal: Boolean(ctaLinks.highWage),
+    },
+  ]
+}
+
+function buildResultShareText({
+  incomeMan,
+  statusLabel,
+  displayedTakeHome,
+  selfTaxBurdenEstimate,
+  parentTaxDeltaEstimate,
+  socialInsuranceStatusLabel,
+}: {
+  incomeMan: number
+  statusLabel: string
+  displayedTakeHome: number
+  selfTaxBurdenEstimate: number
+  parentTaxDeltaEstimate: number
+  socialInsuranceStatusLabel: string
+}): string {
+  return [
+    "学生バイトお金ナビで年収の壁を確認しました。",
+    `年収見込み: ${incomeMan}万円`,
+    `判定: ${statusLabel}`,
+    `本人の手元見込み: ${formatCurrency(displayedTakeHome)}`,
+    `本人の税金見込み: ${formatCurrency(selfTaxBurdenEstimate)}`,
+    `親への影響見込み: ${formatCurrency(parentTaxDeltaEstimate)}`,
+    `社会保険: ${socialInsuranceStatusLabel}`,
+    `${INCOME_SIMULATION_BASIS.targetYear} / 確認日: ${INCOME_SIMULATION_BASIS.checkedAt}`,
+  ].join("\n")
+}
+
+async function writeTextToClipboard(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
+
+  const textarea = document.createElement("textarea")
+  textarea.value = text
+  textarea.setAttribute("readonly", "")
+  textarea.style.position = "fixed"
+  textarea.style.opacity = "0"
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  document.body.removeChild(textarea)
+}
+
 export function IncomeSimulator() {
   const showAffiliateUi = process.env.NEXT_PUBLIC_ENABLE_AFFILIATE_UI === "true"
   const showVisibleAds = process.env.NEXT_PUBLIC_ENABLE_VISIBLE_ADS === "true"
@@ -156,6 +410,7 @@ export function IncomeSimulator() {
   const [studentPensionSpecialStatus, setStudentPensionSpecialStatus] = useState<StudentPensionSpecialStatus>("unknown")
   const [nationalHealthInsuranceAnnual, setNationalHealthInsuranceAnnual] = useState<number | "">("")
   const [includeParentImpactInTakeHome, setIncludeParentImpactInTakeHome] = useState(false)
+  const [shareFeedback, setShareFeedback] = useState("")
   const interactionCountRef = useRef(0)
 
   const studentType = getStudentType(attribute)
@@ -225,6 +480,71 @@ export function IncomeSimulator() {
     { amount: 178, label: "178万円", text: "所得税の目安" },
     ...(age >= 19 && age <= 22 ? [{ amount: 197, label: "197万円", text: "特定親族特別控除" }] : []),
   ]
+  const procedureItems = useMemo(
+    () =>
+      buildProcedureItems({
+        annualIncome,
+        incomeMan: income,
+        socialInsuranceLimit,
+        shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
+        socialInsuranceRoute,
+        age,
+      }),
+    [age, annualIncome, detailedResult.shortHoursSocialInsuranceApplies, income, socialInsuranceLimit, socialInsuranceRoute],
+  )
+  const parentSharePoints = useMemo(
+    () =>
+      buildParentSharePoints({
+        incomeMan: income,
+        displayedTakeHome,
+        parentTaxDeltaEstimate: detailedResult.parentTaxDeltaEstimate,
+        socialInsuranceLimit,
+        socialInsuranceStatusLabel: detailedResult.socialInsuranceStatusLabel,
+        weeklyHours,
+        monthlySalary,
+        companySize,
+      }),
+    [
+      companySize,
+      detailedResult.parentTaxDeltaEstimate,
+      detailedResult.socialInsuranceStatusLabel,
+      displayedTakeHome,
+      income,
+      monthlySalary,
+      socialInsuranceLimit,
+      weeklyHours,
+    ],
+  )
+  const jobSuggestions = useMemo(
+    () =>
+      buildJobSuggestions({
+        annualIncome,
+        socialInsuranceLimit,
+        shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
+        ctaLinks,
+      }),
+    [annualIncome, ctaLinks, detailedResult.shortHoursSocialInsuranceApplies, socialInsuranceLimit],
+  )
+  const resultShareText = useMemo(
+    () =>
+      buildResultShareText({
+        incomeMan: income,
+        statusLabel: status.label,
+        displayedTakeHome,
+        selfTaxBurdenEstimate: detailedResult.selfTaxBurdenEstimate,
+        parentTaxDeltaEstimate: detailedResult.parentTaxDeltaEstimate,
+        socialInsuranceStatusLabel: detailedResult.socialInsuranceStatusLabel,
+      }),
+    [
+      detailedResult.parentTaxDeltaEstimate,
+      detailedResult.selfTaxBurdenEstimate,
+      detailedResult.socialInsuranceStatusLabel,
+      displayedTakeHome,
+      income,
+      status.label,
+    ],
+  )
+  const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(DEFAULT_SHARE_URL)}`
 
   const handleIncomeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value)
@@ -278,6 +598,45 @@ export function IncomeSimulator() {
       student_pension_special_status: trackedStudentPensionSpecialStatus,
       parent_impact_included: trackedIncludeParentImpact,
     })
+  }
+
+  const handleShareResult = async () => {
+    const shareUrl = typeof window !== "undefined" ? window.location.href : DEFAULT_SHARE_URL
+    trackIncomeSimulatorInteraction("share_result", income)
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "年収の壁シミュレーター結果",
+          text: resultShareText,
+          url: shareUrl,
+        })
+        setShareFeedback("共有画面を開きました")
+        return
+      }
+
+      await writeTextToClipboard(`${resultShareText}\n${shareUrl}`)
+      setShareFeedback("結果をコピーしました")
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        setShareFeedback("共有をキャンセルしました")
+        return
+      }
+
+      setShareFeedback("共有できなかったため、コピーを試してください")
+    }
+  }
+
+  const handleCopyResult = async () => {
+    const shareUrl = typeof window !== "undefined" ? window.location.href : DEFAULT_SHARE_URL
+    trackIncomeSimulatorInteraction("copy_result", income)
+
+    try {
+      await writeTextToClipboard(`${resultShareText}\n${shareUrl}`)
+      setShareFeedback("結果をコピーしました")
+    } catch {
+      setShareFeedback("コピーできませんでした")
+    }
   }
 
   return (
@@ -659,6 +1018,142 @@ export function IncomeSimulator() {
                     計算方法を詳しく見る
                   </Link>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardContent className="space-y-4 p-5">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <ClipboardList className="h-5 w-5" />
+                </span>
+                <div className="space-y-1">
+                  <h2 className="text-base font-bold text-foreground">超えた場合に必要な手続き</h2>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    年収見込みと勤務条件から、次に確認したい順番を整理しています。
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {procedureItems.map((item) => (
+                  <div key={item.title} className="flex gap-2 rounded-md border border-border bg-muted/30 p-3">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                      <p className="text-xs leading-relaxed text-muted-foreground">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardContent className="space-y-4 p-5">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <MessageCircle className="h-5 w-5" />
+                </span>
+                <div className="space-y-1">
+                  <h2 className="text-base font-bold text-foreground">親へ共有する要点</h2>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    年末調整や健康保険の確認で、親にそのまま伝えやすい内容です。
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {parentSharePoints.map((item) => (
+                  <div key={item.title} className="rounded-md border border-border bg-background p-3">
+                    <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <Button type="button" className="h-11 gap-2" onClick={handleShareResult}>
+                  <Share2 className="h-4 w-4" />
+                  LINEなどで結果を共有
+                </Button>
+                <Button type="button" variant="outline" className="h-11 gap-2 bg-background" onClick={handleCopyResult}>
+                  <Copy className="h-4 w-4" />
+                  結果をコピー
+                </Button>
+              </div>
+              <Button asChild variant="outline" className="h-11 w-full gap-2 bg-background">
+                <a
+                  href={lineShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackIncomeSimulatorInteraction("line_share_page", income)}
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  LINEでページを共有
+                </a>
+              </Button>
+              {shareFeedback && (
+                <p className="rounded-md bg-muted px-3 py-2 text-center text-xs font-semibold text-muted-foreground">
+                  {shareFeedback}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardContent className="space-y-4 p-5">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <BriefcaseBusiness className="h-5 w-5" />
+                </span>
+                <div className="space-y-1">
+                  <h2 className="text-base font-bold text-foreground">条件に合った求人</h2>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    今の年収帯に合わせて、探す方向性を変えます。PRリンクを含む場合があります。
+                  </p>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                {jobSuggestions.map((job) => {
+                  const content = (
+                    <>
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="rounded-md bg-primary/10 px-2 py-1 text-[11px] font-bold text-primary">
+                          {job.tag}
+                        </span>
+                        {job.isExternal && <ExternalLink className="h-4 w-4 text-muted-foreground" />}
+                      </div>
+                      <div className="mt-2 space-y-1">
+                        <p className="text-sm font-bold text-foreground">{job.title}</p>
+                        <p className="text-xs leading-relaxed text-muted-foreground">{job.description}</p>
+                      </div>
+                    </>
+                  )
+
+                  const className =
+                    "block rounded-md border border-border bg-background p-3 transition-colors hover:border-primary hover:bg-muted/30"
+
+                  return job.isExternal ? (
+                    <a
+                      key={job.title}
+                      href={job.href}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow sponsored"
+                      className={className}
+                      onClick={() => trackIncomeSimulatorInteraction("job_suggestion_click", income)}
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <Link
+                      key={job.title}
+                      href={job.href}
+                      className={className}
+                      onClick={() => trackIncomeSimulatorInteraction("job_suggestion_click", income)}
+                    >
+                      {content}
+                    </Link>
+                  )
+                })}
               </div>
             </CardContent>
           </Card>
