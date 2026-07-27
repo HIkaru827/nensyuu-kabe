@@ -4,20 +4,26 @@ import { AdSlot, JobAdSlot } from "@/components/ad-slot"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { buildArticleJobCards } from "@/lib/affiliate-links"
+import { isA8ProgramActive, isAffiliateProgramActive } from "@/lib/monetization"
 
 export function ArticleMonetizationSection() {
-  const jobs = buildArticleJobCards({
-    NEXT_PUBLIC_A8_TOWNWORK: process.env.NEXT_PUBLIC_A8_TOWNWORK,
-    NEXT_PUBLIC_A8_MACHBAITO: process.env.NEXT_PUBLIC_A8_MACHBAITO,
-    NEXT_PUBLIC_A8_BAITORU: process.env.NEXT_PUBLIC_A8_BAITORU,
-    NEXT_PUBLIC_A8_ARBEIT_EX: process.env.NEXT_PUBLIC_A8_ARBEIT_EX,
-    NEXT_PUBLIC_A8_RECOMMENDED: process.env.NEXT_PUBLIC_A8_RECOMMENDED,
-    NEXT_PUBLIC_A8_HIGH_WAGE: process.env.NEXT_PUBLIC_A8_HIGH_WAGE,
-    NEXT_PUBLIC_A8_FLEXIBLE: process.env.NEXT_PUBLIC_A8_FLEXIBLE,
-    NEXT_PUBLIC_A8_CAREER: process.env.NEXT_PUBLIC_A8_CAREER,
-  })
+  const affiliateProgramActive = isAffiliateProgramActive()
+  const jobs = buildArticleJobCards(
+    affiliateProgramActive
+      ? {
+          NEXT_PUBLIC_A8_TOWNWORK: process.env.NEXT_PUBLIC_A8_TOWNWORK,
+          NEXT_PUBLIC_A8_MACHBAITO: process.env.NEXT_PUBLIC_A8_MACHBAITO,
+          NEXT_PUBLIC_A8_BAITORU: process.env.NEXT_PUBLIC_A8_BAITORU,
+          NEXT_PUBLIC_A8_ARBEIT_EX: process.env.NEXT_PUBLIC_A8_ARBEIT_EX,
+          NEXT_PUBLIC_A8_RECOMMENDED: process.env.NEXT_PUBLIC_A8_RECOMMENDED,
+          NEXT_PUBLIC_A8_HIGH_WAGE: process.env.NEXT_PUBLIC_A8_HIGH_WAGE,
+          NEXT_PUBLIC_A8_FLEXIBLE: process.env.NEXT_PUBLIC_A8_FLEXIBLE,
+          NEXT_PUBLIC_A8_CAREER: process.env.NEXT_PUBLIC_A8_CAREER,
+        }
+      : {},
+  )
 
-  const hasBanner = Boolean(process.env.NEXT_PUBLIC_A8_BANNER)
+  const hasBanner = isA8ProgramActive() && Boolean(process.env.NEXT_PUBLIC_A8_BANNER)
 
   if (jobs.length === 0 && !hasBanner) {
     return null

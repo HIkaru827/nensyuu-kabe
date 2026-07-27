@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 import { BAITO_REALITY_ARTICLES } from "@/lib/baito-reality"
-import { SITE_NAME, SITE_URL } from "@/lib/seo"
+import { SITE_URL } from "@/lib/seo"
 
 const sections = [
   {
@@ -56,7 +56,7 @@ const sections = [
 ]
 
 export const metadata = {
-  title: `サイトマップ | ${SITE_NAME}`,
+  title: "サイトマップ",
   description: "学生バイトお金ナビの主要ページと記事一覧です。",
   alternates: {
     canonical: `${SITE_URL}/site-map`,

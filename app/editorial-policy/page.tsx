@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
-  title: "編集方針 | 学生バイトお金ナビ",
+  title: "編集方針",
   description: "学生バイトお金ナビの記事作成方針、参照先、更新ルール、広告と編集の分離方針をまとめたページです。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/editorial-policy",

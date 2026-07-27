@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from "@/components/google-analytics"
-import { DEFAULT_KEYWORDS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
+import { ADSENSE_CLIENT_ID, DEFAULT_KEYWORDS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
@@ -76,6 +76,9 @@ export const metadata: Metadata = {
   verification: {
     google: "_3Ec801tBI3AkZyBI31adOxWGvWLiYx-hWHmmqMy6d8",
   },
+  other: {
+    "google-adsense-account": ADSENSE_CLIENT_ID,
+  },
 }
 
 export const viewport: Viewport = {
@@ -90,14 +93,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID
-  const adsenseClient = "ca-pub-2931164651880564"
-
   return (
     <html lang="ja" className={`${geist.variable} ${geistMono.variable}`}>
       <head>
         <script
           async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
         />
       </head>

@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
-  title: "利用規約 | 学生バイトお金ナビ",
+  title: "利用規約",
   description: "学生バイトお金ナビの利用規約です。2026年基準の税金・社会保険シミュレーターの利用条件と免責事項を記載しています。",
 }
 
@@ -71,7 +71,7 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">第5条（広告について）</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                当サイトでは、第三者配信の広告サービス（A8.net、Google AdSense等）を利用しています。広告のリンク先サービスの利用については、各リンク先のサイトの利用規約・プライバシーポリシーに従ってください。
+                当サイトでは、Google AdSenseなどの第三者配信広告や、提携中のアフィリエイトサービスを利用する場合があります。広告のリンク先サービスの利用については、各リンク先のサイトの利用規約・プライバシーポリシーに従ってください。
               </p>
             </section>
 

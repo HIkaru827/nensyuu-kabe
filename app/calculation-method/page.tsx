@@ -6,10 +6,10 @@ import {
   INCOME_SIMULATION_BASIS,
   INCOME_THRESHOLDS,
 } from "@/lib/income-simulator"
-import { SITE_NAME, SITE_URL } from "@/lib/seo"
+import { SITE_URL } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  title: `計算方法 | ${SITE_NAME}`,
+  title: "計算方法",
   description:
     "学生バイトお金ナビの年収の壁シミュレーターで使っている2026年基準、所得税・住民税・親の扶養・社会保険料の概算方法、根拠資料をまとめています。",
   alternates: {

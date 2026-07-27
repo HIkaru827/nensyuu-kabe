@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
-  title: "更新履歴 | 年収の壁シミュレーター",
+  title: "更新履歴",
   description: "年収の壁シミュレーターの更新履歴ページです。制度改正や記事追加の履歴を確認できます。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/updates",
@@ -10,6 +10,16 @@ export const metadata = {
 }
 
 const updates = [
+  {
+    date: "2026年7月27日",
+    title: "AdSense審査向けに広告・サイト情報を整理",
+    items: [
+      "AdSenseのサイト所有権確認メタタグと広告クローラ向けのrobots.txt設定を追加",
+      "提携状況を確認できないアフィリエイト広告を表示しない安全側の設定へ変更",
+      "ページタイトルの重複を解消し、トップページに制度ごとの判定基準を追加",
+      "職種別ガイドに確認日、想定読者、参照先を追加",
+    ],
+  },
   {
     date: "2026年7月12日",
     title: "学生バイトタイプ診断と職種別ガイドを追加",

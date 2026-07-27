@@ -74,6 +74,25 @@ const toolCards = [
   },
 ]
 
+const ruleCards = [
+  {
+    title: "本人の所得税",
+    text: "給与所得控除と基礎控除を使い、本人に所得税がかかり始める目安を確認します。",
+  },
+  {
+    title: "親の税金上の扶養",
+    text: "扶養控除と特定親族特別控除を分け、親の税負担に影響する年収帯を確認します。",
+  },
+  {
+    title: "健康保険の扶養",
+    text: "税金とは別制度として、年齢や今後の収入見込みを含む被扶養者認定の目安を示します。",
+  },
+  {
+    title: "勤務先の社会保険",
+    text: "週の労働時間や月額賃金、学生区分などから、勤務先での加入条件を別に確認します。",
+  },
+] as const
+
 export default function Home() {
   return (
     <>
@@ -122,6 +141,39 @@ export default function Home() {
                   </Link>
                 )
               })}
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-5xl space-y-4">
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-primary">このサイト独自の整理</p>
+              <h2 className="text-2xl font-bold text-foreground">「年収の壁」を1本の線として扱わない</h2>
+              <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                同じ年収でも、本人の税金、親の税金上の扶養、健康保険の扶養、勤務先の社会保険では判定方法が異なります。
+                当サイトは4つを分けて試算し、年収だけでは決まらない項目を明示します。
+              </p>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {ruleCards.map((item) => (
+                <Card key={item.title}>
+                  <CardContent className="space-y-2 p-5">
+                    <h3 className="text-base font-bold text-foreground">{item.title}</h3>
+                    <p className="text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
+              <Link href="/calculation-method" className="inline-flex items-center gap-1 text-primary hover:underline">
+                計算方法と参照資料
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/updates" className="inline-flex items-center gap-1 text-primary hover:underline">
+                更新履歴
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </section>
 

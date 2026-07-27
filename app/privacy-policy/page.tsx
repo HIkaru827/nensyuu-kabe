@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 
 export const metadata = {
-  title: "プライバシーポリシー | 学生バイトお金ナビ",
+  title: "プライバシーポリシー",
   description: "学生バイトお金ナビのプライバシーポリシーです。Cookie、アクセス解析、広告配信、アフィリエイトリンクの扱いを説明します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/privacy-policy",
@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
             <section className="space-y-3">
               <h2 className="text-xl font-bold text-foreground">5. 広告配信について</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                当サイトでは、第三者配信の広告サービス（Google AdSense、A8.net、その他アフィリエイトサービス等）を利用する場合があります。
+                当サイトでは、Google AdSenseなどの第三者配信広告や、提携中のアフィリエイトサービスを利用する場合があります。
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Googleなどの第三者配信事業者は、Cookieを使用して、ユーザーが当サイトや他のウェブサイトに過去にアクセスした際の情報に基づいて広告を配信することがあります。

@@ -196,9 +196,11 @@ export function JobAdSlot({
                 target="_blank"
                 rel="noopener noreferrer nofollow sponsored"
                 className="group rounded-lg border-2 border-border bg-background p-3 text-center transition-all hover:border-primary hover:shadow-md"
-              >
-                {job.impressionPixelSrc && (
-                  <img
+                >
+                  {job.impressionPixelSrc && (
+                    // Third-party tracking pixels cannot use Next.js image optimization.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                     src={job.impressionPixelSrc}
                     alt=""
                     width={1}

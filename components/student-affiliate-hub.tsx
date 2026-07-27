@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { buildStudentAffiliateCards } from "@/lib/affiliate-links"
+import { isAffiliateProgramActive } from "@/lib/monetization"
 
 const iconByTag = {
   "バイト求人": BriefcaseBusiness,
@@ -28,7 +29,7 @@ export function StudentAffiliateHub({
   title = "学生バイトの次の悩みもまとめて確認",
   description = "税金・扶養・有給を見たあとに、求人探し、固定費、給与口座、学習までまとめて確認できます。",
 }: StudentAffiliateHubProps) {
-  const affiliateEnabled = process.env.NEXT_PUBLIC_ENABLE_AFFILIATE_UI === "true"
+  const affiliateEnabled = isAffiliateProgramActive()
   const cards = buildStudentAffiliateCards(
     affiliateEnabled
       ? {

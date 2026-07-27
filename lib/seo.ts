@@ -2,6 +2,7 @@ import { BAITO_REALITY_BLOG_POSTS } from "./baito-reality"
 
 export const SITE_URL = "https://nenshuu-kabe.com"
 export const SITE_NAME = "学生バイトお金ナビ"
+export const ADSENSE_CLIENT_ID = "ca-pub-2931164651880564"
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/site-share-card.png`
 
 export const DEFAULT_KEYWORDS = [

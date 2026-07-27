@@ -93,6 +93,8 @@ export function PaidLeaveSimulator() {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false)
 
   useEffect(() => {
+    // Use the visitor's local date after hydration instead of the server timezone.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAsOfDate(getLocalIsoDate(new Date()))
   }, [])
 

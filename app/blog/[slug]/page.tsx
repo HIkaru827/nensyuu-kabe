@@ -4,6 +4,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowRight, ExternalLink, Sparkles } from "lucide-react"
 import { ArticleMonetizationSection } from "@/components/article-monetization-section"
+import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData } from "@/components/structured-data"
@@ -162,6 +163,13 @@ export default async function BaitoRealityArticlePage({ params }: PageProps) {
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">{article.title}</h1>
             <p className="text-base leading-relaxed text-muted-foreground">{article.description}</p>
           </header>
+
+          <ArticleTrustSummary
+            checkedAt="2026年7月12日"
+            audience={`${article.jobName}の仕事内容やシフトを比較したい学生`}
+            sources="厚生労働省 job tag、厚生労働省のアルバイト向け労働条件資料"
+            note="仕事内容や勤務条件は店舗・企業・契約ごとに異なるため、応募前に求人票と労働条件通知書を確認してください。"
+          />
 
           <Card className="border-primary/20 bg-primary/5">
             <CardContent className="space-y-3 p-5 md:p-6">

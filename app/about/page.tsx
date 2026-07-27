@@ -4,7 +4,7 @@ import { ContentPageShell } from "@/components/content-page-shell"
 import { INCOME_SIMULATION_BASIS } from "@/lib/income-simulator"
 
 export const metadata = {
-  title: "運営者情報 | 学生バイトお金ナビ",
+  title: "運営者情報",
   description: "学生バイトお金ナビの運営者情報。学生やアルバイト従事者が年収の壁、扶養、社会保険、有給を正しく理解できるよう支援します。",
   alternates: {
     canonical: "https://nenshuu-kabe.com/about",
@@ -165,7 +165,7 @@ export default function AboutPage() {
           <CardContent className="pt-6 space-y-4">
             <h2 className="text-lg font-bold text-foreground">広告掲載について</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              当サイトでは、サービス運営のため、第三者配信の広告サービス（Google AdSense、A8.net等）やアフィリエイトプログラムを利用する場合があります。広告は、ユーザーの興味に応じて最適化されることがあります。
+              当サイトでは、サービス運営のため、Google AdSenseなどの第三者配信広告や、提携中のアフィリエイトプログラムを利用する場合があります。広告は、ユーザーの興味に応じて最適化されることがあります。
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
               記事内で紹介するサービスや求人サイトは、読者が次に確認しやすい選択肢として掲載するものであり、税金・扶養・社会保険の制度説明や試算結果を広告主の都合で変更することはありません。
