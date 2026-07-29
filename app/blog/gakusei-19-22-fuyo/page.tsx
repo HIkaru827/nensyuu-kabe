@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険の注意点",
-  description:
-    "19歳から22歳の学生がアルバイトでいくらまで稼げるかを、特定親族特別控除、136万円、197万円、社会保険の150万円未満要件に分けて整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/gakusei-19-22-fuyo",
-  },
-}
+export const metadata = createBlogPostMetadata("gakusei-19-22-fuyo")
 
 export default function Gakusei1922FuyoPage() {
   const url = "https://nenshuu-kabe.com/blog/gakusei-19-22-fuyo"

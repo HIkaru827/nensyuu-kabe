@@ -6,15 +6,9 @@ import { ArticleMonetizationSection } from "@/components/article-monetization-se
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "社会保険の壁をケース別に比較。学生・非学生・19歳以上23歳未満の違い",
-  description:
-    "106万円、130万円、150万円未満の基準がどう分かれるかを、学生、非学生、19歳以上23歳未満のケース別に整理します。どこで判断が分かれるかをまとめた記事です。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/social-insurance-case-study",
-  },
-}
+export const metadata = createBlogPostMetadata("social-insurance-case-study")
 
 export default function SocialInsuranceCaseStudyPage() {
   const url = "https://nenshuu-kabe.com/blog/social-insurance-case-study"

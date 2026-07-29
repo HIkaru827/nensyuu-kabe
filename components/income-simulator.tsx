@@ -1,19 +1,22 @@
 "use client"
 
 import type React from "react"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import {
   BriefcaseBusiness,
   CalendarCheck,
+  CalendarRange,
   CheckCircle2,
   ClipboardList,
   Copy,
   ExternalLink,
   Info,
   MessageCircle,
+  RotateCcw,
   Share2,
   TrendingUp,
+  WalletCards,
 } from "lucide-react"
 import { AdSlot, JobAdSlot } from "@/components/ad-slot"
 import { GoogleAdSenseBanner } from "@/components/google-adsense"
@@ -26,11 +29,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { buildResultCtaLinks } from "@/lib/affiliate-links"
 import { isAffiliateProgramActive } from "@/lib/monetization"
 import { trackSimulatorEvent } from "@/lib/client-analytics"
 import {
   EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026,
+  calculateYearToDateIncomePlan,
   getSocialInsuranceDependentLimit,
   INCOME_SIMULATION_BASIS,
   INCOME_THRESHOLDS,
@@ -43,9 +48,19 @@ import {
 } from "@/lib/income-simulator"
 
 type Attribute = "daytime-student" | "evening-student" | "freeter"
+type CalculationMode = "annual" | "year-to-date"
 
 const parentTaxRates: ParentTaxRate[] = [0.05, 0.1, 0.2, 0.23, 0.33, 0.4, 0.45]
 const DEFAULT_SHARE_URL = "https://nenshuu-kabe.com/"
+const INCOME_PLAN_STORAGE_KEY = "income-simulator-year-to-date-v1"
+
+interface SavedIncomePlan {
+  calculationMode: CalculationMode
+  receivedIncome: number
+  lastPaidMonth: number
+  expectedMonthlyIncome: number
+  additionalExpectedIncome: number
+}
 
 interface ActionItem {
   title: string
@@ -79,6 +94,12 @@ function formatManYen(value: number): string {
   return `${Math.round(value / 10_000)}万円`
 }
 
+function formatIncomeMan(value: number): string {
+  return `${new Intl.NumberFormat("ja-JP", {
+    maximumFractionDigits: 1,
+  }).format(value / 10_000)}万円`
+}
+
 function getStudentType(attribute: Attribute): StudentType {
   if (attribute === "daytime-student") return "day"
   if (attribute === "evening-student") return "night"
@@ -98,6 +119,19 @@ function getIncomeTrackingBand(incomeMan: number): string {
 function getIncomeStatus(incomeMan: number, age: number) {
   const socialLimitMan = getSocialInsuranceDependentLimit(age) / 10_000
   const isSpecialAge = age >= 19 && age <= 22
+
+  if (age < 16) {
+    return {
+      label: "本人の負担を確認",
+      title: "16歳未満は親の扶養控除の対象外です",
+      description:
+        incomeMan <= 178
+          ? "親の扶養控除ではなく、本人の住民税と社会保険を中心に確認しましょう。"
+          : "親の扶養控除ではなく、本人の所得税・住民税・社会保険を中心に確認しましょう。",
+      tone: "border-blue-200 bg-blue-50 text-blue-950",
+      bar: "bg-blue-500",
+    }
+  }
 
   if (incomeMan <= 136) {
     return {
@@ -178,6 +212,7 @@ function getMonthlySalaryBand(monthlySalary: number): string {
 
 function buildProcedureItems({
   annualIncome,
+  socialInsuranceIncomeEstimate,
   incomeMan,
   socialInsuranceLimit,
   shortHoursSocialInsuranceApplies,
@@ -185,6 +220,7 @@ function buildProcedureItems({
   age,
 }: {
   annualIncome: number
+  socialInsuranceIncomeEstimate: number
   incomeMan: number
   socialInsuranceLimit: number
   shortHoursSocialInsuranceApplies: boolean
@@ -194,7 +230,7 @@ function buildProcedureItems({
   const items: ActionItem[] = []
   const socialLimitMan = Math.round(socialInsuranceLimit / 10_000)
 
-  if (annualIncome > INCOME_THRESHOLDS.DEPENDENT_FULL) {
+  if (age >= 16 && annualIncome > INCOME_THRESHOLDS.DEPENDENT_FULL) {
     items.push({
       title: "親の年末調整の扶養欄を確認",
       description:
@@ -209,7 +245,7 @@ function buildProcedureItems({
     })
   }
 
-  if (annualIncome >= socialInsuranceLimit) {
+  if (socialInsuranceIncomeEstimate >= socialInsuranceLimit) {
     items.push({
       title: "親の健康保険の被扶養者認定を確認",
       description: `社会保険の扶養目安${socialLimitMan}万円に達しています。親の勤務先または加入中の健康保険で、被扶養者異動届や収入見込みの確認が必要か相談してください。`,
@@ -248,6 +284,7 @@ function buildProcedureItems({
 }
 
 function buildParentSharePoints({
+  age,
   incomeMan,
   displayedTakeHome,
   parentTaxDeltaEstimate,
@@ -257,6 +294,7 @@ function buildParentSharePoints({
   monthlySalary,
   companySize,
 }: {
+  age: number
   incomeMan: number
   displayedTakeHome: number
   parentTaxDeltaEstimate: number
@@ -271,10 +309,17 @@ function buildParentSharePoints({
       title: `今年の年収見込みは${incomeMan}万円`,
       description: `本人の手元見込みは${formatCurrency(displayedTakeHome)}です。年末までの追加シフトや有給で変わる可能性があります。`,
     },
-    {
-      title: `親の税負担への影響は概算${formatCurrency(parentTaxDeltaEstimate)}`,
-      description: "親の所得税率や勤務先の年末調整で変わるため、親の会社へ年収見込みを共有して確認してもらうのが安全です。",
-    },
+    age < 16
+      ? {
+          title: "16歳未満は親の扶養控除の対象外",
+          description:
+            "その年の12月31日時点で16歳未満の場合、本人の年収増による親の扶養控除額の変化は試算していません。",
+        }
+      : {
+          title: `親の税負担への影響は概算${formatCurrency(parentTaxDeltaEstimate)}`,
+          description:
+            "親の所得税率や勤務先の年末調整で変わるため、親の会社へ年収見込みを共有して確認してもらうのが安全です。",
+        },
     {
       title: `社会保険の扶養目安は${formatManYen(socialInsuranceLimit)}`,
       description: `${socialInsuranceStatusLabel}。親の健康保険と、勤務先での社会保険加入は別々に確認します。`,
@@ -288,11 +333,13 @@ function buildParentSharePoints({
 
 function buildJobSuggestions({
   annualIncome,
+  socialInsuranceIncomeEstimate,
   socialInsuranceLimit,
   shortHoursSocialInsuranceApplies,
   ctaLinks,
 }: {
   annualIncome: number
+  socialInsuranceIncomeEstimate: number
   socialInsuranceLimit: number
   shortHoursSocialInsuranceApplies: boolean
   ctaLinks: ResultCtaLinks
@@ -316,7 +363,7 @@ function buildJobSuggestions({
     ]
   }
 
-  if (annualIncome >= socialInsuranceLimit) {
+  if (socialInsuranceIncomeEstimate >= socialInsuranceLimit) {
     return [
       {
         title: "中途半端な超過を避ける",
@@ -354,6 +401,9 @@ function buildJobSuggestions({
 }
 
 function buildResultShareText({
+  calculationMode,
+  receivedIncome,
+  remainingPaymentCount,
   incomeMan,
   statusLabel,
   displayedTakeHome,
@@ -361,6 +411,9 @@ function buildResultShareText({
   parentTaxDeltaEstimate,
   socialInsuranceStatusLabel,
 }: {
+  calculationMode: CalculationMode
+  receivedIncome: number
+  remainingPaymentCount: number
   incomeMan: number
   statusLabel: string
   displayedTakeHome: number
@@ -370,6 +423,12 @@ function buildResultShareText({
 }): string {
   return [
     "学生バイトお金ナビで年収の壁を確認しました。",
+    ...(calculationMode === "year-to-date"
+      ? [
+          `今年受取済み: ${formatCurrency(receivedIncome)}`,
+          `年内の残り給与回数: ${remainingPaymentCount}回`,
+        ]
+      : []),
     `年収見込み: ${incomeMan}万円`,
     `判定: ${statusLabel}`,
     `本人の手元見込み: ${formatCurrency(displayedTakeHome)}`,
@@ -400,7 +459,13 @@ async function writeTextToClipboard(text: string): Promise<void> {
 export function IncomeSimulator() {
   const showAffiliateUi = isAffiliateProgramActive()
   const showVisibleAds = process.env.NEXT_PUBLIC_ENABLE_VISIBLE_ADS === "true"
+  const [calculationMode, setCalculationMode] = useState<CalculationMode>("annual")
   const [income, setIncome] = useState(120)
+  const [receivedIncome, setReceivedIncome] = useState(0)
+  const [lastPaidMonth, setLastPaidMonth] = useState(0)
+  const [expectedMonthlyIncome, setExpectedMonthlyIncome] = useState(100_000)
+  const [additionalExpectedIncome, setAdditionalExpectedIncome] = useState(0)
+  const [hasLoadedIncomePlan, setHasLoadedIncomePlan] = useState(false)
   const [age, setAge] = useState(20)
   const [attribute, setAttribute] = useState<Attribute>("daytime-student")
   const [weeklyHours, setWeeklyHours] = useState(20)
@@ -415,9 +480,88 @@ export function IncomeSimulator() {
   const interactionCountRef = useRef(0)
 
   const studentType = getStudentType(attribute)
-  const annualIncome = income * 10_000
+  const yearToDatePlan = useMemo(
+    () =>
+      calculateYearToDateIncomePlan({
+        receivedIncome,
+        lastPaidMonth: lastPaidMonth || 1,
+        expectedMonthlyIncome,
+        additionalExpectedIncome,
+        age,
+      }),
+    [additionalExpectedIncome, age, expectedMonthlyIncome, lastPaidMonth, receivedIncome],
+  )
+  const annualIncome =
+    calculationMode === "annual" ? income * 10_000 : yearToDatePlan.projectedAnnualIncome
+  const incomeMan = Math.round((annualIncome / 10_000) * 10) / 10
   const socialInsuranceLimit = getSocialInsuranceDependentLimit(age)
-  const status = useMemo(() => getIncomeStatus(income, age), [age, income])
+  const socialContractAnnualEstimate = monthlySalary * 12
+  const socialContractDifference = socialInsuranceLimit - socialContractAnnualEstimate
+  const socialInsuranceIncomeEstimate =
+    calculationMode === "year-to-date" ? socialContractAnnualEstimate : annualIncome
+  const status = useMemo(() => getIncomeStatus(incomeMan, age), [age, incomeMan])
+
+  useEffect(() => {
+    const restoreTimer = window.setTimeout(() => {
+      const currentMonth = new Date().getMonth() + 1
+
+      try {
+        const savedPlan = window.localStorage.getItem(INCOME_PLAN_STORAGE_KEY)
+        if (savedPlan) {
+          const parsed = JSON.parse(savedPlan) as Partial<SavedIncomePlan>
+          const savedMode =
+            parsed.calculationMode === "year-to-date" ? "year-to-date" : "annual"
+
+          setCalculationMode(savedMode)
+          setReceivedIncome(Math.max(0, Number(parsed.receivedIncome) || 0))
+          setLastPaidMonth(
+            Math.min(12, Math.max(1, Number(parsed.lastPaidMonth) || currentMonth)),
+          )
+          setExpectedMonthlyIncome(
+            Math.max(0, Number(parsed.expectedMonthlyIncome) || 0),
+          )
+          setAdditionalExpectedIncome(
+            Math.max(0, Number(parsed.additionalExpectedIncome) || 0),
+          )
+        } else {
+          setLastPaidMonth(currentMonth)
+        }
+      } catch {
+        setLastPaidMonth(currentMonth)
+      } finally {
+        setHasLoadedIncomePlan(true)
+      }
+    }, 0)
+
+    return () => window.clearTimeout(restoreTimer)
+  }, [])
+
+  useEffect(() => {
+    if (!hasLoadedIncomePlan || lastPaidMonth === 0) {
+      return
+    }
+
+    const savedPlan: SavedIncomePlan = {
+      calculationMode,
+      receivedIncome,
+      lastPaidMonth,
+      expectedMonthlyIncome,
+      additionalExpectedIncome,
+    }
+
+    try {
+      window.localStorage.setItem(INCOME_PLAN_STORAGE_KEY, JSON.stringify(savedPlan))
+    } catch {
+      // The simulator remains usable when storage is blocked.
+    }
+  }, [
+    additionalExpectedIncome,
+    calculationMode,
+    expectedMonthlyIncome,
+    hasLoadedIncomePlan,
+    lastPaidMonth,
+    receivedIncome,
+  ])
 
   const detailedResult = useMemo(
     () =>
@@ -427,6 +571,7 @@ export function IncomeSimulator() {
         studentType,
         weeklyHours,
         monthlySalary,
+        socialInsuranceAnnualIncomeEstimate: socialInsuranceIncomeEstimate,
         companySize,
         parentTaxRate,
         studentPensionSpecialStatus,
@@ -442,6 +587,7 @@ export function IncomeSimulator() {
       nationalHealthInsuranceAnnual,
       parentTaxRate,
       socialInsuranceRoute,
+      socialInsuranceIncomeEstimate,
       studentPensionSpecialStatus,
       studentType,
       weeklyHours,
@@ -480,7 +626,7 @@ export function IncomeSimulator() {
 
   const thresholdMarkers = [
     { amount: 119, label: "119万円", text: "住民税の目安" },
-    { amount: 136, label: "136万円", text: "親の税扶養" },
+    ...(age >= 16 ? [{ amount: 136, label: "136万円", text: "親の税扶養" }] : []),
     { amount: socialInsuranceLimit / 10_000, label: formatManYen(socialInsuranceLimit), text: "社保扶養の目安" },
     { amount: 178, label: "178万円", text: "所得税の目安" },
     ...(age >= 19 && age <= 22 ? [{ amount: 197, label: "197万円", text: "特定親族特別控除" }] : []),
@@ -489,18 +635,28 @@ export function IncomeSimulator() {
     () =>
       buildProcedureItems({
         annualIncome,
-        incomeMan: income,
+        socialInsuranceIncomeEstimate,
+        incomeMan,
         socialInsuranceLimit,
         shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
         socialInsuranceRoute,
         age,
       }),
-    [age, annualIncome, detailedResult.shortHoursSocialInsuranceApplies, income, socialInsuranceLimit, socialInsuranceRoute],
+    [
+      age,
+      annualIncome,
+      detailedResult.shortHoursSocialInsuranceApplies,
+      incomeMan,
+      socialInsuranceLimit,
+      socialInsuranceRoute,
+      socialInsuranceIncomeEstimate,
+    ],
   )
   const parentSharePoints = useMemo(
     () =>
       buildParentSharePoints({
-        incomeMan: income,
+        age,
+        incomeMan,
         displayedTakeHome,
         parentTaxDeltaEstimate: detailedResult.parentTaxDeltaEstimate,
         socialInsuranceLimit,
@@ -510,11 +666,12 @@ export function IncomeSimulator() {
         companySize,
       }),
     [
+      age,
       companySize,
       detailedResult.parentTaxDeltaEstimate,
       detailedResult.socialInsuranceStatusLabel,
       displayedTakeHome,
-      income,
+      incomeMan,
       monthlySalary,
       socialInsuranceLimit,
       weeklyHours,
@@ -524,16 +681,26 @@ export function IncomeSimulator() {
     () =>
       buildJobSuggestions({
         annualIncome,
+        socialInsuranceIncomeEstimate,
         socialInsuranceLimit,
         shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
         ctaLinks,
       }),
-    [annualIncome, ctaLinks, detailedResult.shortHoursSocialInsuranceApplies, socialInsuranceLimit],
+    [
+      annualIncome,
+      ctaLinks,
+      detailedResult.shortHoursSocialInsuranceApplies,
+      socialInsuranceIncomeEstimate,
+      socialInsuranceLimit,
+    ],
   )
   const resultShareText = useMemo(
     () =>
       buildResultShareText({
-        incomeMan: income,
+        calculationMode,
+        receivedIncome: yearToDatePlan.receivedIncome,
+        remainingPaymentCount: yearToDatePlan.remainingPaymentCount,
+        incomeMan,
         statusLabel: status.label,
         displayedTakeHome,
         selfTaxBurdenEstimate: detailedResult.selfTaxBurdenEstimate,
@@ -541,12 +708,15 @@ export function IncomeSimulator() {
         socialInsuranceStatusLabel: detailedResult.socialInsuranceStatusLabel,
       }),
     [
+      calculationMode,
       detailedResult.parentTaxDeltaEstimate,
       detailedResult.selfTaxBurdenEstimate,
       detailedResult.socialInsuranceStatusLabel,
       displayedTakeHome,
-      income,
+      incomeMan,
       status.label,
+      yearToDatePlan.receivedIncome,
+      yearToDatePlan.remainingPaymentCount,
     ],
   )
   const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(DEFAULT_SHARE_URL)}`
@@ -558,8 +728,9 @@ export function IncomeSimulator() {
 
   const trackIncomeSimulatorInteraction = (
     interactionType: string,
-    nextIncome = income,
+    nextIncome = incomeMan,
     overrides: Partial<{
+      calculationMode: CalculationMode
       age: number
       attribute: Attribute
       weeklyHours: number
@@ -574,6 +745,7 @@ export function IncomeSimulator() {
     interactionCountRef.current += 1
 
     const trackedAge = overrides.age ?? age
+    const trackedCalculationMode = overrides.calculationMode ?? calculationMode
     const trackedAttribute = overrides.attribute ?? attribute
     const trackedWeeklyHours = overrides.weeklyHours ?? weeklyHours
     const trackedMonthlySalary = overrides.monthlySalary ?? monthlySalary
@@ -590,6 +762,7 @@ export function IncomeSimulator() {
       simulator_name: "income_wall",
       interaction_type: interactionType,
       interaction_count: interactionCountRef.current,
+      calculation_mode: trackedCalculationMode,
       income_man: nextIncome,
       income_band: getIncomeTrackingBand(nextIncome),
       status_label: trackedStatus.label,
@@ -602,12 +775,47 @@ export function IncomeSimulator() {
       social_insurance_route: trackedSocialInsuranceRoute,
       student_pension_special_status: trackedStudentPensionSpecialStatus,
       parent_impact_included: trackedIncludeParentImpact,
+      received_income_band:
+        trackedCalculationMode === "year-to-date"
+          ? getIncomeTrackingBand(receivedIncome / 10_000)
+          : "not_applicable",
+      remaining_payment_count:
+        trackedCalculationMode === "year-to-date"
+          ? yearToDatePlan.remainingPaymentCount
+          : 0,
+    })
+  }
+
+  const handleCalculationModeChange = (value: string) => {
+    const nextMode = value as CalculationMode
+    const nextIncomeMan =
+      nextMode === "annual"
+        ? income
+        : Math.round((yearToDatePlan.projectedAnnualIncome / 10_000) * 10) / 10
+
+    setCalculationMode(nextMode)
+    trackIncomeSimulatorInteraction("calculation_mode_change", nextIncomeMan, {
+      calculationMode: nextMode,
+    })
+  }
+
+  const handleResetIncomePlan = () => {
+    const currentMonth = new Date().getMonth() + 1
+    const resetProjectedIncomeMan = (12 - currentMonth) * 10
+
+    setReceivedIncome(0)
+    setLastPaidMonth(currentMonth)
+    setExpectedMonthlyIncome(100_000)
+    setAdditionalExpectedIncome(0)
+    setShareFeedback("")
+    trackIncomeSimulatorInteraction("year_to_date_reset", resetProjectedIncomeMan, {
+      calculationMode: "year-to-date",
     })
   }
 
   const handleShareResult = async () => {
     const shareUrl = typeof window !== "undefined" ? window.location.href : DEFAULT_SHARE_URL
-    trackIncomeSimulatorInteraction("share_result", income)
+    trackIncomeSimulatorInteraction("share_result", incomeMan)
 
     try {
       if (navigator.share) {
@@ -634,7 +842,7 @@ export function IncomeSimulator() {
 
   const handleCopyResult = async () => {
     const shareUrl = typeof window !== "undefined" ? window.location.href : DEFAULT_SHARE_URL
-    trackIncomeSimulatorInteraction("copy_result", income)
+    trackIncomeSimulatorInteraction("copy_result", incomeMan)
 
     try {
       await writeTextToClipboard(`${resultShareText}\n${shareUrl}`)
@@ -652,7 +860,7 @@ export function IncomeSimulator() {
           年収の壁シミュレーター
         </h1>
         <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-          年収、年齢、勤務条件を入れると、親の扶養・社会保険・本人の税金への影響をまとめて確認できます。
+          年収を指定するか、今年受け取った給与から年末までを予測して、親の扶養・社会保険・本人の税金を確認できます。
         </p>
       </section>
 
@@ -673,57 +881,370 @@ export function IncomeSimulator() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
         <Card className="shadow-sm">
           <CardContent className="space-y-5 p-5">
-            <div className="space-y-4">
-              <div className="flex items-baseline justify-center gap-2">
-                <Input
-                  data-testid="income-input"
-                  aria-label="年収（万円）"
-                  type="number"
-                  value={income}
-                  onChange={handleIncomeInput}
-                  onBlur={() => trackIncomeSimulatorInteraction("income_input_commit")}
-                  min={0}
-                  max={300}
-                  className="h-auto w-32 border-none p-0 text-center text-5xl font-bold shadow-none [appearance:textfield] focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                />
-                <span className="text-2xl font-medium text-muted-foreground">万円</span>
-              </div>
+            <Tabs value={calculationMode} onValueChange={handleCalculationModeChange}>
+              <TabsList className="grid h-auto w-full grid-cols-2">
+                <TabsTrigger value="annual" className="min-h-11 gap-2 px-2">
+                  <WalletCards className="h-4 w-4 shrink-0" />
+                  <span>年収を指定</span>
+                </TabsTrigger>
+                <TabsTrigger value="year-to-date" className="min-h-11 gap-2 px-2">
+                  <CalendarRange className="h-4 w-4 shrink-0" />
+                  <span>今年の給与から計算</span>
+                </TabsTrigger>
+              </TabsList>
 
-              <div className="space-y-2">
-                <Slider
-                  data-testid="income-slider"
-                  aria-label="年収"
-                  value={[income]}
-                  onValueChange={(value) => setIncome(value[0])}
-                  onValueCommit={(value) => trackIncomeSimulatorInteraction("income_slider_commit", value[0])}
-                  min={0}
-                  max={220}
-                  step={1}
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>0万円</span>
-                  <span>220万円</span>
+              <TabsContent value="annual" className="mt-5 space-y-4">
+                <div className="flex items-baseline justify-center gap-2">
+                  <Input
+                    data-testid="income-input"
+                    aria-label="年収（万円）"
+                    type="number"
+                    value={income}
+                    onChange={handleIncomeInput}
+                    onBlur={() => trackIncomeSimulatorInteraction("income_input_commit")}
+                    min={0}
+                    max={300}
+                    className="h-auto w-32 border-none p-0 text-center text-5xl font-bold shadow-none [appearance:textfield] focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                  <span className="text-2xl font-medium text-muted-foreground">万円</span>
                 </div>
-              </div>
 
-              <div className="relative pt-3">
-                <div className="h-3 overflow-hidden rounded-full bg-muted">
-                  <div className={`h-full transition-all ${status.bar}`} style={{ width: `${Math.min(100, (income / 220) * 100)}%` }} />
+                <div className="space-y-2">
+                  <Slider
+                    data-testid="income-slider"
+                    aria-label="年収"
+                    value={[income]}
+                    onValueChange={(value) => setIncome(value[0])}
+                    onValueCommit={(value) =>
+                      trackIncomeSimulatorInteraction("income_slider_commit", value[0])
+                    }
+                    min={0}
+                    max={220}
+                    step={1}
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>0万円</span>
+                    <span>220万円</span>
+                  </div>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
-                  {thresholdMarkers.map((marker) => (
-                    <div key={`${marker.label}-${marker.text}`} className="rounded-md border border-border bg-muted/30 px-3 py-2">
-                      <p className="text-xs font-bold text-foreground">{marker.label}</p>
-                      <p className="text-[11px] text-muted-foreground">{marker.text}</p>
+
+                <div className="relative pt-3">
+                  <div className="h-3 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={`h-full transition-all ${status.bar}`}
+                      style={{ width: `${Math.min(100, (income / 220) * 100)}%` }}
+                    />
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+                    {thresholdMarkers.map((marker) => (
+                      <div
+                        key={`${marker.label}-${marker.text}`}
+                        className="rounded-md border border-border bg-muted/30 px-3 py-2"
+                      >
+                        <p className="text-xs font-bold text-foreground">{marker.label}</p>
+                        <p className="text-[11px] text-muted-foreground">{marker.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="year-to-date" className="mt-5 space-y-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-bold text-foreground">今年あといくら稼げる？</h2>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      給与明細の「総支給額」を勤務先が複数ある場合も合算して入力します。
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleResetIncomePlan}
+                    aria-label="今年の給与入力をリセット"
+                    title="入力をリセット"
+                    className="shrink-0"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="received-income">今年受け取った給与の合計</Label>
+                    <div className="relative">
+                      <Input
+                        id="received-income"
+                        data-testid="received-income-input"
+                        type="number"
+                        min={0}
+                        max={20_000_000}
+                        value={receivedIncome}
+                        onChange={(event) =>
+                          setReceivedIncome(
+                            Math.min(20_000_000, Math.max(0, Number(event.target.value) || 0)),
+                          )
+                        }
+                        onBlur={() =>
+                          trackIncomeSimulatorInteraction("received_income_input_commit")
+                        }
+                        className="h-11 pr-10 text-base md:text-sm"
+                      />
+                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                        円
+                      </span>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>最後に含めた給与の支給月</Label>
+                    <Select
+                      value={String(lastPaidMonth || 1)}
+                      onValueChange={(value) => {
+                        setLastPaidMonth(Number(value))
+                        trackIncomeSimulatorInteraction("last_paid_month_change")
+                      }}
+                    >
+                      <SelectTrigger
+                        data-testid="last-paid-month-select"
+                        className="h-11 w-full text-base md:text-sm"
+                        aria-label="最後に含めた給与の支給月"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
+                          <SelectItem key={month} value={String(month)}>
+                            {month}月支給分まで
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="expected-monthly-income">今後1回あたりの給与見込み</Label>
+                    <div className="relative">
+                      <Input
+                        id="expected-monthly-income"
+                        type="number"
+                        min={0}
+                        max={2_000_000}
+                        value={expectedMonthlyIncome}
+                        onChange={(event) =>
+                          setExpectedMonthlyIncome(
+                            Math.min(2_000_000, Math.max(0, Number(event.target.value) || 0)),
+                          )
+                        }
+                        onBlur={() =>
+                          trackIncomeSimulatorInteraction("expected_monthly_income_commit")
+                        }
+                        className="h-11 pr-10 text-base md:text-sm"
+                      />
+                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                        円
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="additional-expected-income">賞与・追加シフトなど</Label>
+                    <div className="relative">
+                      <Input
+                        id="additional-expected-income"
+                        type="number"
+                        min={0}
+                        max={5_000_000}
+                        value={additionalExpectedIncome}
+                        onChange={(event) =>
+                          setAdditionalExpectedIncome(
+                            Math.min(5_000_000, Math.max(0, Number(event.target.value) || 0)),
+                          )
+                        }
+                        onBlur={() =>
+                          trackIncomeSimulatorInteraction("additional_income_commit")
+                        }
+                        className="h-11 pr-10 text-base md:text-sm"
+                      />
+                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+                        円
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+
+                <div className="grid gap-3 rounded-md border border-primary/20 bg-primary/5 p-4 sm:grid-cols-3">
+                  <div>
+                    <p className="text-xs text-muted-foreground">受取済み</p>
+                    <p className="mt-1 text-base font-bold text-foreground">
+                      {formatCurrency(yearToDatePlan.receivedIncome)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      年内の残り給与
+                    </p>
+                    <p className="mt-1 text-base font-bold text-foreground">
+                      {yearToDatePlan.remainingPaymentCount}回・
+                      {formatCurrency(yearToDatePlan.expectedRemainingIncome)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-primary">年末の年収見込み</p>
+                    <p className="mt-1 text-xl font-bold text-foreground">
+                      {formatIncomeMan(yearToDatePlan.projectedAnnualIncome)}
+                    </p>
+                  </div>
+                </div>
+
+                <section className="space-y-3" aria-labelledby="tax-wall-progress-title">
+                  <div className="space-y-1">
+                    <h2 id="tax-wall-progress-title" className="text-base font-bold text-foreground">
+                      税金の壁までの目安
+                    </h2>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      現在の累計と、月1回の給与支給を前提に計算しています。
+                    </p>
+                  </div>
+
+                  <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
+                    {yearToDatePlan.walls.map((wall) => (
+                      <div key={wall.id} className="space-y-3 bg-background p-4">
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                          <div className="space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 className="text-sm font-bold text-foreground">{wall.label}</h3>
+                              <span className="text-xs text-muted-foreground">{wall.description}</span>
+                            </div>
+                            <p className="text-lg font-bold text-foreground">
+                              {wall.exceededBy > 0
+                                ? `累計で${formatCurrency(wall.exceededBy)}超えています`
+                                : `あと${formatCurrency(wall.remainingToWall)}`}
+                            </p>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className={
+                              wall.projectedExceeds
+                                ? "border-rose-300 bg-rose-50 text-rose-900"
+                                : "border-emerald-300 bg-emerald-50 text-emerald-900"
+                            }
+                          >
+                            {wall.projectedExceeds
+                              ? `年末見込みで${formatCurrency(Math.abs(wall.projectedDifference))}超過`
+                              : wall.projectedDifference === 0
+                                ? "年末見込みで到達"
+                                : `年末見込みで${formatCurrency(wall.projectedDifference)}余裕`}
+                          </Badge>
+                        </div>
+
+                        <div className="h-2 overflow-hidden rounded-full bg-muted">
+                          <div
+                            className={`h-full ${wall.projectedExceeds ? "bg-rose-500" : "bg-emerald-500"}`}
+                            style={{ width: `${wall.receivedProgressPercent}%` }}
+                          />
+                        </div>
+
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                          {wall.averagePerRemainingPayment !== null && wall.exceededBy === 0 && (
+                            <span>
+                              残り1回あたり
+                              <strong className="ml-1 text-foreground">
+                                {formatCurrency(Math.floor(wall.averagePerRemainingPayment))}
+                              </strong>
+                            </span>
+                          )}
+                          {wall.estimatedReachMonth !== null && wall.projectedExceeds && (
+                            <span>
+                              今後の月給だけなら
+                              <strong className="ml-1 text-foreground">
+                                {wall.estimatedReachMonth}月頃
+                              </strong>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <section
+                  className="space-y-3 rounded-md border border-blue-200 bg-blue-50 p-4 text-blue-950"
+                  aria-labelledby="social-outlook-title"
+                >
+                  <div className="flex items-start gap-2">
+                    <Info className="mt-0.5 h-5 w-5 shrink-0" />
+                    <div className="space-y-1">
+                      <h2 id="social-outlook-title" className="text-sm font-bold">
+                        社会保険は今年の累計ではなく、今後の収入見込みで確認
+                      </h2>
+                      <p className="text-xs leading-relaxed text-blue-900/85">
+                        下の「契約上の月額賃金」を12倍した参考値で、
+                        {formatManYen(socialInsuranceLimit)}未満の目安と比べています。
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="rounded-md border border-blue-200 bg-background p-3">
+                      <p className="text-xs text-muted-foreground">契約月額から見た年間見込み</p>
+                      <p className="mt-1 text-base font-bold text-foreground">
+                        {formatCurrency(socialContractAnnualEstimate)}
+                      </p>
+                    </div>
+                    <div className="rounded-md border border-blue-200 bg-background p-3">
+                      <p className="text-xs text-muted-foreground">扶養の収入目安との差</p>
+                      <p
+                        className={`mt-1 text-base font-bold ${
+                          socialContractDifference > 0
+                            ? "text-emerald-700"
+                            : "text-rose-700"
+                        }`}
+                      >
+                        {socialContractDifference > 0
+                          ? `あと${formatCurrency(socialContractDifference)}`
+                          : socialContractDifference === 0
+                            ? "目安と同額（未満ではありません）"
+                            : `${formatCurrency(Math.abs(socialContractDifference))}超える見込み`}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-xs leading-relaxed text-blue-900/85">
+                    最終的な被扶養者認定は、労働契約、他の収入、生計維持関係などを保険者が確認します。
+                    勤務先の社会保険加入条件は、週の勤務時間なども別に確認してください。
+                  </p>
+                  <div className="flex flex-wrap gap-3 text-xs font-semibold">
+                    <a
+                      href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2668_qa.htm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 underline underline-offset-2"
+                    >
+                      国税庁 給与の支給時期
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                    <a
+                      href="https://www.mhlw.go.jp/web/t_doc?dataId=00tc9348&dataType=1&pageNo=1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 underline underline-offset-2"
+                    >
+                      厚生労働省 被扶養者認定
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                </section>
+
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                  入力内容はこの端末だけに自動保存されます。
+                </div>
+              </TabsContent>
+            </Tabs>
 
             <Separator />
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div id="work-conditions" className="grid scroll-mt-24 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="age">その年の12月31日時点の年齢</Label>
                 <div className="relative">
@@ -734,7 +1255,7 @@ export function IncomeSimulator() {
                     max={30}
                     value={age}
                     onChange={(event) => setAge(Math.min(30, Math.max(15, Number(event.target.value) || 15)))}
-                    onBlur={() => trackIncomeSimulatorInteraction("age_input_commit", income, { age })}
+                    onBlur={() => trackIncomeSimulatorInteraction("age_input_commit", incomeMan, { age })}
                     className="h-11 pr-10 text-base md:text-sm"
                   />
                   <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
@@ -749,7 +1270,7 @@ export function IncomeSimulator() {
                   onValueChange={(value) => {
                     const nextAttribute = value as Attribute
                     setAttribute(nextAttribute)
-                    trackIncomeSimulatorInteraction("attribute_change", income, { attribute: nextAttribute })
+                    trackIncomeSimulatorInteraction("attribute_change", incomeMan, { attribute: nextAttribute })
                   }}
                 >
                   <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="属性">
@@ -772,7 +1293,9 @@ export function IncomeSimulator() {
                     max={80}
                     value={weeklyHours}
                     onChange={(event) => setWeeklyHours(Math.max(0, Number(event.target.value) || 0))}
-                    onBlur={() => trackIncomeSimulatorInteraction("weekly_hours_input_commit", income, { weeklyHours })}
+                    onBlur={() =>
+                      trackIncomeSimulatorInteraction("weekly_hours_input_commit", incomeMan, { weeklyHours })
+                    }
                     className="h-11 pr-14 text-base md:text-sm"
                   />
                   <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
@@ -781,7 +1304,7 @@ export function IncomeSimulator() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="monthly-salary">月額賃金</Label>
+                <Label htmlFor="monthly-salary">契約上の月額賃金（社会保険）</Label>
                 <div className="relative">
                   <Input
                     id="monthly-salary"
@@ -790,7 +1313,7 @@ export function IncomeSimulator() {
                     value={monthlySalary}
                     onChange={(event) => setMonthlySalary(Math.max(0, Number(event.target.value) || 0))}
                     onBlur={() =>
-                      trackIncomeSimulatorInteraction("monthly_salary_input_commit", income, { monthlySalary })
+                      trackIncomeSimulatorInteraction("monthly_salary_input_commit", incomeMan, { monthlySalary })
                     }
                     className="h-11 pr-14 text-base md:text-sm"
                   />
@@ -806,7 +1329,9 @@ export function IncomeSimulator() {
                   onValueChange={(value) => {
                     const nextCompanySize = value as CompanySize
                     setCompanySize(nextCompanySize)
-                    trackIncomeSimulatorInteraction("company_size_change", income, { companySize: nextCompanySize })
+                    trackIncomeSimulatorInteraction("company_size_change", incomeMan, {
+                      companySize: nextCompanySize,
+                    })
                   }}
                 >
                   <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="勤務先規模">
@@ -825,7 +1350,7 @@ export function IncomeSimulator() {
                   onValueChange={(value) => {
                     const nextParentTaxRate = Number(value) as ParentTaxRate
                     setParentTaxRate(nextParentTaxRate)
-                    trackIncomeSimulatorInteraction("parent_tax_rate_change", income, {
+                    trackIncomeSimulatorInteraction("parent_tax_rate_change", incomeMan, {
                       parentTaxRate: nextParentTaxRate,
                     })
                   }}
@@ -849,7 +1374,7 @@ export function IncomeSimulator() {
                   onValueChange={(value) => {
                     const nextSocialInsuranceRoute = value as SocialInsuranceRoute
                     setSocialInsuranceRoute(nextSocialInsuranceRoute)
-                    trackIncomeSimulatorInteraction("social_insurance_route_change", income, {
+                    trackIncomeSimulatorInteraction("social_insurance_route_change", incomeMan, {
                       socialInsuranceRoute: nextSocialInsuranceRoute,
                     })
                   }}
@@ -864,28 +1389,30 @@ export function IncomeSimulator() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label>学生納付特例</Label>
-                <Select
-                  value={studentPensionSpecialStatus}
-                  onValueChange={(value) => {
-                    const nextStatus = value as StudentPensionSpecialStatus
-                    setStudentPensionSpecialStatus(nextStatus)
-                    trackIncomeSimulatorInteraction("student_pension_special_status_change", income, {
-                      studentPensionSpecialStatus: nextStatus,
-                    })
-                  }}
-                >
-                  <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="学生納付特例">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="unknown">未確認</SelectItem>
-                    <SelectItem value="eligible">対象見込み</SelectItem>
-                    <SelectItem value="not_eligible">対象外</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {attribute !== "freeter" && age >= 20 && (
+                <div className="space-y-2">
+                  <Label>学生納付特例</Label>
+                  <Select
+                    value={studentPensionSpecialStatus}
+                    onValueChange={(value) => {
+                      const nextStatus = value as StudentPensionSpecialStatus
+                      setStudentPensionSpecialStatus(nextStatus)
+                      trackIncomeSimulatorInteraction("student_pension_special_status_change", incomeMan, {
+                        studentPensionSpecialStatus: nextStatus,
+                      })
+                    }}
+                  >
+                    <SelectTrigger className="h-11 w-full text-base md:text-sm" aria-label="学生納付特例">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unknown">未確認</SelectItem>
+                      <SelectItem value="eligible">対象見込み</SelectItem>
+                      <SelectItem value="not_eligible">対象外</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
               {socialInsuranceRoute === "national" && (
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="national-health-insurance">国民健康保険料の年額が分かる場合</Label>
@@ -938,19 +1465,21 @@ export function IncomeSimulator() {
                 </p>
               </div>
 
-              <label className="flex items-center justify-between gap-3 rounded-md border border-border bg-muted/30 px-3 py-2">
-                <span className="text-xs font-semibold text-foreground">親の税負担増も差し引く</span>
-                <Switch
-                  checked={includeParentImpactInTakeHome}
-                  onCheckedChange={(checked) => {
-                    setIncludeParentImpactInTakeHome(checked)
-                    trackIncomeSimulatorInteraction("parent_impact_toggle", income, {
-                      includeParentImpactInTakeHome: checked,
-                    })
-                  }}
-                  aria-label="親への影響を含めた見込みにする"
-                />
-              </label>
+              {age >= 16 ? (
+                <label className="flex items-center justify-between gap-3 rounded-md border border-border bg-muted/30 px-3 py-2">
+                  <span className="text-xs font-semibold text-foreground">親の税負担増も差し引く</span>
+                  <Switch
+                    checked={includeParentImpactInTakeHome}
+                    onCheckedChange={(checked) => {
+                      setIncludeParentImpactInTakeHome(checked)
+                      trackIncomeSimulatorInteraction("parent_impact_toggle", incomeMan, {
+                        includeParentImpactInTakeHome: checked,
+                      })
+                    }}
+                    aria-label="親への影響を含めた見込みにする"
+                  />
+                </label>
+              ) : null}
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-md border border-border bg-background p-3">
@@ -1090,7 +1619,7 @@ export function IncomeSimulator() {
                   href={lineShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => trackIncomeSimulatorInteraction("line_share_page", income)}
+                  onClick={() => trackIncomeSimulatorInteraction("line_share_page", incomeMan)}
                 >
                   <MessageCircle className="h-4 w-4" />
                   LINEでページを共有
@@ -1144,7 +1673,7 @@ export function IncomeSimulator() {
                       target="_blank"
                       rel="noopener noreferrer nofollow sponsored"
                       className={className}
-                      onClick={() => trackIncomeSimulatorInteraction("job_suggestion_click", income)}
+                      onClick={() => trackIncomeSimulatorInteraction("job_suggestion_click", incomeMan)}
                     >
                       {content}
                     </a>
@@ -1153,7 +1682,7 @@ export function IncomeSimulator() {
                       key={job.title}
                       href={job.href}
                       className={className}
-                      onClick={() => trackIncomeSimulatorInteraction("job_suggestion_click", income)}
+                      onClick={() => trackIncomeSimulatorInteraction("job_suggestion_click", incomeMan)}
                     >
                       {content}
                     </Link>
@@ -1183,7 +1712,7 @@ export function IncomeSimulator() {
               <p className="text-center text-xs leading-relaxed text-muted-foreground">
                 PR・広告リンクを含む場合があります。試算結果は広告の有無にかかわらず同じ基準で表示します。
               </p>
-              {income >= socialInsuranceLimit / 10_000 && income < 178 && ctaLinks.highWage && ctaLinks.flexible && (
+              {incomeMan >= socialInsuranceLimit / 10_000 && incomeMan < 178 && ctaLinks.highWage && ctaLinks.flexible && (
                 <>
                   <Button className="h-11 w-full gap-2 font-semibold" asChild>
                     <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow sponsored">
@@ -1198,7 +1727,7 @@ export function IncomeSimulator() {
                   </Button>
                 </>
               )}
-              {income < socialInsuranceLimit / 10_000 && ctaLinks.recommended && (
+              {incomeMan < socialInsuranceLimit / 10_000 && ctaLinks.recommended && (
                 <Button className="h-11 w-full gap-2 font-semibold" asChild>
                   <a href={ctaLinks.recommended} target="_blank" rel="noopener noreferrer nofollow sponsored">
                     <TrendingUp className="h-4 w-4" />
@@ -1206,7 +1735,7 @@ export function IncomeSimulator() {
                   </a>
                 </Button>
               )}
-              {income >= 178 && ctaLinks.career && (
+              {incomeMan >= 178 && ctaLinks.career && (
                 <Button className="h-11 w-full gap-2 font-semibold" asChild>
                   <a href={ctaLinks.career} target="_blank" rel="noopener noreferrer nofollow sponsored">
                     <TrendingUp className="h-4 w-4" />

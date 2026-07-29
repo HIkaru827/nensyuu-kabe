@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "2026年の学生バイト年収の壁｜119万・130万・136万・150万・178万・197万円を整理",
-  description:
-    "令和8年分以後の所得税改正を反映し、学生バイトが見るべき住民税、親の扶養、社会保険、本人の所得税、特定親族特別控除の年収ラインを整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/2026-student-income-wall",
-  },
-}
+export const metadata = createBlogPostMetadata("2026-student-income-wall")
 
 export default function StudentIncomeWall2026Page() {
   const url = "https://nenshuu-kabe.com/blog/2026-student-income-wall"

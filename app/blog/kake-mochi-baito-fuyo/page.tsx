@@ -6,15 +6,9 @@ import { ArticleMonetizationSection } from "@/components/article-monetization-se
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "掛け持ちバイトで扶養はどう判定する？収入の合算と見落としやすい点",
-  description:
-    "掛け持ちバイトで扶養判定を見るときの収入の合算方法と、103万円・130万円・136万円・178万円の違いを整理します。源泉徴収票が複数ある場合の見方もまとめています。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/kake-mochi-baito-fuyo",
-  },
-}
+export const metadata = createBlogPostMetadata("kake-mochi-baito-fuyo")
 
 export default function KakeMochiBaitoFuyoPage() {
   const url = "https://nenshuu-kabe.com/blog/kake-mochi-baito-fuyo"

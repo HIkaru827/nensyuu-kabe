@@ -1,10 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata = {
+export const metadata = createPageMetadata({
+  path: "/terms",
   title: "利用規約",
-  description: "学生バイトお金ナビの利用規約です。2026年基準の税金・社会保険シミュレーターの利用条件と免責事項を記載しています。",
-}
+  description:
+    "学生バイトお金ナビの利用規約です。2026年基準の税金・社会保険シミュレーターの利用条件と免責事項を記載しています。",
+})
 
 export default function TermsPage() {
   return (

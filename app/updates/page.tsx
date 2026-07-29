@@ -1,15 +1,35 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata = {
+export const metadata = createPageMetadata({
+  path: "/updates",
   title: "更新履歴",
-  description: "年収の壁シミュレーターの更新履歴ページです。制度改正や記事追加の履歴を確認できます。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/updates",
-  },
-}
+  description:
+    "年収の壁シミュレーターの更新履歴ページです。制度改正や記事追加の履歴を確認できます。",
+})
 
 const updates = [
+  {
+    date: "2026年7月30日",
+    title: "今年の給与から年末年収を予測する機能を追加",
+    items: [
+      "今年受け取った給与、最後の支給月、今後の給与見込みから年末年収を計算",
+      "住民税、親の税扶養、本人の所得税など、各年収ラインまでの残額と残り1回あたりの目安を表示",
+      "社会保険の扶養は今年の累計ではなく、契約上の今後1年の収入見込みとして分けて表示",
+      "入力内容を端末内に自動保存し、次回も続きから確認できるよう改善",
+    ],
+  },
+  {
+    date: "2026年7月29日",
+    title: "記事ページのSEO情報と内部リンクを整理",
+    items: [
+      "全記事に記事固有のcanonical、OG、X向け共有情報、公開日・更新日を統一して設定",
+      "記事の構造化データから運営者情報、編集方針、サイト本体への関係を明確化",
+      "HTMLサイトマップを記事台帳から自動生成し、公開中の記事が漏れなく掲載されるよう改善",
+      "記事タイトルとブログ一覧の表記ずれを解消",
+    ],
+  },
   {
     date: "2026年7月27日",
     title: "AdSense審査向けに広告・サイト情報を整理",

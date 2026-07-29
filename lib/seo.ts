@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { BAITO_REALITY_BLOG_POSTS } from "./baito-reality"
 
 export const SITE_URL = "https://nenshuu-kabe.com"
@@ -24,6 +25,9 @@ export const DEFAULT_KEYWORDS = [
   "アパレル バイト 仕事内容",
   "バイト 有給 シミュレーター",
   "年収の壁 シミュレーター",
+  "今年 あといくら稼げる",
+  "扶養 あといくら",
+  "年収 見込み 計算",
 ]
 
 export const STUDENT_BAITO_PAGE = {
@@ -152,36 +156,36 @@ export const BLOG_POSTS = [
   },
   {
     slug: "4-6gatsu-hatarakisugi",
-    title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険",
+    title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険の違い",
     description:
-      "4月から6月の働き方が社会保険料にどう関係するか、学生バイト向けに整理します。",
+      "「4月から6月に働きすぎると9月から高くなる」という話は、原則として税金ではなく社会保険料の話です。学生バイトにどこまで当てはまるかを、公的資料に基づいて整理します。",
     publishedAt: "2026-04-20T00:00:00Z",
     updatedAt: "2026-04-20T00:00:00Z",
     priority: 0.9,
   },
   {
     slug: "student-123man-parent-impact",
-    title: "学生が136万円を超えたら親に何が起きる？扶養控除と特定親族特別控除",
+    title: "学生が136万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
     description:
-      "学生の給与収入が136万円を超えたとき、親の税金へどんな影響が出るかをケース別に整理します。",
+      "学生の給与収入が136万円を超えたときに、親の税金へどんな影響が出るかをケース別に整理します。19歳以上23歳未満の特定親族特別控除も現行ルールで確認できます。",
     publishedAt: "2026-04-15T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.9,
   },
   {
     slug: "kake-mochi-baito-fuyo",
-    title: "掛け持ちバイトの扶養判定はどう見る？収入の合算と注意点",
+    title: "掛け持ちバイトで扶養はどう判定する？収入の合算と見落としやすい点",
     description:
-      "複数のアルバイトをしている学生向けに、収入の合算方法と136万円・178万円・130万円の違いを解説します。",
+      "掛け持ちバイトで扶養判定を見るときの収入の合算方法と、103万円・130万円・136万円・178万円の違いを整理します。源泉徴収票が複数ある場合の見方もまとめています。",
     publishedAt: "2026-04-15T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.88,
   },
   {
     slug: "social-insurance-case-study",
-    title: "社会保険の壁をケース別に比較｜学生・非学生・19歳以上23歳未満の違い",
+    title: "社会保険の壁をケース別に比較。学生・非学生・19歳以上23歳未満の違い",
     description:
-      "106万円、130万円、150万円未満の基準がどう分かれるかを学生バイト向けに整理します。",
+      "106万円、130万円、150万円未満の基準がどう分かれるかを、学生、非学生、19歳以上23歳未満のケース別に整理します。どこで判断が分かれるかをまとめた記事です。",
     publishedAt: "2026-04-15T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.88,
@@ -190,7 +194,7 @@ export const BLOG_POSTS = [
     slug: "daigakusei-baito-fuyo",
     title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
     description:
-      "大学生アルバイト向けに、所得税、親の扶養、特定親族特別控除、社会保険の注意点を整理します。",
+      "大学生アルバイトがいくらまで稼げるかを、本人の所得税178万円、親の扶養控除136万円、19歳以上23歳未満の特定親族特別控除197万円、社会保険の扱いに分けて整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.9,
@@ -199,61 +203,61 @@ export const BLOG_POSTS = [
     slug: "koukousei-baito-fuyo",
     title: "高校生バイトはいくらまでなら扶養内？103万円・130万円・136万円の違い",
     description:
-      "高校生アルバイト向けに、税金、扶養、社会保険の年収ラインをわかりやすく整理します。",
+      "高校生アルバイトが扶養内で働くときに確認したい、103万円、130万円、136万円、178万円の違いを、本人の税金・親の扶養控除・社会保険に分けて整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.88,
   },
   {
     slug: "gakusei-19-22-fuyo",
-    title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険",
+    title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険の注意点",
     description:
-      "19歳以上23歳未満の学生向けに、136万円・150万円未満・178万円・197万円の基準を整理します。",
+      "19歳から22歳の学生がアルバイトでいくらまで稼げるかを、特定親族特別控除、136万円、197万円、社会保険の150万円未満要件に分けて整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.88,
   },
   {
     slug: "103man-no-kabe",
-    title: "178万円の壁とは？103万円・160万円から何が変わったかを解説",
+    title: "178万円の壁とは？現行ルールでわかる所得税・扶養・社会保険の違い",
     description:
-      "103万円の壁、160万円の壁から178万円の壁へ変わった背景と、所得税・扶養・社会保険への影響を整理します。",
+      "178万円の壁の意味を、所得税、税法上の扶養、社会保険を分けて整理します。令和8年分以後の現行ルールに沿って確認できる範囲だけを解説しています。",
     publishedAt: "2026-01-18T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.9,
   },
   {
     slug: "130man-no-kabe-v2",
-    title: "130万円の壁を超えるとどうなる？損しにくい働き方の考え方",
+    title: "130万円を超えるとどうなるか。被扶養者認定と勤務先加入を分けて確認",
     description:
-      "130万円を超えたときの社会保険料、手取りの変化、シフト調整と年収アップの判断軸を解説します。",
+      "130万円を超えたときに何が起きるかを、被扶養者認定と勤務先での社会保険加入に分けて整理します。106万円だけでは判定できない点、学生や19歳以上23歳未満の扱いも現行ルールで説明します。",
     publishedAt: "2026-01-18T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.85,
   },
   {
     slug: "gakusei-baito-zeikin",
-    title: "学生バイトの税金対策｜178万円・136万円・197万円の基準を解説",
+    title: "学生バイトの税金。178万円・136万円・社会保険を分けて確認",
     description:
-      "学生アルバイト向けに、所得税178万円ライン、扶養判定136万円、19〜22歳の197万円基準を整理します。",
+      "学生アルバイトの税金と扶養判定を、178万円、136万円、19歳以上23歳未満の197万円、社会保険のルールに分けて整理します。年収だけで断定しにくい点も含めて、現行法ベースで説明します。",
     publishedAt: "2026-01-29T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.85,
   },
   {
     slug: "tokutei-fuyo",
-    title: "特定親族特別控除とは？19歳から22歳の新ルールを解説",
+    title: "特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理",
     description:
-      "19歳以上23歳未満の子どもがいる家庭向けに、136万円超〜197万円の特定親族特別控除と年収ごとの影響を解説します。",
+      "特定親族特別控除は、19歳以上23歳未満の子の給与収入が136万円を超えても197万円までなら、親が段階的に控除を受けられる制度です。扶養控除との違いと見方を現行法で整理します。",
     publishedAt: "2026-04-02T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.8,
   },
   {
     slug: "shakaihoken-kabe",
-    title: "社会保険の壁とは？106万円・130万円の違いを整理",
+    title: "社会保険の壁とは？130万円・106万円・150万円未満の関係を現行ルールで整理",
     description:
-      "106万円と130万円の社会保険の壁の違い、扶養判定、手取りへの影響を学生バイト向けに解説します。",
+      "社会保険の壁を、被扶養者認定、短時間労働者への適用、19歳以上23歳未満の150万円未満要件に分けて整理します。",
     publishedAt: "2026-04-02T00:00:00Z",
     updatedAt: "2026-07-06T00:00:00Z",
     priority: 0.8,
@@ -261,17 +265,157 @@ export const BLOG_POSTS = [
 ] as const
 
 export const STATIC_PAGES = [
-  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-30T00:00:00Z" },
   { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: BAITO_TYPE_DIAGNOSIS_PAGE.path, priority: 0.94, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
   { path: "/calculation-method", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
-  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-29T00:00:00Z" },
   { path: "/editorial-policy", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
-  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-12T00:00:00Z" },
-  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-29T00:00:00Z" },
+  { path: "/updates", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-30T00:00:00Z" },
   { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const, lastModified: "2026-07-25T00:00:00Z" },
 ] as const
+
+export function getBlogPostCategory(slug: string): string {
+  if (slug.includes("baito-reality")) return "職種別ガイド"
+  if (slug.includes("yukyu")) return "有給"
+  if (
+    slug.includes("money") ||
+    slug.includes("phone") ||
+    slug.includes("skill") ||
+    slug.includes("living")
+  ) {
+    return "生活・お金"
+  }
+  if (
+    slug.includes("shakaihoken") ||
+    slug.includes("social") ||
+    slug.includes("130man") ||
+    slug.includes("weekly")
+  ) {
+    return "社会保険"
+  }
+  if (
+    slug.includes("fuyo") ||
+    slug.includes("123man") ||
+    slug.includes("tokutei") ||
+    slug.includes("zeikin")
+  ) {
+    return "扶養・税金"
+  }
+  if (
+    slug.includes("daigakusei") ||
+    slug.includes("koukousei") ||
+    slug.includes("gakusei") ||
+    slug.includes("student") ||
+    slug.includes("baito")
+  ) {
+    return "学生バイト"
+  }
+  return "年収の壁"
+}
+
+export function createBlogPostMetadata(slug: string): Metadata {
+  const post = BLOG_POSTS.find((candidate) => candidate.slug === slug)
+
+  if (!post) {
+    throw new Error(`BLOG_POSTSに記事が登録されていません: ${slug}`)
+  }
+
+  const url = `${SITE_URL}/blog/${post.slug}`
+  const category = getBlogPostCategory(post.slug)
+
+  return {
+    title: post.title,
+    description: post.description,
+    authors: [{ name: `${SITE_NAME}編集部`, url: `${SITE_URL}/about` }],
+    creator: `${SITE_NAME}編集部`,
+    publisher: SITE_NAME,
+    category,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "article",
+      locale: "ja_JP",
+      url,
+      siteName: SITE_NAME,
+      title: `${post.title} | ${SITE_NAME}`,
+      description: post.description,
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
+      section: category,
+      authors: [`${SITE_URL}/about`],
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          alt: post.title,
+        },
+      ],
+    },
+  }
+}
+
+export function createPageMetadata({
+  path,
+  title,
+  description,
+}: {
+  path: string
+  title: string
+  description: string
+}): Metadata {
+  const url = `${SITE_URL}${path}`
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "website",
+      locale: "ja_JP",
+      url,
+      siteName: SITE_NAME,
+      title: `${title} | ${SITE_NAME}`,
+      description,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          alt: title,
+        },
+      ],
+    },
+  }
+}

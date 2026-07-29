@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生バイトの給与口座・学生カードの整え方｜給料管理と使いすぎ防止",
-  description:
-    "学生バイト向けに、給与口座、生活費管理、学生カード、リボ払い・延滞・口座売買の注意点を公式情報ベースで整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/student-money-management",
-  },
-}
+export const metadata = createBlogPostMetadata("student-money-management")
 
 export default function StudentMoneyManagementPage() {
   const url = "https://nenshuu-kabe.com/blog/student-money-management"

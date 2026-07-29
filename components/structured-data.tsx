@@ -13,6 +13,7 @@ export function WebsiteStructuredData() {
   const data = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
     alternateName: "学生バイトの扶養・税金・有給シミュレーター",
     description:
@@ -31,7 +32,7 @@ export function WebApplicationStructuredData() {
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      "学生バイトの年収の壁、有給付与日数、親の扶養や社会保険への影響を確認できる無料シミュレーターです。",
+      "今年受け取った給与から年末年収と各年収の壁までの残額を計算し、親の扶養や社会保険への影響も確認できる無料シミュレーターです。",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     browserRequirements: "JavaScript required",
@@ -43,6 +44,8 @@ export function WebApplicationStructuredData() {
     },
     featureList: [
       "年収の壁シミュレーション",
+      "受取済み給与から年末年収を予測",
+      "各年収の壁まであといくら稼げるかを計算",
       "親の扶養への影響確認",
       "社会保険の扶養目安",
       "学生バイト向け有給シミュレーション",
@@ -95,16 +98,21 @@ export function BaitoDiagnosisStructuredData({
 }
 
 export function BlogListStructuredData() {
+  const postsByUpdatedAt = [...BLOG_POSTS].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
   const data = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
+    "@id": `${SITE_URL}/blog/#webpage`,
     name: `ブログ | ${SITE_NAME}`,
     url: `${SITE_URL}/blog`,
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`,
+    },
     description:
       "学生バイトの年収の壁、扶養、社会保険、有給、税金について解説した記事一覧です。",
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: BLOG_POSTS.map((post, index) => ({
+      itemListElement: postsByUpdatedAt.map((post, index) => ({
         "@type": "ListItem",
         position: index + 1,
         url: `${SITE_URL}/blog/${post.slug}`,
@@ -189,15 +197,24 @@ export function ArticleStructuredData({
     })),
     author: {
       "@type": "Organization",
-      name: SITE_NAME,
+      "@id": `${SITE_URL}/#organization`,
+      name: `${SITE_NAME}編集部`,
+      url: `${SITE_URL}/about`,
     },
     publisher: {
       "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
+      url: SITE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/icon.svg`,
+        url: `${SITE_URL}/icon.png`,
+        width: 512,
+        height: 512,
       },
+    },
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`,
     },
   }
 
@@ -248,11 +265,18 @@ export function OrganizationStructuredData() {
   const data = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/icon.svg`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/icon.png`,
+      width: 512,
+      height: 512,
+    },
     description:
       "学生バイトの年収の壁、扶養、社会保険、有給をわかりやすく整理する情報サイトです。",
+    publishingPrinciples: `${SITE_URL}/editorial-policy`,
   }
 
   return <JsonLd data={data} />

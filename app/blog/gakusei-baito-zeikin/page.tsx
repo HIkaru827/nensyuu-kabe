@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生バイトの税金。178万円・136万円・社会保険を分けて確認",
-  description:
-    "学生アルバイトの税金と扶養判定を、178万円、136万円、19歳以上23歳未満の197万円、社会保険のルールに分けて整理します。年収だけで断定しにくい点も含めて、現行法ベースで説明します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin",
-  },
-}
+export const metadata = createBlogPostMetadata("gakusei-baito-zeikin")
 
 export default function GakuseiZeikinPage() {
   const url = "https://nenshuu-kabe.com/blog/gakusei-baito-zeikin"

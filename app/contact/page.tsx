@@ -1,14 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, MessageSquare } from "lucide-react"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata = {
+export const metadata = createPageMetadata({
+  path: "/contact",
   title: "お問い合わせ",
-  description: "年収の壁シミュレーターへのお問い合わせページ。ご質問・ご要望・不具合報告など、お気軽にお問い合わせください。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/contact",
-  },
-}
+  description:
+    "年収の壁シミュレーターへのお問い合わせページ。ご質問・ご要望・不具合報告など、お気軽にお問い合わせください。",
+})
 
 export default function ContactPage() {
   return (

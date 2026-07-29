@@ -1,4 +1,3 @@
-import type { Metadata } from "next"
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 import {
@@ -6,16 +5,14 @@ import {
   INCOME_SIMULATION_BASIS,
   INCOME_THRESHOLDS,
 } from "@/lib/income-simulator"
-import { SITE_URL } from "@/lib/seo"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
+  path: "/calculation-method",
   title: "計算方法",
   description:
     "学生バイトお金ナビの年収の壁シミュレーターで使っている2026年基準、所得税・住民税・親の扶養・社会保険料の概算方法、根拠資料をまとめています。",
-  alternates: {
-    canonical: `${SITE_URL}/calculation-method`,
-  },
-}
+})
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("ja-JP", {

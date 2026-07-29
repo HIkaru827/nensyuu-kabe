@@ -7,14 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "178万円の壁とは？現行ルールでわかる所得税・扶養・社会保険の違い",
-  description: "178万円の壁の意味を、所得税、税法上の扶養、社会保険を分けて整理します。令和8年分以後の現行ルールに沿って確認できる範囲だけを解説しています。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/103man-no-kabe",
-  },
-}
+export const metadata = createBlogPostMetadata("103man-no-kabe")
 
 export default function Blog103ManPage() {
   const url = "https://nenshuu-kabe.com/blog/103man-no-kabe"

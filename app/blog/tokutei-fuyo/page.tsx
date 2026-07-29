@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理",
-  description:
-    "特定親族特別控除は、19歳以上23歳未満の子の給与収入が136万円を超えても197万円までなら、親が段階的に控除を受けられる制度です。扶養控除との違いと見方を現行法で整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/tokutei-fuyo",
-  },
-}
+export const metadata = createBlogPostMetadata("tokutei-fuyo")
 
 export default function TokuteiFuyoPage() {
   const url = "https://nenshuu-kabe.com/blog/tokutei-fuyo"

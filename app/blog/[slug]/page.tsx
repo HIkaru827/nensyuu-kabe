@@ -48,8 +48,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: article.title,
     description: article.description,
     keywords,
-    authors: [{ name: SITE_NAME }],
-    creator: SITE_NAME,
+    authors: [{ name: `${SITE_NAME}編集部`, url: `${SITE_URL}/about` }],
+    creator: `${SITE_NAME}編集部`,
     publisher: SITE_NAME,
     category: article.category,
     alternates: {
@@ -61,17 +61,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url,
       siteName: SITE_NAME,
       type: "article",
+      locale: "ja_JP",
       publishedTime: publishedAt,
       modifiedTime: updatedAt,
       section: article.category,
       tags: keywords,
-      images: [DEFAULT_OG_IMAGE],
+      authors: [`${SITE_URL}/about`],
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: article.description,
-      images: [DEFAULT_OG_IMAGE],
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          alt: article.title,
+        },
+      ],
     },
   }
 }

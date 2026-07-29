@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
 import { BAITO_REALITY_ARTICLES } from "@/lib/baito-reality"
-import { SITE_URL } from "@/lib/seo"
+import { BLOG_POSTS, createPageMetadata } from "@/lib/seo"
 
 const sections = [
   {
@@ -24,22 +24,14 @@ const sections = [
     })),
   },
   {
-    title: "人気記事",
-    links: [
-      { href: "/blog/student-money-management", label: "学生バイトの給与口座・学生カード" },
-      { href: "/blog/student-phone-bill", label: "学生バイトのスマホ代を下げる見直し方" },
-      { href: "/blog/student-skill-up-baito", label: "学生バイトの資格・学習で時給を上げる考え方" },
-      { href: "/blog/student-living-costs", label: "学生バイトの一人暮らし固定費の見直し方" },
-      { href: "/blog/2026-student-income-wall", label: "2026年の学生バイト年収の壁" },
-      { href: "/blog/student-baito-shift-checklist", label: "学生バイトのシフト調整チェックリスト" },
-      { href: "/blog/103man-no-kabe", label: "178万円の壁とは？" },
-      { href: "/blog/130man-no-kabe-v2", label: "130万円の壁を超えるとどうなる？" },
-      { href: "/blog/shakaihoken-kabe", label: "社会保険の壁とは？" },
-      { href: "/blog/gakusei-baito-zeikin", label: "学生バイトの税金対策" },
-      { href: "/blog/weekly-20hours-social-insurance", label: "週20時間と学生バイトの社会保険" },
-      { href: "/blog/baito-yukyu-kyuryo", label: "バイト有給の給料はいくら？" },
-      { href: "/blog/tokutei-fuyo", label: "特定親族特別控除とは？" },
-    ],
+    title: "制度・生活の記事",
+    links: BLOG_POSTS
+      .filter((post) => !post.slug.startsWith("baito-reality-"))
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+      .map((post) => ({
+        href: `/blog/${post.slug}`,
+        label: post.title,
+      })),
   },
   {
     title: "運営情報",
@@ -55,13 +47,11 @@ const sections = [
   },
 ]
 
-export const metadata = {
+export const metadata = createPageMetadata({
+  path: "/site-map",
   title: "サイトマップ",
   description: "学生バイトお金ナビの主要ページと記事一覧です。",
-  alternates: {
-    canonical: `${SITE_URL}/site-map`,
-  },
-}
+})
 
 export default function SiteMapPage() {
   return (

@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生バイトのスマホ代を下げる見直し方｜料金プラン・格安スマホの注意点",
-  description:
-    "学生バイト向けに、スマホ代を下げるための料金プラン確認、データ使用量、格安スマホ・SIMの注意点、契約トラブル時の相談先を整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/student-phone-bill",
-  },
-}
+export const metadata = createBlogPostMetadata("student-phone-bill")
 
 export default function StudentPhoneBillPage() {
   const url = "https://nenshuu-kabe.com/blog/student-phone-bill"

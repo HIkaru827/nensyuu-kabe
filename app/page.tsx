@@ -15,17 +15,17 @@ import { Card, CardContent } from "@/components/ui/card"
 import { DEFAULT_KEYWORDS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  title: "学生バイトの年収の壁・扶養・有給シミュレーター",
+  title: "学生バイトの年収の壁・あといくら稼げるシミュレーター",
   description:
-    "学生バイト向けに、年収の壁、親の扶養、社会保険、有給休暇をまとめて確認できる無料シミュレーターです。",
+    "今年受け取った給与と今後の月給から、年末の年収見込み、各年収の壁まであといくら稼げるかを計算。親の扶養、税金、社会保険も確認できます。",
   keywords: [...DEFAULT_KEYWORDS],
   alternates: {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: `学生バイトの年収の壁・扶養・有給シミュレーター | ${SITE_NAME}`,
+    title: `学生バイトの年収の壁・あといくら稼げるシミュレーター | ${SITE_NAME}`,
     description:
-      "年収の壁、親の扶養、社会保険、有給休暇を学生バイト向けにまとめて確認できます。",
+      "今年受け取った給与から年末の年収を予測し、各年収の壁まであといくら稼げるかを確認できます。",
     url: SITE_URL,
     siteName: SITE_NAME,
     type: "website",
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "学生バイトの年収の壁・扶養・有給シミュレーター",
-    description: "年収と勤務条件を入れて、扶養・税金・社会保険・有給の目安を確認できます。",
+    title: "学生バイトの年収の壁・あといくら稼げるシミュレーター",
+    description: "受取済み給与と今後の月給から、扶養・税金・社会保険の目安を確認できます。",
     images: [DEFAULT_OG_IMAGE],
   },
 }
@@ -44,7 +44,7 @@ const toolCards = [
     href: "/",
     icon: WalletCards,
     title: "年収の壁シミュレーター",
-    text: "扶養、本人の税金、社会保険の目安を年収から確認します。",
+    text: "受取済み給与から年末年収と各年収の壁までの残額を確認します。",
     badge: "表示中",
     action: "このまま使う",
   },

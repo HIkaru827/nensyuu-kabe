@@ -1,19 +1,22 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Target, Users, TrendingUp, Shield } from "lucide-react"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { OrganizationStructuredData } from "@/components/structured-data"
 import { INCOME_SIMULATION_BASIS } from "@/lib/income-simulator"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata = {
+export const metadata = createPageMetadata({
+  path: "/about",
   title: "運営者情報",
-  description: "学生バイトお金ナビの運営者情報。学生やアルバイト従事者が年収の壁、扶養、社会保険、有給を正しく理解できるよう支援します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/about",
-  },
-}
+  description:
+    "学生バイトお金ナビの運営者情報。学生やアルバイト従事者が年収の壁、扶養、社会保険、有給を正しく理解できるよう支援します。",
+})
 
 export default function AboutPage() {
   return (
-    <ContentPageShell title="運営者情報" description="学生バイトお金ナビについて">
+    <>
+      <OrganizationStructuredData />
+      <ContentPageShell title="運営者情報" description="学生バイトお金ナビについて">
         <Card>
           <CardContent className="pt-6 space-y-6">
             <section className="space-y-3">
@@ -187,6 +190,7 @@ export default function AboutPage() {
             </ul>
           </CardContent>
         </Card>
-    </ContentPageShell>
+      </ContentPageShell>
+    </>
   )
 }

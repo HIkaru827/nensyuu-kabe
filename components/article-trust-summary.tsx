@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
+import Link from "next/link"
 
 interface ArticleTrustSummaryProps {
   checkedAt: string
@@ -26,6 +27,17 @@ export function ArticleTrustSummary({
           <span className="font-semibold text-foreground">主な参照先:</span> {sources}
         </p>
         <p>{note}</p>
+        <p className="flex flex-wrap gap-x-3 gap-y-1 border-t border-border pt-2">
+          <Link href="/about" className="font-semibold text-primary hover:underline">
+            運営者情報
+          </Link>
+          <Link href="/editorial-policy" className="font-semibold text-primary hover:underline">
+            編集方針
+          </Link>
+          <Link href="/contact" className="font-semibold text-primary hover:underline">
+            修正を連絡
+          </Link>
+        </p>
       </CardContent>
     </Card>
   )

@@ -7,14 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "社会保険の壁とは？130万円・106万円・150万円未満の関係を現行ルールで整理",
-  description: "社会保険の壁を、被扶養者認定、短時間労働者への適用、19歳以上23歳未満の150万円未満要件に分けて整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/shakaihoken-kabe",
-  },
-}
+export const metadata = createBlogPostMetadata("shakaihoken-kabe")
 
 export default function ShakaiHokenPage() {
   const url = "https://nenshuu-kabe.com/blog/shakaihoken-kabe"

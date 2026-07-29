@@ -5,23 +5,19 @@ import { BlogListStructuredData, BreadcrumbStructuredData } from "@/components/s
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BLOG_POSTS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
+import {
+  BLOG_POSTS,
+  SITE_URL,
+  createPageMetadata,
+  getBlogPostCategory as getCategory,
+} from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "ブログ | 学生バイトの扶養・税金・社会保険の解説",
+export const metadata: Metadata = createPageMetadata({
+  path: "/blog",
+  title: "学生バイトのお金ブログ｜扶養・税金・社会保険・有給",
   description:
     "学生バイトの年収の壁、親の扶養、社会保険、有給、税金について解説した記事一覧です。",
-  alternates: {
-    canonical: `${SITE_URL}/blog`,
-  },
-  openGraph: {
-    title: `ブログ | ${SITE_NAME}`,
-    description: "学生バイトの年収の壁、扶養、社会保険、有給、税金を整理した記事一覧です。",
-    url: `${SITE_URL}/blog`,
-    type: "website",
-    images: [DEFAULT_OG_IMAGE],
-  },
-}
+})
 
 const formatDate = (dateString: string) =>
   new Intl.DateTimeFormat("ja-JP", {
@@ -29,39 +25,6 @@ const formatDate = (dateString: string) =>
     month: "long",
     day: "numeric",
   }).format(new Date(dateString))
-
-const getCategory = (slug: string) => {
-  if (slug.includes("baito-reality")) {
-    return "職種別ガイド"
-  }
-  if (slug.includes("yukyu")) {
-    return "有給"
-  }
-  if (
-    slug.includes("money") ||
-    slug.includes("phone") ||
-    slug.includes("skill") ||
-    slug.includes("living")
-  ) {
-    return "生活・お金"
-  }
-  if (slug.includes("shakaihoken") || slug.includes("social") || slug.includes("130man") || slug.includes("weekly")) {
-    return "社会保険"
-  }
-  if (slug.includes("fuyo") || slug.includes("123man") || slug.includes("tokutei") || slug.includes("zeikin")) {
-    return "扶養・税金"
-  }
-  if (
-    slug.includes("daigakusei") ||
-    slug.includes("koukousei") ||
-    slug.includes("gakusei") ||
-    slug.includes("student") ||
-    slug.includes("baito")
-  ) {
-    return "学生バイト"
-  }
-  return "年収の壁"
-}
 
 const sortedPosts = [...BLOG_POSTS].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
 

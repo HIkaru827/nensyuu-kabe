@@ -8,15 +8,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生バイトのシフト調整チェックリスト｜年末までに見る給与・扶養・有給",
-  description:
-    "学生バイト向けに、年収見込み、掛け持ち、有給、親への共有、社会保険の確認を月別チェックリストで整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/student-baito-shift-checklist",
-  },
-}
+export const metadata = createBlogPostMetadata("student-baito-shift-checklist")
 
 export default function StudentBaitoShiftChecklistPage() {
   const url = "https://nenshuu-kabe.com/blog/student-baito-shift-checklist"

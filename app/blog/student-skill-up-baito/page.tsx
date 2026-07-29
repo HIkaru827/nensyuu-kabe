@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生バイトの資格・学習で時給を上げる考え方｜塾講師・事務・IT系の選び方",
-  description:
-    "学生バイト向けに、塾講師、事務、IT系などへつなげる学習・資格の選び方、求人比較、実質時給の見方を公式情報ベースで整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/student-skill-up-baito",
-  },
-}
+export const metadata = createBlogPostMetadata("student-skill-up-baito")
 
 export default function StudentSkillUpBaitoPage() {
   const url = "https://nenshuu-kabe.com/blog/student-skill-up-baito"

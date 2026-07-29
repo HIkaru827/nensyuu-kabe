@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "バイト有給の給料はいくら？通常賃金・平均賃金・標準報酬日額を学生向けに解説",
-  description:
-    "アルバイトの有給休暇で支払われる賃金が、通常賃金、平均賃金、標準報酬日額のどの方式で決まるかを学生バイト向けに整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/baito-yukyu-kyuryo",
-  },
-}
+export const metadata = createBlogPostMetadata("baito-yukyu-kyuryo")
 
 export default function BaitoYukyuKyuryoPage() {
   const url = "https://nenshuu-kabe.com/blog/baito-yukyu-kyuryo"
@@ -47,7 +41,7 @@ export default function BaitoYukyuKyuryoPage() {
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
               バイト有給の給料はいくら？
               <br />
-              通常賃金・平均賃金・標準報酬日額を解説
+              通常賃金・平均賃金・標準報酬日額を学生向けに解説
             </h1>
             <p className="text-sm text-muted-foreground">
               2026年7月6日時点の厚生労働省資料を確認し、有給日の給料の決まり方を学生バイト向けに整理しています。

@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "週20時間・月8.8万円で学生バイトは社会保険に入る？学生区分と例外を整理",
-  description:
-    "社会保険の短時間労働者要件を、週20時間、月額8.8万円、学生でないこと、企業規模、昼間学生と夜間・通信制の違いに分けて解説します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/weekly-20hours-social-insurance",
-  },
-}
+export const metadata = createBlogPostMetadata("weekly-20hours-social-insurance")
 
 export default function Weekly20HoursSocialInsurancePage() {
   const url = "https://nenshuu-kabe.com/blog/weekly-20hours-social-insurance"

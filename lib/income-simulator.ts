@@ -34,6 +34,7 @@ export interface SimulationResult {
 export interface DetailedSimulationParams extends SimulationParams {
   weeklyHours: number
   monthlySalary: number
+  socialInsuranceAnnualIncomeEstimate?: number
   companySize: CompanySize
   parentTaxRate: ParentTaxRate
   studentPensionSpecialStatus: StudentPensionSpecialStatus
@@ -56,6 +57,7 @@ export interface DetailedSimulationResult {
   selfTakeHomeBeforeSocialInsuranceEstimate: number
   selfTakeHomeAfterKnownBurdenEstimate: number
   socialInsuranceDependentLimit: number
+  socialInsuranceAnnualIncomeEstimate: number
   canRemainSocialInsuranceDependent: boolean
   shortHoursSocialInsuranceApplies: boolean
   socialInsuranceStatusLabel: string
@@ -70,9 +72,48 @@ export interface DetailedSimulationResult {
   assumptions: string[]
 }
 
+export type TaxIncomeWallId =
+  | "resident-tax"
+  | "parent-dependent"
+  | "income-tax"
+  | "special-dependent"
+
+export interface TaxIncomeWallDefinition {
+  id: TaxIncomeWallId
+  label: string
+  amount: number
+  description: string
+}
+
+export interface YearToDateIncomePlanParams {
+  receivedIncome: number
+  lastPaidMonth: number
+  expectedMonthlyIncome: number
+  additionalExpectedIncome: number
+  age: number
+}
+
+export interface TaxIncomeWallProgress extends TaxIncomeWallDefinition {
+  remainingToWall: number
+  exceededBy: number
+  averagePerRemainingPayment: number | null
+  projectedDifference: number
+  projectedExceeds: boolean
+  estimatedReachMonth: number | null
+  receivedProgressPercent: number
+}
+
+export interface YearToDateIncomePlan {
+  receivedIncome: number
+  remainingPaymentCount: number
+  expectedRemainingIncome: number
+  projectedAnnualIncome: number
+  walls: TaxIncomeWallProgress[]
+}
+
 export const INCOME_SIMULATION_BASIS = {
   targetYear: "2026年（令和8年）基準",
-  checkedAt: "2026年7月25日",
+  checkedAt: "2026年7月30日",
   sources: [
     {
       label: "国税庁 令和8年度税制改正",
@@ -101,6 +142,14 @@ export const INCOME_SIMULATION_BASIS = {
     {
       label: "日本年金機構 被扶養者認定の収入要件",
       url: "https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html",
+    },
+    {
+      label: "国税庁 給与所得の収入金額の収入すべき時期",
+      url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2668_qa.htm",
+    },
+    {
+      label: "厚生労働省 被扶養者認定の年間収入の取扱い",
+      url: "https://www.mhlw.go.jp/web/t_doc?dataId=00tc9348&dataType=1&pageNo=1",
     },
   ],
 } as const
@@ -160,6 +209,10 @@ function isSpecialTaxDependent(age: number): boolean {
   return age >= 19 && age < 23
 }
 
+function isTaxDependentEligibleAge(age: number): boolean {
+  return age >= 16
+}
+
 function isDayStudentExcludedFromShortHoursRule(studentType: StudentType): boolean {
   return studentType === "day"
 }
@@ -168,6 +221,94 @@ export function getSocialInsuranceDependentLimit(age: number): number {
   return isSpecialTaxDependent(age)
     ? INCOME_THRESHOLDS.SOCIAL_INSURANCE_LIMIT_AGE_19_TO_22
     : INCOME_THRESHOLDS.SOCIAL_INSURANCE_LIMIT_DEFAULT
+}
+
+export function getTaxIncomeWalls(age: number): TaxIncomeWallDefinition[] {
+  return [
+    {
+      id: "resident-tax",
+      label: "119万円",
+      amount: INCOME_THRESHOLDS.RESIDENT_TAX_START,
+      description: "住民税の非課税ラインの目安",
+    },
+    ...(age >= 16
+      ? [
+          {
+            id: "parent-dependent" as const,
+            label: "136万円",
+            amount: INCOME_THRESHOLDS.DEPENDENT_FULL,
+            description: "親の税扶養が満額となる給与収入の目安",
+          },
+        ]
+      : []),
+    {
+      id: "income-tax",
+      label: "178万円",
+      amount: INCOME_THRESHOLDS.INCOME_TAX_START,
+      description: "本人の所得税が0円見込みとなる目安",
+    },
+    ...(isSpecialTaxDependent(age)
+      ? [
+          {
+            id: "special-dependent" as const,
+            label: "197万円",
+            amount: INCOME_THRESHOLDS.SPECIAL_DEPENDENT_MAX,
+            description: "特定親族特別控除が段階適用される上限目安",
+          },
+        ]
+      : []),
+  ]
+}
+
+export function calculateYearToDateIncomePlan(
+  params: YearToDateIncomePlanParams,
+): YearToDateIncomePlan {
+  const receivedIncome = Math.max(0, Math.floor(params.receivedIncome))
+  const lastPaidMonth = Math.min(12, Math.max(1, Math.floor(params.lastPaidMonth)))
+  const expectedMonthlyIncome = Math.max(0, Math.floor(params.expectedMonthlyIncome))
+  const additionalExpectedIncome = Math.max(0, Math.floor(params.additionalExpectedIncome))
+  const remainingPaymentCount = Math.max(0, 12 - lastPaidMonth)
+  const expectedRemainingIncome =
+    expectedMonthlyIncome * remainingPaymentCount + additionalExpectedIncome
+  const projectedAnnualIncome = receivedIncome + expectedRemainingIncome
+
+  const walls = getTaxIncomeWalls(params.age).map((wall) => {
+    const differenceFromReceived = wall.amount - receivedIncome
+    const remainingToWall = Math.max(0, differenceFromReceived)
+    const exceededBy = Math.max(0, -differenceFromReceived)
+    const averagePerRemainingPayment =
+      remainingPaymentCount > 0 ? remainingToWall / remainingPaymentCount : null
+    const projectedDifference = wall.amount - projectedAnnualIncome
+    const projectedExceeds = projectedDifference < 0
+    const paymentsUntilWall =
+      differenceFromReceived > 0 && expectedMonthlyIncome > 0
+        ? Math.ceil(differenceFromReceived / expectedMonthlyIncome)
+        : null
+    const estimatedReachMonth =
+      paymentsUntilWall !== null && lastPaidMonth + paymentsUntilWall <= 12
+        ? lastPaidMonth + paymentsUntilWall
+        : null
+
+    return {
+      ...wall,
+      remainingToWall,
+      exceededBy,
+      averagePerRemainingPayment,
+      projectedDifference,
+      projectedExceeds,
+      estimatedReachMonth,
+      receivedProgressPercent:
+        wall.amount > 0 ? Math.min(100, (receivedIncome / wall.amount) * 100) : 0,
+    }
+  })
+
+  return {
+    receivedIncome,
+    remainingPaymentCount,
+    expectedRemainingIncome,
+    projectedAnnualIncome,
+    walls,
+  }
 }
 
 function determineZone(annualIncome: number, age: number): IncomeZone {
@@ -341,20 +482,24 @@ function getSpecialDependentResidentTaxDeduction(totalIncome: number): number {
 }
 
 function getParentIncomeTaxDeduction(age: number, totalIncome: number): number {
+  if (!isTaxDependentEligibleAge(age)) return 0
   if (isSpecialTaxDependent(age)) return getSpecialDependentIncomeTaxDeduction(totalIncome)
   return totalIncome <= 620_000 ? 380_000 : 0
 }
 
 function getParentResidentTaxDeduction(age: number, totalIncome: number): number {
+  if (!isTaxDependentEligibleAge(age)) return 0
   if (isSpecialTaxDependent(age)) return getSpecialDependentResidentTaxDeduction(totalIncome)
   return totalIncome <= 620_000 ? 330_000 : 0
 }
 
 function getFullParentIncomeTaxDeduction(age: number): number {
+  if (!isTaxDependentEligibleAge(age)) return 0
   return isSpecialTaxDependent(age) ? 630_000 : 380_000
 }
 
 function getFullParentResidentTaxDeduction(age: number): number {
+  if (!isTaxDependentEligibleAge(age)) return 0
   return isSpecialTaxDependent(age) ? 450_000 : 330_000
 }
 
@@ -420,7 +565,12 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   const selfTaxBurdenEstimate = incomeTaxEstimate + residentTaxIncomeLevyEstimate
 
   const socialInsuranceDependentLimit = getSocialInsuranceDependentLimit(params.age)
-  const canRemainSocialInsuranceDependent = params.annualIncome < socialInsuranceDependentLimit
+  const socialInsuranceAnnualIncomeEstimate = Math.max(
+    0,
+    params.socialInsuranceAnnualIncomeEstimate ?? params.annualIncome,
+  )
+  const canRemainSocialInsuranceDependent =
+    socialInsuranceAnnualIncomeEstimate < socialInsuranceDependentLimit
   const shortHoursSocialInsuranceApplies =
     !isDayStudentExcludedFromShortHoursRule(params.studentType) &&
     params.weeklyHours >= 20 &&
@@ -461,13 +611,19 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   let socialInsuranceBurdenEstimate: number | undefined
 
   if (params.socialInsuranceRoute === "national") {
-    if (params.age >= 20 && params.studentPensionSpecialStatus === "not_eligible") {
+    const canUseStudentPensionSpecial =
+      params.age >= 20 && params.studentType !== "none"
+
+    if (
+      params.age >= 20 &&
+      (!canUseStudentPensionSpecial || params.studentPensionSpecialStatus === "not_eligible")
+    ) {
       nationalPensionAnnualEstimate = INCOME_THRESHOLDS.NATIONAL_PENSION_MONTHLY_2026 * 12
       socialInsuranceBurdenEstimate = nationalPensionAnnualEstimate
-    } else if (params.age >= 20 && params.studentPensionSpecialStatus === "eligible") {
+    } else if (canUseStudentPensionSpecial && params.studentPensionSpecialStatus === "eligible") {
       nationalPensionAnnualEstimate = 0
       assumptions.push("学生納付特例は、前年所得などの要件を満たしている前提で0円としています。")
-    } else if (params.age >= 20) {
+    } else if (canUseStudentPensionSpecial) {
       assumptions.push("学生納付特例は前年所得などで判定されるため、対象未確認のときは国民年金を加算していません。")
     }
 
@@ -512,6 +668,7 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     selfTakeHomeBeforeSocialInsuranceEstimate,
     selfTakeHomeAfterKnownBurdenEstimate,
     socialInsuranceDependentLimit,
+    socialInsuranceAnnualIncomeEstimate,
     canRemainSocialInsuranceDependent,
     shortHoursSocialInsuranceApplies,
     socialInsuranceStatusLabel,

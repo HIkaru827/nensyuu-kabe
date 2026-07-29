@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "130万円を超えるとどうなるか。被扶養者認定と勤務先加入を分けて確認",
-  description:
-    "130万円を超えたときに何が起きるかを、被扶養者認定と勤務先での社会保険加入に分けて整理します。106万円だけでは判定できない点、学生や19歳以上23歳未満の扱いも現行ルールで説明します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/130man-no-kabe-v2",
-  },
-}
+export const metadata = createBlogPostMetadata("130man-no-kabe-v2")
 
 export default function Blog130ManV2Page() {
   const url = "https://nenshuu-kabe.com/blog/130man-no-kabe-v2"

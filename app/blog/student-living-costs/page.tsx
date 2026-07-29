@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生バイトの一人暮らし固定費の見直し方｜家計簿・引っ越し・サブスク整理",
-  description:
-    "学生バイト向けに、一人暮らしの家賃、通信費、光熱費、サブスク、引っ越し費用を見直す順番と契約トラブルの注意点を整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/student-living-costs",
-  },
-}
+export const metadata = createBlogPostMetadata("student-living-costs")
 
 export default function StudentLivingCostsPage() {
   const url = "https://nenshuu-kabe.com/blog/student-living-costs"

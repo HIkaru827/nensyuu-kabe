@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
-  description:
-    "大学生アルバイトがいくらまで稼げるかを、本人の所得税178万円、親の扶養控除136万円、19歳以上23歳未満の特定親族特別控除197万円、社会保険の扱いに分けて整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/daigakusei-baito-fuyo",
-  },
-}
+export const metadata = createBlogPostMetadata("daigakusei-baito-fuyo")
 
 export default function DaigakuseiBaitoFuyoPage() {
   const url = "https://nenshuu-kabe.com/blog/daigakusei-baito-fuyo"

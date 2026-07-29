@@ -7,15 +7,9 @@ import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/st
 import { ArticleTrustSummary } from "@/components/article-trust-summary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "高校生バイトはいくらまでなら扶養内？103万円・130万円・136万円の違い",
-  description:
-    "高校生アルバイトが扶養内で働くときに確認したい、103万円、130万円、136万円、178万円の違いを、本人の税金・親の扶養控除・社会保険に分けて整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/koukousei-baito-fuyo",
-  },
-}
+export const metadata = createBlogPostMetadata("koukousei-baito-fuyo")
 
 export default function KoukouseiBaitoFuyoPage() {
   const url = "https://nenshuu-kabe.com/blog/koukousei-baito-fuyo"

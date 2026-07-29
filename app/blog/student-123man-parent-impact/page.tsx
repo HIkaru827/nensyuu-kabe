@@ -6,15 +6,9 @@ import { ArticleMonetizationSection } from "@/components/article-monetization-se
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "学生が136万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
-  description:
-    "学生の給与収入が136万円を超えたときに、親の税金へどんな影響が出るかをケース別に整理します。19歳以上23歳未満の特定親族特別控除も現行ルールで確認できます。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/student-123man-parent-impact",
-  },
-}
+export const metadata = createBlogPostMetadata("student-123man-parent-impact")
 
 export default function Student123ManParentImpactPage() {
   const url = "https://nenshuu-kabe.com/blog/student-123man-parent-impact"

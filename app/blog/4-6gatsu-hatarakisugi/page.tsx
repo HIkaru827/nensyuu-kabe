@@ -6,15 +6,9 @@ import { ArticleMonetizationSection } from "@/components/article-monetization-se
 import { ArticleStructuredData, BreadcrumbStructuredData } from "@/components/structured-data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { createBlogPostMetadata } from "@/lib/seo"
 
-export const metadata = {
-  title: "4月・5月・6月に働きすぎると9月から高くなる？学生バイトの税金と社会保険の違い",
-  description:
-    "「4月から6月に働きすぎると9月から高くなる」という話は、原則として税金ではなく社会保険料の話です。学生バイトにどこまで当てはまるかを、公的資料に基づいて整理します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/blog/4-6gatsu-hatarakisugi",
-  },
-}
+export const metadata = createBlogPostMetadata("4-6gatsu-hatarakisugi")
 
 export default function AprilToJuneWorkTooMuchPage() {
   const url = "https://nenshuu-kabe.com/blog/4-6gatsu-hatarakisugi"

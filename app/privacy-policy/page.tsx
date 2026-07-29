@@ -1,13 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { ContentPageShell } from "@/components/content-page-shell"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata = {
+export const metadata = createPageMetadata({
+  path: "/privacy-policy",
   title: "プライバシーポリシー",
-  description: "学生バイトお金ナビのプライバシーポリシーです。Cookie、アクセス解析、広告配信、アフィリエイトリンクの扱いを説明します。",
-  alternates: {
-    canonical: "https://nenshuu-kabe.com/privacy-policy",
-  },
-}
+  description:
+    "学生バイトお金ナビのプライバシーポリシーです。Cookie、アクセス解析、広告配信、アフィリエイトリンクの扱いを説明します。",
+})
 
 export default function PrivacyPolicyPage() {
   return (
