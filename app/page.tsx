@@ -59,10 +59,10 @@ const toolCards = [
   {
     href: "/student-baito",
     icon: GraduationCap,
-    title: "学生バイト年収ガイド",
-    text: "大学生・高校生向けに、扶養や税金の全体像を整理します。",
+    title: "大学生の年収の壁・扶養ガイド",
+    text: "大学生はいくらまでなら扶養内か、130万・150万・159万円などを整理します。",
     badge: "ガイド",
-    action: "記事で整理",
+    action: "大学生の扶養を見る",
   },
   {
     href: "/baito-type-diagnosis",

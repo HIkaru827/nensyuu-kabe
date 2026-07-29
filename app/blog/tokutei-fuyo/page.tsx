@@ -18,9 +18,9 @@ export default function TokuteiFuyoPage() {
     <>
       <ArticleStructuredData
         title="特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理"
-        description="特定親族特別控除は、19歳以上23歳未満の子の給与収入が136万円を超えても197万円までなら、親が段階的に控除を受けられる制度です。扶養控除との違いと見方を現行法で整理します。"
+        description="特定親族特別控除は、19歳以上23歳未満の子の給与収入が159万円以下なら親の所得税の控除が満額、159万円超から197万円以下では段階的に減る制度です。"
         datePublished="2026-04-02T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -44,12 +44,12 @@ export default function TokuteiFuyoPage() {
               19歳以上23歳未満の新ルールを整理
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点の国税庁資料に基づき、特定親族特別控除の見方を整理しています。
+              2026年7月30日時点の国税庁資料に基づき、特定親族特別控除の見方を整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年7月6日"
+            checkedAt="2026年7月30日"
             audience="19歳以上23歳未満の子どもがいる家庭"
             sources="国税庁"
             note="特定親族特別控除は親の控除の話です。本人の所得税や社会保険とは別論点であることを前提に書いています。"
@@ -61,7 +61,7 @@ export default function TokuteiFuyoPage() {
               <ul className="space-y-2 text-sm text-slate-700">
                 <li>対象は主に19歳以上23歳未満の親族です。</li>
                 <li>給与収入136万円までは通常の扶養控除の判定帯です。</li>
-                <li>136万円を超えても197万円までなら、親が段階的に控除を受けられる可能性があります。</li>
+                <li>給与収入159万円以下なら親の所得税の控除が満額、159万円超から197万円以下では段階的に減ります。</li>
                 <li>控除額は一律ではなく、収入帯ごとに変わります。</li>
               </ul>
             </CardContent>
@@ -81,14 +81,14 @@ export default function TokuteiFuyoPage() {
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は197万円まで対象になり得る</h2>
+                <h2 className="text-2xl font-bold text-foreground">159万円まで満額、197万円まで対象になり得る</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   国税庁の改正資料では、19歳以上23歳未満の親族について、給与収入136万円超197万円以下の範囲で、
                   親が特定親族特別控除の対象になる可能性があります。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  ここで大事なのは、197万円までなら常に同じ控除額ではないことです。収入帯に応じて控除額が段階的に減るため、
-                  単純化しすぎた説明や固定額の損得表示は避けるべきです。
+                  給与収入159万円以下なら親の所得税の控除は満額となる目安です。159万円を超えると197万円まで段階的に減るため、
+                  「136万円を超えたらすぐ減る」「197万円まで同じ」のどちらも正確ではありません。
                 </p>
               </section>
 
@@ -109,7 +109,7 @@ export default function TokuteiFuyoPage() {
                   <ol className="space-y-2">
                     <li>1. 親の通常の扶養控除を見たいなら、まず136万円を確認する。</li>
                     <li>2. 対象者が19歳以上23歳未満かどうかを確認する。</li>
-                    <li>3. 136万円を超えているなら、197万円までの特定親族特別控除を確認する。</li>
+                    <li>3. 136万円を超えているなら、159万円までは満額、159万円超から197万円までは段階的に減る控除額を確認する。</li>
                     <li>4. 本人の税金や社会保険は別の基準で見る。</li>
                   </ol>
                 </div>
@@ -157,7 +157,7 @@ export default function TokuteiFuyoPage() {
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">19歳以上23歳未満の判定を安全側で確認する</h3>
               <p className="text-sm text-muted-foreground">
-                シミュレーターでは、136万円と197万円の関係を、年収だけで確認できる範囲で表示しています。
+                シミュレーターでは、136万円・159万円・197万円の関係を、年収だけで確認できる範囲で表示しています。
               </p>
               <Link href="/">
                 <Button size="lg">シミュレーターに戻る</Button>

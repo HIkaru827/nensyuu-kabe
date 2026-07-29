@@ -19,7 +19,7 @@ export default function Student123ManParentImpactPage() {
         title="学生が136万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理"
         description="学生の給与収入が136万円を超えたときに、親の税金へどんな影響が出るかをケース別に整理します。19歳以上23歳未満の特定親族特別控除も現行ルールで確認できます。"
         datePublished="2026-04-15T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -43,7 +43,7 @@ export default function Student123ManParentImpactPage() {
               扶養控除と特定親族特別控除を整理
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点の公的資料を確認し、親目線で起きる変化をケース別にまとめています。
+              2026年7月30日時点の公的資料を確認し、親目線で起きる変化をケース別にまとめています。
             </p>
           </div>
 
@@ -52,7 +52,7 @@ export default function Student123ManParentImpactPage() {
               <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
               <ul className="space-y-2 text-sm text-slate-700">
                 <li>子どもの給与収入が136万円を超えると、親の扶養控除は原則そのままでは見られません。</li>
-                <li>ただし、19歳以上23歳未満なら197万円まで特定親族特別控除が段階的に残る可能性があります。</li>
+                <li>ただし、19歳以上23歳未満なら159万円以下は親の所得税の控除が満額、159万円超から197万円以下では段階的に減ります。</li>
                 <li>親の負担増は一律ではなく、子どもの年齢帯と親の税率で差が出ます。</li>
                 <li>136万円を少し超えたからといって、必ずしも大きな働き損になるとは限りません。</li>
               </ul>
@@ -88,7 +88,8 @@ export default function Student123ManParentImpactPage() {
                 <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は新しい特例を必ず確認する</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   19歳以上23歳未満では、特定親族特別控除を確認します。
-                  令和8年分以後は、給与収入136万円を超えても197万円までの範囲で親の控除が段階的に残る可能性があります。
+                  令和8年分以後は、給与収入159万円以下なら親の所得税の控除が満額となる目安です。
+                  159万円を超えると197万円まで控除額が段階的に減ります。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   つまり、大学生が136万円を少し超えたからといって、すぐに親の税負担が最大まで跳ね上がるわけではありません。
@@ -127,7 +128,7 @@ export default function Student123ManParentImpactPage() {
                 <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
                   <ol className="space-y-2">
                     <li>1. 子どもの年齢が19歳以上23歳未満に当たるか確認する。</li>
-                    <li>2. 136万円を超えるか、197万円に近づくかを見る。</li>
+                    <li>2. 19歳以上23歳未満なら、159万円を超えるか、197万円に近づくかを見る。</li>
                     <li>3. 親の税率や家計への影響をシミュレーターで概算する。</li>
                     <li>4. 社会保険は別に、150万円未満要件や勤務条件を確認する。</li>
                   </ol>

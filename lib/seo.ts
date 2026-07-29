@@ -19,6 +19,8 @@ export const DEFAULT_KEYWORDS = [
   "特定親族特別控除",
   "社会保険",
   "大学生 バイト 扶養",
+  "大学生 年収の壁",
+  "大学生 扶養",
   "高校生 バイト 扶養",
   "学生 バイト 診断",
   "飲食 バイト 仕事内容",
@@ -32,13 +34,20 @@ export const DEFAULT_KEYWORDS = [
 
 export const STUDENT_BAITO_PAGE = {
   path: "/student-baito",
-  title: "学生バイトはいくらまで稼げる？扶養・税金・社会保険の年収ガイド",
+  title: "大学生の年収の壁はいくら？親の扶養・税金を2026年基準で解説",
   description:
-    "学生バイト向けに、119万円・130万円・136万円・150万円未満・178万円・197万円の年収ラインと、親の扶養・税金・社会保険への影響を整理します。",
+    "大学生はいくらまでなら親の扶養内か、2026年の年収の壁を解説。130万円未満・136万円・150万円未満・159万円・178万円・197万円を税金と社会保険に分けて確認できます。",
   keywords: [
+    "大学生 年収の壁",
+    "大学生 扶養",
+    "大学生 親の扶養",
+    "大学生 バイト 年収の壁",
     "学生バイト いくらまで",
     "学生バイト 扶養",
     "大学生 バイト 扶養 いくらまで",
+    "大学生 130万円",
+    "大学生 150万円",
+    "大学生 159万円",
     "高校生 バイト 扶養",
     "学生 130万円の壁",
     "学生 178万円の壁",
@@ -120,11 +129,11 @@ export const BLOG_POSTS = [
   },
   {
     slug: "2026-student-income-wall",
-    title: "2026年の学生バイト年収の壁｜119万・130万・136万・150万・178万・197万円を整理",
+    title: "2026年の学生バイト年収の壁｜119万・130万・136万・150万・159万・178万・197万円",
     description:
-      "令和8年分以後の所得税改正を反映し、学生バイトが見るべき住民税、親の扶養、社会保険、本人の所得税、特定親族特別控除の年収ラインを整理します。",
+      "令和8年分以後の所得税改正を反映し、学生バイトが見るべき119万円・130万円・136万円・150万円未満・159万円・178万円・197万円の違いを整理します。",
     publishedAt: "2026-07-06T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.94,
   },
   {
@@ -133,7 +142,7 @@ export const BLOG_POSTS = [
     description:
       "学生バイト向けに、年収見込み、掛け持ち、有給、親への共有、社会保険の確認を月別チェックリストで整理します。",
     publishedAt: "2026-07-06T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.9,
   },
   {
@@ -167,9 +176,9 @@ export const BLOG_POSTS = [
     slug: "student-123man-parent-impact",
     title: "学生が136万円を超えたら親に何が起きる？扶養控除と特定親族特別控除を整理",
     description:
-      "学生の給与収入が136万円を超えたときに、親の税金へどんな影響が出るかをケース別に整理します。19歳以上23歳未満の特定親族特別控除も現行ルールで確認できます。",
+      "学生の給与収入が136万円を超えたときの親への影響を、19歳以上23歳未満の159万円以下の満額控除と197万円までの段階控除に分けて整理します。",
     publishedAt: "2026-04-15T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.9,
   },
   {
@@ -191,15 +200,6 @@ export const BLOG_POSTS = [
     priority: 0.88,
   },
   {
-    slug: "daigakusei-baito-fuyo",
-    title: "大学生バイトはいくらまで稼げる？親の扶養・税金・社会保険を年収別に解説",
-    description:
-      "大学生アルバイトがいくらまで稼げるかを、本人の所得税178万円、親の扶養控除136万円、19歳以上23歳未満の特定親族特別控除197万円、社会保険の扱いに分けて整理します。",
-    publishedAt: "2026-04-09T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
-    priority: 0.9,
-  },
-  {
     slug: "koukousei-baito-fuyo",
     title: "高校生バイトはいくらまでなら扶養内？103万円・130万円・136万円の違い",
     description:
@@ -210,11 +210,11 @@ export const BLOG_POSTS = [
   },
   {
     slug: "gakusei-19-22-fuyo",
-    title: "19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険の注意点",
+    title: "19歳から22歳の学生はいくらまで稼げる？150万・159万・197万円の違い",
     description:
-      "19歳から22歳の学生がアルバイトでいくらまで稼げるかを、特定親族特別控除、136万円、197万円、社会保険の150万円未満要件に分けて整理します。",
+      "19歳から22歳の学生がアルバイトでいくらまで稼げるかを、健康保険150万円未満、親の所得税の控除が満額となる159万円、段階控除の上限197万円に分けて整理します。",
     publishedAt: "2026-04-09T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.88,
   },
   {
@@ -223,7 +223,7 @@ export const BLOG_POSTS = [
     description:
       "178万円の壁の意味を、所得税、税法上の扶養、社会保険を分けて整理します。令和8年分以後の現行ルールに沿って確認できる範囲だけを解説しています。",
     publishedAt: "2026-01-18T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.9,
   },
   {
@@ -237,20 +237,20 @@ export const BLOG_POSTS = [
   },
   {
     slug: "gakusei-baito-zeikin",
-    title: "学生バイトの税金。178万円・136万円・社会保険を分けて確認",
+    title: "学生バイトの税金。178万円・136万円・159万円・社会保険を確認",
     description:
-      "学生アルバイトの税金と扶養判定を、178万円、136万円、19歳以上23歳未満の197万円、社会保険のルールに分けて整理します。年収だけで断定しにくい点も含めて、現行法ベースで説明します。",
+      "学生アルバイトの税金と扶養判定を、178万円、136万円、19歳以上23歳未満の159万円・197万円、社会保険のルールに分けて整理します。",
     publishedAt: "2026-01-29T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.85,
   },
   {
     slug: "tokutei-fuyo",
     title: "特定親族特別控除とは何か。19歳以上23歳未満の新ルールを整理",
     description:
-      "特定親族特別控除は、19歳以上23歳未満の子の給与収入が136万円を超えても197万円までなら、親が段階的に控除を受けられる制度です。扶養控除との違いと見方を現行法で整理します。",
+      "特定親族特別控除は、19歳以上23歳未満の子の給与収入が159万円以下なら親の所得税の控除が満額、159万円超から197万円以下では段階的に減る制度です。",
     publishedAt: "2026-04-02T00:00:00Z",
-    updatedAt: "2026-07-06T00:00:00Z",
+    updatedAt: "2026-07-30T00:00:00Z",
     priority: 0.8,
   },
   {
@@ -266,11 +266,11 @@ export const BLOG_POSTS = [
 
 export const STATIC_PAGES = [
   { path: "", priority: 1.0, changeFrequency: "weekly" as const, lastModified: "2026-07-30T00:00:00Z" },
-  { path: STUDENT_BAITO_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: STUDENT_BAITO_PAGE.path, priority: 0.98, changeFrequency: "weekly" as const, lastModified: "2026-07-30T00:00:00Z" },
   { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: BAITO_TYPE_DIAGNOSIS_PAGE.path, priority: 0.94, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
-  { path: "/calculation-method", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
+  { path: "/calculation-method", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-30T00:00:00Z" },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-29T00:00:00Z" },
   { path: "/editorial-policy", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-05-27T00:00:00Z" },
   { path: "/site-map", priority: 0.65, changeFrequency: "monthly" as const, lastModified: "2026-07-29T00:00:00Z" },

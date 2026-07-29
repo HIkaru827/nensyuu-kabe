@@ -17,10 +17,10 @@ export default function GakuseiZeikinPage() {
   return (
     <>
       <ArticleStructuredData
-        title="学生バイトの税金。178万円・136万円・社会保険を分けて確認"
-        description="学生アルバイトの税金と扶養判定を、178万円、136万円、19歳以上23歳未満の197万円、社会保険のルールに分けて整理します。年収だけで断定しにくい点も含めて、現行法ベースで説明します。"
+        title="学生バイトの税金。178万円・136万円・159万円・社会保険を確認"
+        description="学生アルバイトの税金と扶養判定を、178万円、136万円、19歳以上23歳未満の159万円・197万円、社会保険のルールに分けて整理します。"
         datePublished="2026-04-02T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -41,15 +41,15 @@ export default function GakuseiZeikinPage() {
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
               学生バイトの税金
               <br />
-              178万円・136万円・社会保険を分けて確認
+              178万円・136万円・159万円・社会保険を確認
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点の公的資料に基づき、学生アルバイトで確認すべき順番を整理しています。
+              2026年7月30日時点の公的資料に基づき、学生アルバイトで確認すべき順番を整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年7月6日"
+            checkedAt="2026年7月30日"
             audience="学生バイトの税金と扶養をざっくりではなく正確に見たい人"
             sources="国税庁、日本年金機構"
             note="本人の税金、親の扶養、社会保険はそれぞれ基準が違います。この記事では学生向けに確認順をそろえています。"
@@ -87,10 +87,11 @@ export default function GakuseiZeikinPage() {
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は197万円まで段階的な控除があり得る</h2>
+                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は159万円まで満額、197万円まで段階控除</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   19歳以上23歳未満の子については、特定親族特別控除の対象になり得ます。
-                  令和8年分以後は、給与収入136万円を超えても197万円までの範囲であれば、親が段階的な控除を受けられる可能性があります。
+                  令和8年分以後は、給与収入159万円以下なら親の所得税の控除が満額となる目安です。
+                  159万円を超えると197万円まで控除額が段階的に減ります。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   ただし、控除額は一律ではありません。収入帯ごとに段階的に変わるため、雑な概算金額で「親の税金がいくら増える」と断定するのは避けるべきです。
@@ -180,6 +181,9 @@ export default function GakuseiZeikinPage() {
               </p>
               <Link href="/">
                 <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+              <Link href="/student-baito" className="block text-sm font-semibold text-primary hover:underline">
+                大学生の年収の壁・親の扶養ガイドを見る
               </Link>
             </CardContent>
           </Card>

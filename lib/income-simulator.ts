@@ -76,6 +76,7 @@ export type TaxIncomeWallId =
   | "resident-tax"
   | "parent-dependent"
   | "income-tax"
+  | "special-dependent-full"
   | "special-dependent"
 
 export interface TaxIncomeWallDefinition {
@@ -158,6 +159,7 @@ export const INCOME_THRESHOLDS = {
   RESIDENT_TAX_START: 1_190_000,
   INCOME_TAX_START: 1_780_000,
   DEPENDENT_FULL: 1_360_000,
+  SPECIAL_DEPENDENT_FULL: 1_590_000,
   SPECIAL_DEPENDENT_MAX: 1_970_000,
   SOCIAL_INSURANCE_LIMIT_DEFAULT: 1_300_000,
   SOCIAL_INSURANCE_LIMIT_AGE_19_TO_22: 1_500_000,
@@ -238,6 +240,16 @@ export function getTaxIncomeWalls(age: number): TaxIncomeWallDefinition[] {
             label: "136万円",
             amount: INCOME_THRESHOLDS.DEPENDENT_FULL,
             description: "親の税扶養が満額となる給与収入の目安",
+          },
+        ]
+      : []),
+    ...(isSpecialTaxDependent(age)
+      ? [
+          {
+            id: "special-dependent-full" as const,
+            label: "159万円",
+            amount: INCOME_THRESHOLDS.SPECIAL_DEPENDENT_FULL,
+            description: "親の所得税の控除が満額となる特定親族特別控除の目安",
           },
         ]
       : []),

@@ -17,10 +17,10 @@ export default function StudentIncomeWall2026Page() {
   return (
     <>
       <ArticleStructuredData
-        title="2026年の学生バイト年収の壁｜119万・130万・136万・150万・178万・197万円を整理"
-        description="令和8年分以後の所得税改正を反映し、学生バイトが見るべき住民税、親の扶養、社会保険、本人の所得税、特定親族特別控除の年収ラインを整理します。"
+        title="2026年の学生バイト年収の壁｜119万・130万・136万・150万・159万・178万・197万円"
+        description="令和8年分以後の所得税改正を反映し、学生バイトが見るべき119万円・130万円・136万円・150万円未満・159万円・178万円・197万円の違いを整理します。"
         datePublished="2026-07-06T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -41,15 +41,15 @@ export default function StudentIncomeWall2026Page() {
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
               2026年の学生バイト年収の壁
               <br />
-              119万・130万・136万・150万・178万・197万円を整理
+              119万・130万・136万・150万・159万・178万・197万円
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点の国税庁・日本年金機構の公的情報に基づいて整理しています。
+              2026年7月30日時点の国税庁・日本年金機構の公的情報に基づいて整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年7月6日"
+            checkedAt="2026年7月30日"
             audience="学生バイト本人、親の扶養を気にする家庭、シフトを増やすか迷っている人"
             sources="国税庁、日本年金機構、自治体公開情報"
             note="所得税、親の税扶養、社会保険は同じ年収でも判定軸が違います。この記事では学生バイト向けに確認順をそろえています。"
@@ -61,7 +61,7 @@ export default function StudentIncomeWall2026Page() {
               <ul className="space-y-2 text-sm text-slate-700">
                 <li>本人の所得税は、令和8年分以後の給与収入178万円が大きな目安です。</li>
                 <li>親の扶養控除は、給与収入136万円までが目安です。</li>
-                <li>19歳以上23歳未満は、136万円超から197万円以下で特定親族特別控除を確認します。</li>
+                <li>19歳以上23歳未満は、159万円以下なら親の所得税の控除が満額、159万円超から197万円以下では段階的に減ります。</li>
                 <li>社会保険は税金とは別です。原則130万円未満、19歳以上23歳未満は150万円未満の被扶養者要件も見ます。</li>
               </ul>
             </CardContent>
@@ -77,6 +77,7 @@ export default function StudentIncomeWall2026Page() {
                     ["130万円未満", "家族の健康保険などの被扶養者認定でよく見る基本ラインです。"],
                     ["136万円", "令和8年分以後の親の扶養控除の給与収入目安です。"],
                     ["150万円未満", "19歳以上23歳未満の社会保険の被扶養者認定で確認する年収要件です。"],
+                    ["159万円", "19歳以上23歳未満で親の所得税の控除が満額となる給与収入の目安です。"],
                     ["178万円", "令和8年分以後、給与収入だけなら本人の所得税が0円見込みとなる目安です。"],
                     ["197万円", "19歳以上23歳未満の特定親族特別控除が段階適用され得る上限目安です。"],
                   ].map(([income, note]) => (
@@ -100,14 +101,14 @@ export default function StudentIncomeWall2026Page() {
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">136万円と197万円は親の税金の話</h2>
+                <h2 className="text-2xl font-bold text-foreground">136万円・159万円・197万円は親の税金の話</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   親の扶養控除は、扶養される人の合計所得金額で判定します。令和8年分以後は合計所得金額62万円以下が目安となり、
                   給与収入だけなら136万円以下がひとつのラインです。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  19歳以上23歳未満は、136万円を超えても197万円以下なら特定親族特別控除の対象になり得ます。
-                  ただし控除額は段階的に減るため、197万円まで親への影響がないという意味ではありません。
+                  19歳以上23歳未満は、136万円を超えても特定親族特別控除の対象になり得ます。
+                  給与収入159万円以下なら親の所得税の控除は満額となる目安で、159万円を超えると197万円まで段階的に減ります。
                 </p>
               </section>
 
@@ -127,9 +128,11 @@ export default function StudentIncomeWall2026Page() {
                 <h2 className="text-2xl font-bold text-foreground">確認の順番</h2>
                 <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
                   <ol className="space-y-2">
-                    <li>1. 年収見込みを出して、119万円・130万円・136万円・178万円・197万円のどこに近いか見る。</li>
+                    <li>
+                      1. 年収見込みを出して、119万円・130万円未満・136万円・150万円未満・159万円・178万円・197万円のどこに近いか見る。
+                    </li>
                     <li>2. 親の扶養を気にするなら、まず136万円を確認する。</li>
-                    <li>3. 19歳以上23歳未満なら、150万円未満の社会保険と197万円までの税控除を分けて見る。</li>
+                    <li>3. 19歳以上23歳未満なら、150万円未満の社会保険、159万円以下の満額控除、197万円までの段階控除を分けて見る。</li>
                     <li>4. 週20時間以上や月額賃金が大きいなら、勤務先の社会保険も確認する。</li>
                   </ol>
                 </div>
@@ -139,7 +142,7 @@ export default function StudentIncomeWall2026Page() {
                 <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
                 <div className="space-y-3">
                   <OfficialLink href="https://www.nta.go.jp/users/gensen/2026kiso/index.htm" title="国税庁 令和8年度税制改正" description="基礎控除、給与所得控除、扶養親族等の所得要件改正を確認できます。" />
-                  <OfficialLink href="https://www.nta.go.jp/publication/pamph/gensen/2026kaisei.pdf" title="国税庁 源泉所得税の改正のあらまし" description="令和8・9年分の178万円、136万円、197万円の根拠を確認できます。" />
+                  <OfficialLink href="https://www.nta.go.jp/publication/pamph/gensen/2026kaisei.pdf" title="国税庁 源泉所得税の改正のあらまし" description="令和8・9年分の136万円、159万円、178万円、197万円の根拠を確認できます。" />
                   <OfficialLink href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html" title="日本年金機構 19歳以上23歳未満の被扶養者認定" description="2025年10月1日以後の150万円未満要件を確認できます。" />
                   <OfficialLink href="https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/tanjikan.html" title="日本年金機構 短時間労働者の適用要件" description="週20時間、月額賃金、学生区分などを確認できます。" />
                 </div>
@@ -158,6 +161,9 @@ export default function StudentIncomeWall2026Page() {
               </p>
               <Link href="/">
                 <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+              <Link href="/student-baito" className="block text-sm font-semibold text-primary hover:underline">
+                大学生の年収の壁・親の扶養ガイドを見る
               </Link>
             </CardContent>
           </Card>

@@ -26,7 +26,7 @@ export function SiteFooter() {
             </li>
             <li>
               <Link href="/student-baito" className="text-muted-foreground transition-colors hover:text-primary">
-                学生バイト年収ガイド
+                大学生の年収の壁・扶養ガイド
               </Link>
             </li>
             <li>

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   BLOG_POSTS,
   SITE_URL,
+  STUDENT_BAITO_PAGE,
   createPageMetadata,
   getBlogPostCategory as getCategory,
 } from "@/lib/seo"
@@ -56,6 +57,23 @@ const featuredPosts = [
   .map((slug) => sortedPosts.find((post) => post.slug === slug))
   .filter((post): post is (typeof sortedPosts)[number] => Boolean(post))
 
+const featuredContents = [
+  {
+    href: STUDENT_BAITO_PAGE.path,
+    title: STUDENT_BAITO_PAGE.title,
+    description: STUDENT_BAITO_PAGE.description,
+    category: "大学生の扶養",
+    updatedAt: "2026-07-30T00:00:00Z",
+  },
+  ...featuredPosts.map((post) => ({
+    href: `/blog/${post.slug}`,
+    title: post.title,
+    description: post.description,
+    category: getCategory(post.slug),
+    updatedAt: post.updatedAt,
+  })),
+]
+
 const groupedPosts = categorySummaries
   .map((category) => ({
     ...category,
@@ -88,14 +106,14 @@ export default function BlogPage() {
               <p className="text-xs font-semibold text-primary">最初に読むなら</p>
               <h2 className="text-2xl font-bold text-foreground">迷いやすい順番で読む</h2>
             </div>
-            <div className="grid gap-3 md:grid-cols-3">
-              {featuredPosts.map((post) => (
-                <Link key={post.slug} href={`/blog/${post.slug}`} aria-label={`${post.title}を読む`}>
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+              {featuredContents.map((post) => (
+                <Link key={post.href} href={post.href} aria-label={`${post.title}を読む`}>
                   <Card className="h-full transition-colors hover:border-primary hover:bg-muted/30">
                     <CardContent className="flex h-full flex-col gap-3 p-5">
                       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                         <span className="rounded-md bg-primary/10 px-2 py-1 font-semibold text-primary">
-                          {getCategory(post.slug)}
+                          {post.category}
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />

@@ -21,7 +21,7 @@ export default function StudentBaitoShiftChecklistPage() {
         title="学生バイトのシフト調整チェックリスト｜年末までに見る給与・扶養・有給"
         description="学生バイト向けに、年収見込み、掛け持ち、有給、親への共有、社会保険の確認を月別チェックリストで整理します。"
         datePublished="2026-07-06T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -45,12 +45,12 @@ export default function StudentBaitoShiftChecklistPage() {
               年末までに見る給与・扶養・有給
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点の公的情報を前提に、学生バイトが年収を管理するときの確認順を整理しています。
+              2026年7月30日時点の公的情報を前提に、学生バイトが年収を管理するときの確認順を整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年7月6日"
+            checkedAt="2026年7月30日"
             audience="シフトを増やすか減らすか、家族と相談したい学生バイト"
             sources="国税庁、日本年金機構、厚生労働省"
             note="年収ラインだけでなく、掛け持ち、有給、社会保険、親への共有まで実務で漏れやすい順に並べています。"
@@ -89,9 +89,9 @@ export default function StudentBaitoShiftChecklistPage() {
                   <ChecklistItem title="親の扶養控除は136万円を確認する">
                     令和8年分以後、親の扶養控除は給与収入136万円が目安です。高校生や23歳以上はこのラインを超えると親の税金に影響しやすくなります。
                   </ChecklistItem>
-                  <ChecklistItem title="19歳から22歳は197万円までの段階控除を確認する">
-                    19歳以上23歳未満は、136万円を超えても197万円以下なら特定親族特別控除を確認します。
-                    ただし、136万円を超えた後も控除額は収入帯で変わるため、親と共有しておくのが安全です。
+                  <ChecklistItem title="19歳から22歳は159万円と197万円を確認する">
+                    19歳以上23歳未満は、159万円以下なら親の所得税の控除が満額となる目安です。
+                    159万円を超えると197万円まで段階的に減るため、親と共有しておくのが安全です。
                   </ChecklistItem>
                   <ChecklistItem title="社会保険は150万円未満と勤務条件を分ける">
                     19歳以上23歳未満の被扶養者認定では150万円未満の要件があります。一方、勤務先で加入するかは週20時間、月額賃金、学生区分なども関係します。

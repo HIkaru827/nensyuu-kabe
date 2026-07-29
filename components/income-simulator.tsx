@@ -144,22 +144,35 @@ function getIncomeStatus(incomeMan: number, age: number) {
   }
 
   if (isSpecialAge && incomeMan <= 197) {
-    if (incomeMan >= socialLimitMan) {
+    if (incomeMan >= socialLimitMan && incomeMan <= 159) {
       return {
-        label: "社保と親の控除を確認",
-        title: "19〜22歳は社会保険と特定親族特別控除を分けて見ましょう",
-        description: "197万円以下なら親の控除が段階的に残る可能性がありますが、社会保険の扶養は別に確認が必要です。",
+        label: "社会保険を確認",
+        title: "親の税控除は満額圏でも、社会保険の扶養は確認が必要です",
+        description:
+          "19〜22歳は159万円以下なら親の所得税の控除が満額となる可能性がありますが、健康保険の扶養は150万円未満が目安です。",
         tone: "border-rose-200 bg-rose-50 text-rose-950",
         bar: "bg-rose-500",
       }
     }
 
+    if (incomeMan <= 159) {
+      return {
+        label: "親の控除は満額圏",
+        title: "19〜22歳は親の所得税の控除が満額で残る可能性があります",
+        description:
+          "給与収入159万円以下なら特定親族特別控除が満額となる目安です。社会保険の扶養は150万円未満を別に確認します。",
+        tone: "border-amber-200 bg-amber-50 text-amber-950",
+        bar: "bg-amber-500",
+      }
+    }
+
     return {
-      label: "親の控除を確認",
-      title: "19〜22歳は特定親族特別控除の範囲を確認しましょう",
-      description: "136万円を超えても197万円以下なら、親の控除が段階的に残る可能性があります。",
-      tone: "border-amber-200 bg-amber-50 text-amber-950",
-      bar: "bg-amber-500",
+      label: "親の控除が段階的に減少",
+      title: "19〜22歳は親の控除額と社会保険を確認しましょう",
+      description:
+        "159万円を超えると親の特定親族特別控除が段階的に減り、197万円を超えると対象外になります。",
+      tone: "border-rose-200 bg-rose-50 text-rose-950",
+      bar: "bg-rose-500",
     }
   }
 
@@ -235,7 +248,7 @@ function buildProcedureItems({
       title: "親の年末調整の扶養欄を確認",
       description:
         age >= 19 && age <= 22
-          ? "136万円を超えても197万円以下なら特定親族特別控除の対象になり得ます。親の勤務先へ年収見込みを共有してください。"
+          ? "159万円以下なら親の所得税の控除が満額となる目安で、159万円超から197万円以下では段階的に減ります。親の勤務先へ年収見込みを共有してください。"
           : "税法上の扶養控除から外れる可能性があります。親の勤務先で扶養控除等申告書の異動が必要か確認してもらいましょう。",
     })
   } else {
@@ -628,6 +641,9 @@ export function IncomeSimulator() {
     { amount: 119, label: "119万円", text: "住民税の目安" },
     ...(age >= 16 ? [{ amount: 136, label: "136万円", text: "親の税扶養" }] : []),
     { amount: socialInsuranceLimit / 10_000, label: formatManYen(socialInsuranceLimit), text: "社保扶養の目安" },
+    ...(age >= 19 && age <= 22
+      ? [{ amount: 159, label: "159万円", text: "親の税控除が満額" }]
+      : []),
     { amount: 178, label: "178万円", text: "所得税の目安" },
     ...(age >= 19 && age <= 22 ? [{ amount: 197, label: "197万円", text: "特定親族特別控除" }] : []),
   ]
@@ -935,7 +951,7 @@ export function IncomeSimulator() {
                       style={{ width: `${Math.min(100, (income / 220) * 100)}%` }}
                     />
                   </div>
-                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
                     {thresholdMarkers.map((marker) => (
                       <div
                         key={`${marker.label}-${marker.text}`}

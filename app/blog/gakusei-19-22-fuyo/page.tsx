@@ -17,10 +17,10 @@ export default function Gakusei1922FuyoPage() {
   return (
     <>
       <ArticleStructuredData
-        title="19歳から22歳の学生はいくらまで稼げる？特定親族特別控除と社会保険の注意点"
-        description="19歳から22歳の学生がアルバイトでいくらまで稼げるかを、特定親族特別控除、136万円、197万円、社会保険の150万円未満要件に分けて整理します。"
+        title="19歳から22歳の学生はいくらまで稼げる？150万・159万・197万円の違い"
+        description="19歳から22歳の学生がアルバイトでいくらまで稼げるかを、健康保険150万円未満、親の所得税の控除が満額となる159万円、段階控除の上限197万円に分けて整理します。"
         datePublished="2026-04-09T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -41,18 +41,18 @@ export default function Gakusei1922FuyoPage() {
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">
               19歳から22歳の学生はいくらまで稼げる？
               <br />
-              特定親族特別控除と社会保険の注意点
+              150万・159万・197万円の違い
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点の公的資料に基づき、19歳以上23歳未満の学生が確認すべき基準を整理しています。
+              2026年7月30日時点の公的資料に基づき、19歳以上23歳未満の学生が確認すべき基準を整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年7月6日"
+            checkedAt="2026年7月30日"
             audience="19歳から22歳の学生本人と、その親"
             sources="国税庁、日本年金機構"
-            note="136万円、150万円未満、178万円、197万円はそれぞれ意味が違います。この記事では年齢特例を前提に見分けています。"
+            note="136万円、150万円未満、159万円、178万円、197万円はそれぞれ意味が違います。この記事では年齢特例を前提に見分けています。"
           />
 
           <Card className="border-slate-200 bg-slate-50">
@@ -60,7 +60,7 @@ export default function Gakusei1922FuyoPage() {
               <h2 className="text-lg font-bold text-slate-950">先に結論</h2>
               <ul className="space-y-2 text-sm text-slate-700">
                 <li>親の通常の扶養控除は、給与収入136万円までが目安です。</li>
-                <li>19歳以上23歳未満は、136万円超〜197万円で特定親族特別控除が段階適用され得ます。</li>
+                <li>19歳以上23歳未満は、159万円以下なら親の所得税の控除が満額、159万円超〜197万円で段階的に減ります。</li>
                 <li>本人の所得税は、給与収入178万円までなら発生しない設計です。</li>
                 <li>社会保険の被扶養者認定では、令和7年10月1日以後、150万円未満要件も確認します。</li>
               </ul>
@@ -80,11 +80,11 @@ export default function Gakusei1922FuyoPage() {
               <section className="space-y-3">
                 <h2 className="text-2xl font-bold text-foreground">136万円を超えてもすぐゼロとは限らない</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  令和8年分以後、通常の扶養控除は給与収入136万円が目安です。ただし、19歳以上23歳未満では、136万円を超えても197万円までなら、
-                  親が特定親族特別控除を受けられる可能性があります。
+                  令和8年分以後、通常の扶養控除は給与収入136万円が目安です。ただし、19歳以上23歳未満では、
+                  特定親族特別控除により給与収入159万円以下まで親の所得税の控除が満額となる可能性があります。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  控除額は、子の合計所得金額に応じて段階的に変わります。197万円まで満額で維持される、という意味ではありません。
+                  159万円を超えると控除額が段階的に減り、197万円を超えると対象外になります。
                 </p>
               </section>
 
@@ -113,6 +113,7 @@ export default function Gakusei1922FuyoPage() {
                   {[
                     ["136万円", "親の通常の扶養控除の目安です。"],
                     ["150万円未満", "19歳以上23歳未満の社会保険の被扶養者認定で確認する場面があります。"],
+                    ["159万円", "親の所得税の特定親族特別控除が満額となる給与収入の目安です。"],
                     ["178万円", "本人の所得税が発生するかを見る目安です。"],
                     ["197万円", "特定親族特別控除が段階適用され得る上限の目安です。"],
                   ].map(([income, note]) => (
@@ -128,7 +129,7 @@ export default function Gakusei1922FuyoPage() {
                 <h2 className="text-2xl font-bold text-foreground">公的情報</h2>
                 <div className="space-y-3">
                   <OfficialLink href="https://www.nta.go.jp/users/gensen/2026kiso/index.htm" title="国税庁 令和8年度税制改正" description="給与所得控除、基礎控除、扶養親族等の所得要件改正を確認できます。" />
-                  <OfficialLink href="https://www.nta.go.jp/publication/pamph/gensen/2026kaisei.pdf" title="国税庁 源泉所得税の改正のあらまし" description="令和8・9年分の136万円、178万円、197万円の根拠を確認できます。" />
+                  <OfficialLink href="https://www.nta.go.jp/publication/pamph/gensen/2026kaisei.pdf" title="国税庁 源泉所得税の改正のあらまし" description="令和8・9年分の136万円、159万円、178万円、197万円の根拠を確認できます。" />
                   <OfficialLink href="https://www.nenkin.go.jp/oshirase/taisetu/2025/202508/0819.html" title="日本年金機構 19歳以上23歳未満の被扶養者認定" description="令和7年10月1日以後の150万円未満要件を確認できます。" />
                 </div>
               </section>
@@ -140,9 +141,12 @@ export default function Gakusei1922FuyoPage() {
             <CardContent className="space-y-4 pt-6 text-center">
               <Calculator className="mx-auto h-12 w-12 text-primary" />
               <h3 className="text-xl font-bold text-foreground">19歳から22歳の年収ラインを確認する</h3>
-              <p className="text-sm text-muted-foreground">136万円、150万円未満、178万円、197万円を分けて確認しましょう。</p>
+              <p className="text-sm text-muted-foreground">136万円、150万円未満、159万円、178万円、197万円を分けて確認しましょう。</p>
               <Link href="/">
                 <Button size="lg">シミュレーターに戻る</Button>
+              </Link>
+              <Link href="/student-baito" className="block text-sm font-semibold text-primary hover:underline">
+                大学生の年収の壁・親の扶養ガイドを見る
               </Link>
             </CardContent>
           </Card>

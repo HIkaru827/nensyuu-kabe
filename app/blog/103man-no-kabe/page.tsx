@@ -20,7 +20,7 @@ export default function Blog103ManPage() {
         title="178万円の壁とは？現行ルールでわかる所得税・扶養・社会保険の違い"
         description="178万円の壁の意味を、所得税、税法上の扶養、社会保険を分けて整理します。令和8年分以後の現行ルールに沿って確認できる範囲だけを解説しています。"
         datePublished="2026-04-02T00:00:00Z"
-        dateModified="2026-07-06T00:00:00Z"
+        dateModified="2026-07-30T00:00:00Z"
         url={url}
       />
       <BreadcrumbStructuredData
@@ -44,13 +44,13 @@ export default function Blog103ManPage() {
               所得税・扶養・社会保険の違い
             </h1>
             <p className="text-sm text-muted-foreground">
-              2026年7月6日時点で確認した国税庁・日本年金機構の公的情報に基づいて整理しています。
+              2026年7月30日時点で確認した国税庁・日本年金機構の公的情報に基づいて整理しています。
             </p>
           </div>
 
           <ArticleTrustSummary
-            checkedAt="2026年7月6日"
-            audience="178万円、136万円、197万円、社会保険の基準が混ざって分かりにくい人"
+            checkedAt="2026年7月30日"
+            audience="178万円、136万円、159万円、197万円、社会保険の基準が混ざって分かりにくい人"
             sources="国税庁、日本年金機構"
             note="所得税、税法上の扶養、社会保険は基準が別です。この記事では数字ごとに論点を分けて説明しています。"
           />
@@ -95,11 +95,11 @@ export default function Blog103ManPage() {
               </section>
 
               <section className="space-y-3">
-                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は 197万円まで段階控除の対象になり得る</h2>
+                <h2 className="text-2xl font-bold text-foreground">19歳以上23歳未満は159万円まで満額、197万円まで段階控除</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   19歳以上23歳未満の親族等については、特定親族特別控除の対象になり得ます。
-                  令和8年分以後は、合計所得金額が 123万円以下、給与収入だけなら
-                  <strong className="text-foreground"> 197万円以下</strong> の範囲で、段階的に控除の対象になり得ます。
+                  令和8年分以後は、給与収入だけなら159万円以下で親の所得税の控除が満額となる目安です。
+                  159万円を超えると、<strong className="text-foreground">197万円以下</strong>まで段階的に控除額が減ります。
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   ここは「136万円を超えたら即ゼロ」ではなく、年齢要件に当てはまるかで扱いが変わる点が重要です。

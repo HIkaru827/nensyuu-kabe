@@ -20,6 +20,11 @@ const nextConfig = {
         destination: '/blog/130man-no-kabe-v2',
         statusCode: 301,
       },
+      {
+        source: '/blog/daigakusei-baito-fuyo',
+        destination: '/student-baito',
+        statusCode: 301,
+      },
     ]
   },
   

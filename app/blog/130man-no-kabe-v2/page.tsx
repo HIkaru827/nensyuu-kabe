@@ -176,6 +176,9 @@ export default function Blog130ManV2Page() {
               <Link href="/">
                 <Button size="lg">シミュレーターに戻る</Button>
               </Link>
+              <Link href="/student-baito" className="block text-sm font-semibold text-primary hover:underline">
+                大学生の年収の壁・親の扶養ガイドを見る
+              </Link>
             </CardContent>
           </Card>
         </article>
