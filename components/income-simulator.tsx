@@ -615,7 +615,9 @@ export function IncomeSimulator() {
       ? "勤務先社保概算"
       : socialInsuranceRoute === "national"
         ? "国保・年金見込み"
-        : "社保負担見込み"
+        : detailedResult.socialInsuranceBurdenIsProvisional
+          ? "社保の暫定概算"
+          : "社保負担見込み"
   const employeeSocialInsuranceRateLabel = `${(EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026 * 100).toFixed(2)}%`
 
   const ctaLinks = useMemo(
@@ -1477,7 +1479,7 @@ export function IncomeSimulator() {
                 </p>
                 <p className="text-3xl font-bold text-foreground">{formatCurrency(displayedTakeHome)}</p>
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  本人の税金と、入力済みの社会保険負担を反映した概算です。
+                  本人の税金と、選択または暫定計算した社会保険負担を反映した概算です。
                 </p>
               </div>
 
@@ -1529,6 +1531,22 @@ export function IncomeSimulator() {
                   </p>
                   <p className="mt-1 text-emerald-900/80">
                     実際は標準報酬月額、都道府県、健康保険組合、勤務先の扱いで変わります。
+                  </p>
+                </div>
+              )}
+
+              {detailedResult.socialInsuranceBurdenIsProvisional && (
+                <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+                  <p className="font-semibold">扶養外を見込み、社会保険料を暫定的に手取りへ反映しています。</p>
+                  <p>
+                    加入先が未定のため、年収を12か月で割った月額
+                    {formatCurrency(detailedResult.employeeSocialInsuranceAssumedMonthlySalary ?? 0)}をもとに、
+                    勤務先社保の本人負担約{employeeSocialInsuranceRateLabel}で計算しています。
+                    目安は月{formatCurrency(detailedResult.employeeSocialInsuranceMonthlyEstimate ?? 0)}、
+                    年{formatCurrency(detailedResult.socialInsuranceBurdenEstimate ?? 0)}です。
+                  </p>
+                  <p className="mt-1 text-amber-900/80">
+                    実際の加入先が国保・国民年金なら金額が変わります。「扶養を外れた後の加入先」を選ぶと表示を更新します。
                   </p>
                 </div>
               )}

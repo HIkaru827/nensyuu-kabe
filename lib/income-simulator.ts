@@ -69,6 +69,7 @@ export interface DetailedSimulationResult {
   employeeSocialInsuranceMonthlyEstimate?: number
   employeeSocialInsuranceAssumedMonthlySalary?: number
   socialInsuranceBurdenEstimate?: number
+  socialInsuranceBurdenIsProvisional: boolean
   assumptions: string[]
 }
 
@@ -621,6 +622,7 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   let employeeSocialInsuranceMonthlyEstimate: number | undefined
   let employeeSocialInsuranceAssumedMonthlySalary: number | undefined
   let socialInsuranceBurdenEstimate: number | undefined
+  let socialInsuranceBurdenIsProvisional = false
 
   if (params.socialInsuranceRoute === "national") {
     const canUseStudentPensionSpecial =
@@ -657,6 +659,20 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
       "勤務先の社会保険は、協会けんぽ東京支部の令和8年度料率を目安に、健康保険・子ども子育て支援金・厚生年金の本人負担分を概算しています。",
     )
     assumptions.push("実際の保険料は、標準報酬月額の等級、都道府県、健康保険組合、勤務先の扱いで変わります。")
+  } else if (!canRemainSocialInsuranceDependent || shortHoursSocialInsuranceApplies) {
+    const provisionalMonthlySalary = Math.round(params.annualIncome / 12)
+    const employeeSocialInsurance = estimateEmployeeSocialInsurance(provisionalMonthlySalary)
+    employeeHealthInsuranceAnnualEstimate = employeeSocialInsurance.employeeHealthInsuranceAnnualEstimate
+    employeeChildSupportAnnualEstimate = employeeSocialInsurance.employeeChildSupportAnnualEstimate
+    employeePensionAnnualEstimate = employeeSocialInsurance.employeePensionAnnualEstimate
+    employeeSocialInsuranceMonthlyEstimate = employeeSocialInsurance.monthlyEstimate
+    employeeSocialInsuranceAssumedMonthlySalary = employeeSocialInsurance.assumedMonthlySalary
+    socialInsuranceBurdenEstimate = employeeSocialInsurance.annualEstimate
+    socialInsuranceBurdenIsProvisional = true
+    assumptions.push(
+      "扶養外で加入先が未定のため、年収を12か月で割った月額を使い、勤務先の社会保険に加入した場合の本人負担を暫定反映しています。",
+    )
+    assumptions.push("国民健康保険・国民年金を選ぶ場合は、この暫定額ではなく選択後の条件で再計算します。")
   } else {
     assumptions.push("加入先が未定のため、具体的な社会保険料は加算していません。")
   }
@@ -692,6 +708,7 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     employeeSocialInsuranceMonthlyEstimate,
     employeeSocialInsuranceAssumedMonthlySalary,
     socialInsuranceBurdenEstimate,
+    socialInsuranceBurdenIsProvisional,
     assumptions,
   }
 }
