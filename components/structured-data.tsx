@@ -1,4 +1,10 @@
-import { BLOG_POSTS, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo"
+import {
+  BLOG_POSTS,
+  DEFAULT_OG_IMAGE,
+  INTERNATIONAL_STUDENT_PAGE,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo"
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
@@ -51,6 +57,43 @@ export function WebApplicationStructuredData() {
       "学生バイト向け有給シミュレーション",
       "関連記事とバイト関連カテゴリへの導線",
     ],
+  }
+
+  return <JsonLd data={data} />
+}
+
+export function InternationalStudentSimulatorStructuredData() {
+  const url = `${SITE_URL}${INTERNATIONAL_STUDENT_PAGE.path}`
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${url}/#application`,
+    name: INTERNATIONAL_STUDENT_PAGE.title,
+    url,
+    description: INTERNATIONAL_STUDENT_PAGE.description,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Web",
+    browserRequirements: "JavaScript required",
+    inLanguage: "ja-JP",
+    isAccessibleForFree: true,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "JPY",
+    },
+    featureList: [
+      "資格外活動許可の確認",
+      "掛け持ち合計の週28時間判定",
+      "日本の税法上の居住者を前提とした税金概算",
+      "日本国内の家族の健康保険扶養の確認",
+      "年収と社会保険料を反映した手取り概算",
+    ],
+    provider: {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
   }
 
   return <JsonLd data={data} />

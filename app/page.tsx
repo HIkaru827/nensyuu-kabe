@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, CalendarCheck, GraduationCap, Sparkles, WalletCards } from "lucide-react"
+import { ArrowRight, CalendarCheck, Globe2, GraduationCap, Sparkles, WalletCards } from "lucide-react"
 import { IncomeSimulator } from "@/components/income-simulator"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -142,6 +142,28 @@ export default function Home() {
                 )
               })}
             </div>
+
+            <Link href="/international-student" aria-label="留学生アルバイトの週28時間と税金を確認する">
+              <Card className="border-sky-200 bg-sky-50/70 transition-colors hover:border-sky-400 hover:bg-sky-50">
+                <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-start gap-3">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sky-100 text-sky-700">
+                      <Globe2 className="h-5 w-5" />
+                    </span>
+                    <div className="space-y-1">
+                      <h3 className="font-bold text-sky-950">外国人留学生のアルバイトはこちら</h3>
+                      <p className="text-sm leading-relaxed text-sky-900/75">
+                        資格外活動許可、掛け持ち合計の週28時間、税金と健康保険を順番に確認します。
+                      </p>
+                    </div>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-sky-800">
+                    留学生向けに確認
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
           </section>
 
           <section className="mx-auto max-w-5xl space-y-4">

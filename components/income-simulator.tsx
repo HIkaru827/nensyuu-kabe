@@ -11,6 +11,7 @@ import {
   ClipboardList,
   Copy,
   ExternalLink,
+  Globe2,
   Info,
   MessageCircle,
   RotateCcw,
@@ -49,6 +50,7 @@ import {
 
 type Attribute = "daytime-student" | "evening-student" | "freeter"
 type CalculationMode = "annual" | "year-to-date"
+type ConfirmationStatus = "yes" | "no" | "unknown"
 
 const parentTaxRates: ParentTaxRate[] = [0.05, 0.1, 0.2, 0.23, 0.33, 0.4, 0.45]
 const DEFAULT_SHARE_URL = "https://nenshuu-kabe.com/"
@@ -205,6 +207,53 @@ function getIncomeStatus(incomeMan: number, age: number) {
   }
 }
 
+function getInternationalStudentWorkStatus(
+  workPermissionStatus: ConfirmationStatus,
+  weeklyHours: number,
+) {
+  if (workPermissionStatus === "no") {
+    return {
+      label: "就労前に許可が必要",
+      title: "資格外活動許可なしでは原則アルバイトできません",
+      description:
+        "在留資格が「留学」の場合は、原則としてアルバイト開始前に資格外活動許可を受ける必要があります。",
+      tone: "border-rose-200 bg-rose-50 text-rose-950",
+      bar: "bg-rose-500",
+    }
+  }
+
+  if (workPermissionStatus === "unknown") {
+    return {
+      label: "在留カードを確認",
+      title: "資格外活動許可の有無を先に確認してください",
+      description:
+        "在留カード裏面の資格外活動許可欄を確認し、勤務先にも許可内容を提示してください。",
+      tone: "border-amber-200 bg-amber-50 text-amber-950",
+      bar: "bg-amber-500",
+    }
+  }
+
+  if (weeklyHours > 28) {
+    return {
+      label: "週28時間を超過",
+      title: "通常の授業期間は勤務時間を見直してください",
+      description:
+        "資格外活動許可の一般的な上限は、掛け持ちした全勤務先の合計で週28時間以内です。",
+      tone: "border-rose-200 bg-rose-50 text-rose-950",
+      bar: "bg-rose-500",
+    }
+  }
+
+  return {
+    label: "週28時間以内",
+    title: `通常の授業期間はあと${Math.max(0, 28 - weeklyHours)}時間/週が上限までの目安です`,
+    description:
+      "掛け持ちを含む合計時間です。学校が定める長期休業中は1日8時間以内ですが、許可書の条件を優先してください。",
+    tone: "border-emerald-200 bg-emerald-50 text-emerald-950",
+    bar: "bg-emerald-500",
+  }
+}
+
 function getAgeTrackingBand(age: number): string {
   if (age <= 18) return "under_19"
   if (age <= 22) return "19_22"
@@ -231,6 +280,9 @@ function buildProcedureItems({
   shortHoursSocialInsuranceApplies,
   socialInsuranceRoute,
   age,
+  includeParentTaxImpact = true,
+  hasFamilyHealthInsuranceDependency = true,
+  familyHealthInsuranceStatus = "yes",
 }: {
   annualIncome: number
   socialInsuranceIncomeEstimate: number
@@ -239,11 +291,14 @@ function buildProcedureItems({
   shortHoursSocialInsuranceApplies: boolean
   socialInsuranceRoute: SocialInsuranceRoute
   age: number
+  includeParentTaxImpact?: boolean
+  hasFamilyHealthInsuranceDependency?: boolean
+  familyHealthInsuranceStatus?: ConfirmationStatus
 }): ActionItem[] {
   const items: ActionItem[] = []
   const socialLimitMan = Math.round(socialInsuranceLimit / 10_000)
 
-  if (age >= 16 && annualIncome > INCOME_THRESHOLDS.DEPENDENT_FULL) {
+  if (includeParentTaxImpact && age >= 16 && annualIncome > INCOME_THRESHOLDS.DEPENDENT_FULL) {
     items.push({
       title: "親の年末調整の扶養欄を確認",
       description:
@@ -254,11 +309,16 @@ function buildProcedureItems({
   } else {
     items.push({
       title: "給与明細と年収見込みを保存",
-      description: "大きな手続きは発生しにくい年収帯ですが、年末前に累計給与と12月までの見込みを親へ共有できるようにしておきましょう。",
+      description: includeParentTaxImpact
+        ? "大きな手続きは発生しにくい年収帯ですが、年末前に累計給与と12月までの見込みを親へ共有できるようにしておきましょう。"
+        : "勤務先ごとの給与明細と源泉徴収票を保存し、年末の給与収入を確認できるようにしておきましょう。",
     })
   }
 
-  if (socialInsuranceIncomeEstimate >= socialInsuranceLimit) {
+  if (
+    hasFamilyHealthInsuranceDependency &&
+    socialInsuranceIncomeEstimate >= socialInsuranceLimit
+  ) {
     items.push({
       title: "親の健康保険の被扶養者認定を確認",
       description: `社会保険の扶養目安${socialLimitMan}万円に達しています。親の勤務先または加入中の健康保険で、被扶養者異動届や収入見込みの確認が必要か相談してください。`,
@@ -276,6 +336,19 @@ function buildProcedureItems({
     items.push({
       title: "国民健康保険・国民年金の手続きを確認",
       description: "扶養から外れて勤務先社保に入らない場合は、市区町村の国民健康保険と、20歳以上なら国民年金や学生納付特例の確認が必要です。",
+    })
+  }
+
+  if (!hasFamilyHealthInsuranceDependency && socialInsuranceRoute === "undecided") {
+    items.push({
+      title:
+        familyHealthInsuranceStatus === "unknown"
+          ? "家族の健康保険扶養を確認"
+          : "日本での医療保険を確認",
+      description:
+        familyHealthInsuranceStatus === "unknown"
+          ? "日本で働く家族の健康保険扶養に入っているかを確認してください。未確認の間は130万円・150万円未満の扶養基準を試算に使いません。"
+          : "家族の健康保険扶養に入っていない場合は、勤務先の社会保険か国民健康保険のどちらに加入しているかを確認し、詳細欄へ反映してください。",
     })
   }
 
@@ -306,6 +379,11 @@ function buildParentSharePoints({
   weeklyHours,
   monthlySalary,
   companySize,
+  includeParentTaxImpact = true,
+  hasFamilyHealthInsuranceDependency = true,
+  parentJapaneseTaxStatus = "yes",
+  familyHealthInsuranceStatus = "yes",
+  takeHomeIsBeforeSocialInsurance = false,
 }: {
   age: number
   incomeMan: number
@@ -316,13 +394,31 @@ function buildParentSharePoints({
   weeklyHours: number
   monthlySalary: number
   companySize: CompanySize
+  includeParentTaxImpact?: boolean
+  hasFamilyHealthInsuranceDependency?: boolean
+  parentJapaneseTaxStatus?: ConfirmationStatus
+  familyHealthInsuranceStatus?: ConfirmationStatus
+  takeHomeIsBeforeSocialInsurance?: boolean
 }): ActionItem[] {
   return [
     {
       title: `今年の年収見込みは${incomeMan}万円`,
-      description: `本人の手元見込みは${formatCurrency(displayedTakeHome)}です。年末までの追加シフトや有給で変わる可能性があります。`,
+      description: takeHomeIsBeforeSocialInsurance
+        ? `保険料入力前の手元見込みは${formatCurrency(displayedTakeHome)}です。加入先と保険料を反映すると金額が下がります。`
+        : `本人の手元見込みは${formatCurrency(displayedTakeHome)}です。年末までの追加シフトや有給で変わる可能性があります。`,
     },
-    age < 16
+    !includeParentTaxImpact
+      ? {
+          title:
+            parentJapaneseTaxStatus === "unknown"
+              ? "親の日本での納税状況を確認"
+              : "親の日本での税負担は試算対象外",
+          description:
+            parentJapaneseTaxStatus === "unknown"
+              ? "未確認のため、親の税負担額を表示していません。親が日本で所得税・住民税を納めているか確認してください。"
+              : "親が日本で所得税・住民税を納めていない前提です。親が日本で納税している場合は入力を変更してください。",
+        }
+      : age < 16
       ? {
           title: "16歳未満は親の扶養控除の対象外",
           description:
@@ -333,10 +429,21 @@ function buildParentSharePoints({
           description:
             "親の所得税率や勤務先の年末調整で変わるため、親の会社へ年収見込みを共有して確認してもらうのが安全です。",
         },
-    {
-      title: `社会保険の扶養目安は${formatManYen(socialInsuranceLimit)}`,
-      description: `${socialInsuranceStatusLabel}。親の健康保険と、勤務先での社会保険加入は別々に確認します。`,
-    },
+    hasFamilyHealthInsuranceDependency
+      ? {
+          title: `社会保険の扶養目安は${formatManYen(socialInsuranceLimit)}`,
+          description: `${socialInsuranceStatusLabel}。家族の健康保険と、勤務先での社会保険加入は別々に確認します。`,
+        }
+      : {
+          title:
+            familyHealthInsuranceStatus === "unknown"
+              ? "家族の健康保険扶養を確認"
+              : "130万円・150万円未満の扶養基準は試算対象外",
+          description:
+            familyHealthInsuranceStatus === "unknown"
+              ? "未確認のため、130万円・150万円未満の扶養基準を表示していません。日本で働く家族の健康保険扶養に入っているか確認してください。"
+              : "日本で働く家族の健康保険扶養に入っていない前提です。自分の勤務先の社会保険または国民健康保険を確認してください。",
+        },
     {
       title: "勤務条件も一緒に伝える",
       description: `週${weeklyHours}時間、月額賃金${formatCurrency(monthlySalary)}、勤務先規模は${companySize === "over_50" ? "51人以上" : "50人以下"}として試算しています。`,
@@ -350,13 +457,36 @@ function buildJobSuggestions({
   socialInsuranceLimit,
   shortHoursSocialInsuranceApplies,
   ctaLinks,
+  hasFamilyHealthInsuranceDependency = true,
 }: {
   annualIncome: number
   socialInsuranceIncomeEstimate: number
   socialInsuranceLimit: number
   shortHoursSocialInsuranceApplies: boolean
   ctaLinks: ResultCtaLinks
+  hasFamilyHealthInsuranceDependency?: boolean
 }): JobSuggestion[] {
+  if (!hasFamilyHealthInsuranceDependency) {
+    return [
+      {
+        title: "週28時間以内で収入を伸ばす",
+        description:
+          "留学生は勤務時間の上限があるため、許可条件を守りながら時給と通いやすさを比較します。",
+        href: ctaLinks.highWage ?? "/baito-type-diagnosis",
+        tag: "留学生",
+        isExternal: Boolean(ctaLinks.highWage),
+      },
+      {
+        title: "仕事内容から候補を絞る",
+        description:
+          "授業との両立や日本語での接客量も考え、続けやすい職種を診断から確認します。",
+        href: "/baito-type-diagnosis",
+        tag: "診断",
+        isExternal: false,
+      },
+    ]
+  }
+
   if (shortHoursSocialInsuranceApplies || annualIncome > INCOME_THRESHOLDS.INCOME_TAX_START) {
     return [
       {
@@ -423,6 +553,7 @@ function buildResultShareText({
   selfTaxBurdenEstimate,
   parentTaxDeltaEstimate,
   socialInsuranceStatusLabel,
+  takeHomeIsBeforeSocialInsurance = false,
 }: {
   calculationMode: CalculationMode
   receivedIncome: number
@@ -433,6 +564,7 @@ function buildResultShareText({
   selfTaxBurdenEstimate: number
   parentTaxDeltaEstimate: number
   socialInsuranceStatusLabel: string
+  takeHomeIsBeforeSocialInsurance?: boolean
 }): string {
   return [
     "学生バイトお金ナビで年収の壁を確認しました。",
@@ -444,7 +576,7 @@ function buildResultShareText({
       : []),
     `年収見込み: ${incomeMan}万円`,
     `判定: ${statusLabel}`,
-    `本人の手元見込み: ${formatCurrency(displayedTakeHome)}`,
+    `${takeHomeIsBeforeSocialInsurance ? "保険料入力前の手元見込み" : "本人の手元見込み"}: ${formatCurrency(displayedTakeHome)}`,
     `本人の税金見込み: ${formatCurrency(selfTaxBurdenEstimate)}`,
     `親への影響見込み: ${formatCurrency(parentTaxDeltaEstimate)}`,
     `社会保険: ${socialInsuranceStatusLabel}`,
@@ -469,7 +601,13 @@ async function writeTextToClipboard(text: string): Promise<void> {
   document.body.removeChild(textarea)
 }
 
-export function IncomeSimulator() {
+export function IncomeSimulator({
+  defaultInternationalStudent = false,
+  showHeading = true,
+}: {
+  defaultInternationalStudent?: boolean
+  showHeading?: boolean
+} = {}) {
   const showAffiliateUi = isAffiliateProgramActive()
   const showVisibleAds = process.env.NEXT_PUBLIC_ENABLE_VISIBLE_ADS === "true"
   const [calculationMode, setCalculationMode] = useState<CalculationMode>("annual")
@@ -481,6 +619,13 @@ export function IncomeSimulator() {
   const [hasLoadedIncomePlan, setHasLoadedIncomePlan] = useState(false)
   const [age, setAge] = useState(20)
   const [attribute, setAttribute] = useState<Attribute>("daytime-student")
+  const [isInternationalStudent, setIsInternationalStudent] = useState(defaultInternationalStudent)
+  const [workPermissionStatus, setWorkPermissionStatus] =
+    useState<ConfirmationStatus>("unknown")
+  const [parentJapaneseTaxStatus, setParentJapaneseTaxStatus] =
+    useState<ConfirmationStatus>("unknown")
+  const [familyHealthInsuranceStatus, setFamilyHealthInsuranceStatus] =
+    useState<ConfirmationStatus>("unknown")
   const [weeklyHours, setWeeklyHours] = useState(20)
   const [monthlySalary, setMonthlySalary] = useState(100_000)
   const [companySize, setCompanySize] = useState<CompanySize>("over_50")
@@ -512,7 +657,26 @@ export function IncomeSimulator() {
   const socialContractDifference = socialInsuranceLimit - socialContractAnnualEstimate
   const socialInsuranceIncomeEstimate =
     calculationMode === "year-to-date" ? socialContractAnnualEstimate : annualIncome
-  const status = useMemo(() => getIncomeStatus(incomeMan, age), [age, incomeMan])
+  const includeParentTaxImpact =
+    !isInternationalStudent || parentJapaneseTaxStatus === "yes"
+  const hasFamilyHealthInsuranceDependency =
+    !isInternationalStudent || familyHealthInsuranceStatus === "yes"
+  const applicableSocialInsuranceLimit = hasFamilyHealthInsuranceDependency
+    ? socialInsuranceLimit
+    : Number.POSITIVE_INFINITY
+  const visibleYearToDateWalls = includeParentTaxImpact
+    ? yearToDatePlan.walls
+    : yearToDatePlan.walls.filter(
+        (wall) => wall.id === "resident-tax" || wall.id === "income-tax",
+      )
+  const domesticTaxStatus = useMemo(() => getIncomeStatus(incomeMan, age), [age, incomeMan])
+  const internationalStudentWorkStatus = useMemo(
+    () => getInternationalStudentWorkStatus(workPermissionStatus, weeklyHours),
+    [weeklyHours, workPermissionStatus],
+  )
+  const status = isInternationalStudent
+    ? internationalStudentWorkStatus
+    : domesticTaxStatus
 
   useEffect(() => {
     const restoreTimer = window.setTimeout(() => {
@@ -589,6 +753,8 @@ export function IncomeSimulator() {
         parentTaxRate,
         studentPensionSpecialStatus,
         socialInsuranceRoute,
+        includeParentTaxImpact,
+        hasFamilyHealthInsuranceDependency,
         nationalHealthInsuranceAnnual:
           typeof nationalHealthInsuranceAnnual === "number" ? nationalHealthInsuranceAnnual : undefined,
       }),
@@ -596,6 +762,8 @@ export function IncomeSimulator() {
       age,
       annualIncome,
       companySize,
+      hasFamilyHealthInsuranceDependency,
+      includeParentTaxImpact,
       monthlySalary,
       nationalHealthInsuranceAnnual,
       parentTaxRate,
@@ -610,6 +778,11 @@ export function IncomeSimulator() {
   const displayedTakeHome = includeParentImpactInTakeHome
     ? detailedResult.selfTakeHomeAfterKnownBurdenEstimate - detailedResult.parentTaxDeltaEstimate
     : detailedResult.selfTakeHomeAfterKnownBurdenEstimate
+  const socialInsuranceBurdenNeedsInput =
+    isInternationalStudent &&
+    !hasFamilyHealthInsuranceDependency &&
+    socialInsuranceRoute === "undecided" &&
+    !detailedResult.socialInsuranceBurdenIsProvisional
   const socialInsuranceBurdenLabel =
     socialInsuranceRoute === "employee"
       ? "勤務先社保概算"
@@ -617,7 +790,9 @@ export function IncomeSimulator() {
         ? "国保・年金見込み"
         : detailedResult.socialInsuranceBurdenIsProvisional
           ? "社保の暫定概算"
-          : "社保負担見込み"
+          : socialInsuranceBurdenNeedsInput
+            ? "医療保険料"
+            : "社保負担見込み"
   const employeeSocialInsuranceRateLabel = `${(EMPLOYEE_SOCIAL_INSURANCE_EMPLOYEE_SHARE_RATE_2026 * 100).toFixed(2)}%`
 
   const ctaLinks = useMemo(
@@ -641,30 +816,55 @@ export function IncomeSimulator() {
 
   const thresholdMarkers = [
     { amount: 119, label: "119万円", text: "住民税の目安" },
-    ...(age >= 16 ? [{ amount: 136, label: "136万円", text: "親の税扶養" }] : []),
-    { amount: socialInsuranceLimit / 10_000, label: formatManYen(socialInsuranceLimit), text: "社保扶養の目安" },
-    ...(age >= 19 && age <= 22
+    ...(includeParentTaxImpact && age >= 16
+      ? [{ amount: 136, label: "136万円", text: "親の税扶養" }]
+      : []),
+    ...(hasFamilyHealthInsuranceDependency
+      ? [{ amount: socialInsuranceLimit / 10_000, label: formatManYen(socialInsuranceLimit), text: "社保扶養の目安" }]
+      : []),
+    ...(includeParentTaxImpact && age >= 19 && age <= 22
       ? [{ amount: 159, label: "159万円", text: "親の税控除が満額" }]
       : []),
     { amount: 178, label: "178万円", text: "所得税の目安" },
-    ...(age >= 19 && age <= 22 ? [{ amount: 197, label: "197万円", text: "特定親族特別控除" }] : []),
+    ...(includeParentTaxImpact && age >= 19 && age <= 22
+      ? [{ amount: 197, label: "197万円", text: "特定親族特別控除" }]
+      : []),
   ]
   const procedureItems = useMemo(
     () =>
-      buildProcedureItems({
-        annualIncome,
-        socialInsuranceIncomeEstimate,
-        incomeMan,
-        socialInsuranceLimit,
-        shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
-        socialInsuranceRoute,
-        age,
-      }),
+      [
+        ...(isInternationalStudent
+          ? [
+              {
+                title: internationalStudentWorkStatus.title,
+                description: internationalStudentWorkStatus.description,
+              },
+            ]
+          : []),
+        ...buildProcedureItems({
+          annualIncome,
+          socialInsuranceIncomeEstimate,
+          incomeMan,
+          socialInsuranceLimit,
+          shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
+          socialInsuranceRoute,
+          age,
+          includeParentTaxImpact,
+          hasFamilyHealthInsuranceDependency,
+          familyHealthInsuranceStatus,
+        }),
+      ],
     [
       age,
       annualIncome,
       detailedResult.shortHoursSocialInsuranceApplies,
+      hasFamilyHealthInsuranceDependency,
+      familyHealthInsuranceStatus,
+      includeParentTaxImpact,
       incomeMan,
+      internationalStudentWorkStatus.description,
+      internationalStudentWorkStatus.title,
+      isInternationalStudent,
       socialInsuranceLimit,
       socialInsuranceRoute,
       socialInsuranceIncomeEstimate,
@@ -682,6 +882,11 @@ export function IncomeSimulator() {
         weeklyHours,
         monthlySalary,
         companySize,
+        includeParentTaxImpact,
+        hasFamilyHealthInsuranceDependency,
+        parentJapaneseTaxStatus,
+        familyHealthInsuranceStatus,
+        takeHomeIsBeforeSocialInsurance: socialInsuranceBurdenNeedsInput,
       }),
     [
       age,
@@ -689,9 +894,14 @@ export function IncomeSimulator() {
       detailedResult.parentTaxDeltaEstimate,
       detailedResult.socialInsuranceStatusLabel,
       displayedTakeHome,
+      hasFamilyHealthInsuranceDependency,
+      includeParentTaxImpact,
+      familyHealthInsuranceStatus,
       incomeMan,
       monthlySalary,
+      parentJapaneseTaxStatus,
       socialInsuranceLimit,
+      socialInsuranceBurdenNeedsInput,
       weeklyHours,
     ],
   )
@@ -700,16 +910,18 @@ export function IncomeSimulator() {
       buildJobSuggestions({
         annualIncome,
         socialInsuranceIncomeEstimate,
-        socialInsuranceLimit,
+        socialInsuranceLimit: applicableSocialInsuranceLimit,
         shortHoursSocialInsuranceApplies: detailedResult.shortHoursSocialInsuranceApplies,
         ctaLinks,
+        hasFamilyHealthInsuranceDependency,
       }),
     [
       annualIncome,
+      applicableSocialInsuranceLimit,
       ctaLinks,
       detailedResult.shortHoursSocialInsuranceApplies,
+      hasFamilyHealthInsuranceDependency,
       socialInsuranceIncomeEstimate,
-      socialInsuranceLimit,
     ],
   )
   const resultShareText = useMemo(
@@ -724,6 +936,7 @@ export function IncomeSimulator() {
         selfTaxBurdenEstimate: detailedResult.selfTaxBurdenEstimate,
         parentTaxDeltaEstimate: detailedResult.parentTaxDeltaEstimate,
         socialInsuranceStatusLabel: detailedResult.socialInsuranceStatusLabel,
+        takeHomeIsBeforeSocialInsurance: socialInsuranceBurdenNeedsInput,
       }),
     [
       calculationMode,
@@ -733,6 +946,7 @@ export function IncomeSimulator() {
       displayedTakeHome,
       incomeMan,
       status.label,
+      socialInsuranceBurdenNeedsInput,
       yearToDatePlan.receivedIncome,
       yearToDatePlan.remainingPaymentCount,
     ],
@@ -758,6 +972,7 @@ export function IncomeSimulator() {
       socialInsuranceRoute: SocialInsuranceRoute
       studentPensionSpecialStatus: StudentPensionSpecialStatus
       includeParentImpactInTakeHome: boolean
+      isInternationalStudent: boolean
     }> = {},
   ) => {
     interactionCountRef.current += 1
@@ -774,6 +989,8 @@ export function IncomeSimulator() {
       overrides.studentPensionSpecialStatus ?? studentPensionSpecialStatus
     const trackedIncludeParentImpact =
       overrides.includeParentImpactInTakeHome ?? includeParentImpactInTakeHome
+    const trackedInternationalStudent =
+      overrides.isInternationalStudent ?? isInternationalStudent
     const trackedStatus = getIncomeStatus(nextIncome, trackedAge)
 
     trackSimulatorEvent("income_simulator_interaction", {
@@ -793,6 +1010,7 @@ export function IncomeSimulator() {
       social_insurance_route: trackedSocialInsuranceRoute,
       student_pension_special_status: trackedStudentPensionSpecialStatus,
       parent_impact_included: trackedIncludeParentImpact,
+      international_student_mode: trackedInternationalStudent,
       received_income_band:
         trackedCalculationMode === "year-to-date"
           ? getIncomeTrackingBand(receivedIncome / 10_000)
@@ -872,15 +1090,17 @@ export function IncomeSimulator() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-5">
-      <section className="space-y-3 text-center">
-        <Badge variant="secondary" className="mx-auto">学生バイト向け</Badge>
-        <h1 className="text-3xl font-bold tracking-normal text-foreground md:text-4xl">
-          年収の壁シミュレーター
-        </h1>
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-          年収を指定するか、今年受け取った給与から年末までを予測して、親の扶養・社会保険・本人の税金を確認できます。
-        </p>
-      </section>
+      {showHeading && (
+        <section className="space-y-3 text-center">
+          <Badge variant="secondary" className="mx-auto">学生バイト向け</Badge>
+          <h1 className="text-3xl font-bold tracking-normal text-foreground md:text-4xl">
+            年収の壁シミュレーター
+          </h1>
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+            年収を指定するか、今年受け取った給与から年末までを予測して、親の扶養・社会保険・本人の税金を確認できます。
+          </p>
+        </section>
+      )}
 
       <section className="sticky top-14 z-30 -mx-4 border-y border-border bg-background/95 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
@@ -1127,7 +1347,7 @@ export function IncomeSimulator() {
                   </div>
 
                   <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
-                    {yearToDatePlan.walls.map((wall) => (
+                    {visibleYearToDateWalls.map((wall) => (
                       <div key={wall.id} className="space-y-3 bg-background p-4">
                         <div className="flex flex-wrap items-start justify-between gap-2">
                           <div className="space-y-1">
@@ -1187,7 +1407,7 @@ export function IncomeSimulator() {
                   </div>
                 </section>
 
-                <section
+                {hasFamilyHealthInsuranceDependency && <section
                   className="space-y-3 rounded-md border border-blue-200 bg-blue-50 p-4 text-blue-950"
                   aria-labelledby="social-outlook-title"
                 >
@@ -1251,7 +1471,7 @@ export function IncomeSimulator() {
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
-                </section>
+                </section>}
 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
@@ -1261,6 +1481,100 @@ export function IncomeSimulator() {
             </Tabs>
 
             <Separator />
+
+            <div className="space-y-4 rounded-md border border-sky-200 bg-sky-50/70 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <Globe2 className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" />
+                  <div className="space-y-1">
+                    <Label htmlFor="international-student-mode" className="font-bold text-sky-950">
+                      留学生モード
+                    </Label>
+                    <p className="text-xs leading-relaxed text-sky-900/80">
+                      在留資格が「留学」の人は、年収より先に資格外活動許可と勤務時間を確認します。
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  id="international-student-mode"
+                  checked={isInternationalStudent}
+                  onCheckedChange={(checked) => {
+                    setIsInternationalStudent(checked)
+                    if (checked && attribute === "freeter") {
+                      setAttribute("daytime-student")
+                    }
+                    setIncludeParentImpactInTakeHome(false)
+                    trackIncomeSimulatorInteraction("international_student_toggle", incomeMan, {
+                      isInternationalStudent: checked,
+                    })
+                  }}
+                  aria-label="留学生モードを切り替える"
+                />
+              </div>
+
+              {isInternationalStudent && (
+                <div className="grid gap-4 border-t border-sky-200 pt-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>資格外活動許可</Label>
+                    <Select
+                      value={workPermissionStatus}
+                      onValueChange={(value) =>
+                        setWorkPermissionStatus(value as ConfirmationStatus)
+                      }
+                    >
+                      <SelectTrigger className="h-11 w-full bg-background text-base md:text-sm" aria-label="資格外活動許可">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unknown">わからない・未確認</SelectItem>
+                        <SelectItem value="yes">許可あり</SelectItem>
+                        <SelectItem value="no">許可なし</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>親は日本で所得税・住民税を納めている？</Label>
+                    <Select
+                      value={parentJapaneseTaxStatus}
+                      onValueChange={(value) => {
+                        setParentJapaneseTaxStatus(value as ConfirmationStatus)
+                        setIncludeParentImpactInTakeHome(false)
+                      }}
+                    >
+                      <SelectTrigger className="h-11 w-full bg-background text-base md:text-sm" aria-label="親の日本での納税状況">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unknown">わからない</SelectItem>
+                        <SelectItem value="yes">はい</SelectItem>
+                        <SelectItem value="no">いいえ・親は海外</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>日本で働く家族の健康保険の扶養に入っている？</Label>
+                    <Select
+                      value={familyHealthInsuranceStatus}
+                      onValueChange={(value) =>
+                        setFamilyHealthInsuranceStatus(value as ConfirmationStatus)
+                      }
+                    >
+                      <SelectTrigger className="h-11 w-full bg-background text-base md:text-sm" aria-label="日本の家族の健康保険扶養">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unknown">わからない</SelectItem>
+                        <SelectItem value="yes">はい</SelectItem>
+                        <SelectItem value="no">いいえ</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[11px] leading-relaxed text-sky-900/75">
+                      「いいえ」の場合、130万円・150万円未満の健康保険扶養基準は使いません。自分の国民健康保険または勤務先の社会保険を確認します。
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div id="work-conditions" className="grid scroll-mt-24 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
@@ -1302,7 +1616,9 @@ export function IncomeSimulator() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weekly-hours">週の勤務時間</Label>
+                <Label htmlFor="weekly-hours">
+                  {isInternationalStudent ? "掛け持ち合計の週勤務時間" : "週の勤務時間"}
+                </Label>
                 <div className="relative">
                   <Input
                     id="weekly-hours"
@@ -1361,7 +1677,7 @@ export function IncomeSimulator() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
+              {includeParentTaxImpact && <div className="space-y-2">
                 <Label>親の所得税率の目安</Label>
                 <Select
                   value={String(parentTaxRate)}
@@ -1384,7 +1700,7 @@ export function IncomeSimulator() {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </div>}
               <div className="space-y-2">
                 <Label>扶養を外れた後の加入先</Label>
                 <Select
@@ -1475,15 +1791,21 @@ export function IncomeSimulator() {
             <CardContent className="space-y-4 p-5">
               <div className="space-y-1">
                 <p className="text-xs font-semibold text-primary">
-                  {includeParentImpactInTakeHome ? "親への影響も含めた見込み" : "本人の手元に残る見込み"}
+                  {socialInsuranceBurdenNeedsInput
+                    ? "医療保険料入力前の手元見込み"
+                    : includeParentImpactInTakeHome
+                      ? "親への影響も含めた見込み"
+                      : "本人の手元に残る見込み"}
                 </p>
                 <p className="text-3xl font-bold text-foreground">{formatCurrency(displayedTakeHome)}</p>
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  本人の税金と、選択または暫定計算した社会保険負担を反映した概算です。
+                  {socialInsuranceBurdenNeedsInput
+                    ? "本人の税金のみ反映しています。国民健康保険または勤務先の社会保険を選ぶと保険料を反映します。"
+                    : "本人の税金と、選択または暫定計算した社会保険負担を反映した概算です。"}
                 </p>
               </div>
 
-              {age >= 16 ? (
+              {includeParentTaxImpact && age >= 16 ? (
                 <label className="flex items-center justify-between gap-3 rounded-md border border-border bg-muted/30 px-3 py-2">
                   <span className="text-xs font-semibold text-foreground">親の税負担増も差し引く</span>
                   <Switch
@@ -1501,24 +1823,59 @@ export function IncomeSimulator() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-md border border-border bg-background p-3">
-                  <p className="text-xs text-muted-foreground">本人の税金</p>
+                  <p className="text-xs text-muted-foreground">
+                    {isInternationalStudent ? "本人の税金（居住者前提）" : "本人の税金"}
+                  </p>
                   <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.selfTaxBurdenEstimate)}</p>
                 </div>
                 <div className="rounded-md border border-border bg-background p-3">
                   <p className="text-xs text-muted-foreground">親への影響</p>
-                  <p className="text-lg font-bold text-foreground">{formatCurrency(detailedResult.parentTaxDeltaEstimate)}</p>
+                  <p className="text-lg font-bold text-foreground">
+                    {includeParentTaxImpact
+                      ? formatCurrency(detailedResult.parentTaxDeltaEstimate)
+                      : parentJapaneseTaxStatus === "unknown"
+                        ? "要確認"
+                        : "試算対象外"}
+                  </p>
                 </div>
                 <div className="rounded-md border border-border bg-background p-3">
                   <p className="text-xs text-muted-foreground">社保扶養目安</p>
-                  <p className="text-lg font-bold text-foreground">{formatManYen(socialInsuranceLimit)}</p>
+                  <p className="text-lg font-bold text-foreground">
+                    {hasFamilyHealthInsuranceDependency
+                      ? formatManYen(socialInsuranceLimit)
+                      : familyHealthInsuranceStatus === "unknown"
+                        ? "要確認"
+                        : "試算対象外"}
+                  </p>
                 </div>
                 <div className="rounded-md border border-border bg-background p-3">
                   <p className="text-xs text-muted-foreground">{socialInsuranceBurdenLabel}</p>
                   <p className="text-lg font-bold text-foreground">
-                    {formatCurrency(detailedResult.socialInsuranceBurdenEstimate ?? 0)}
+                    {socialInsuranceBurdenNeedsInput
+                      ? "未入力"
+                      : formatCurrency(detailedResult.socialInsuranceBurdenEstimate ?? 0)}
                   </p>
                 </div>
               </div>
+
+              {isInternationalStudent && (
+                <div className="space-y-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+                  <p className="font-semibold">税額は日本の税法上の居住者・租税条約未適用の概算です。</p>
+                  <p>
+                    非居住者の給与は原則20.42%の源泉徴収となる場合があり、国籍と租税条約によって免除・軽減されることもあります。
+                    このシミュレーターでは自動判定しません。
+                  </p>
+                  <a
+                    href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2884.htm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-semibold text-amber-950 underline underline-offset-2"
+                  >
+                    国税庁の非居住者の源泉徴収を確認
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              )}
 
               {socialInsuranceRoute === "employee" && (
                 <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-xs leading-relaxed text-emerald-950">
@@ -1552,8 +1909,33 @@ export function IncomeSimulator() {
               )}
 
               <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-xs leading-relaxed text-blue-950">
-                年収だけでなく、週の勤務時間、月額賃金、勤務先規模で社会保険の扱いが変わることがあります。
+                <p>
+                  {isInternationalStudent && familyHealthInsuranceStatus === "unknown"
+                    ? "家族の健康保険扶養が未確認のため、130万円・150万円未満の扶養基準はまだ試算に使っていません。"
+                    : detailedResult.socialInsuranceStatusDescription}
+                </p>
+                <p className="mt-1">
+                  年収だけでなく、週の勤務時間、月額賃金、勤務先規模で社会保険の扱いが変わることがあります。
+                </p>
               </div>
+
+              {isInternationalStudent && (
+                <div className="rounded-md border border-sky-200 bg-sky-50 p-3 text-xs leading-relaxed text-sky-950">
+                  <p className="font-semibold">在留資格の確認は税金・扶養の判定より優先です。</p>
+                  <p>
+                    週28時間は掛け持ちした全勤務先の合計です。風俗営業等での勤務は、時間内でも資格外活動許可の対象外です。
+                  </p>
+                  <a
+                    href="https://www.moj.go.jp/isa/applications/guide/kanri_qa.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 font-semibold text-sky-950 underline underline-offset-2"
+                  >
+                    出入国在留管理庁の案内を確認
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              )}
 
               <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -1624,9 +2006,13 @@ export function IncomeSimulator() {
                   <MessageCircle className="h-5 w-5" />
                 </span>
                 <div className="space-y-1">
-                  <h2 className="text-base font-bold text-foreground">親へ共有する要点</h2>
+                  <h2 className="text-base font-bold text-foreground">
+                    {isInternationalStudent ? "確認・共有する要点" : "親へ共有する要点"}
+                  </h2>
                   <p className="text-xs leading-relaxed text-muted-foreground">
-                    年末調整や健康保険の確認で、親にそのまま伝えやすい内容です。
+                    {isInternationalStudent
+                      ? "在留資格、税金、健康保険について次に確認する内容です。"
+                      : "年末調整や健康保険の確認で、親にそのまま伝えやすい内容です。"}
                   </p>
                 </div>
               </div>
@@ -1746,7 +2132,7 @@ export function IncomeSimulator() {
               <p className="text-center text-xs leading-relaxed text-muted-foreground">
                 PR・広告リンクを含む場合があります。試算結果は広告の有無にかかわらず同じ基準で表示します。
               </p>
-              {incomeMan >= socialInsuranceLimit / 10_000 && incomeMan < 178 && ctaLinks.highWage && ctaLinks.flexible && (
+              {incomeMan >= applicableSocialInsuranceLimit / 10_000 && incomeMan < 178 && ctaLinks.highWage && ctaLinks.flexible && (
                 <>
                   <Button className="h-11 w-full gap-2 font-semibold" asChild>
                     <a href={ctaLinks.highWage} target="_blank" rel="noopener noreferrer nofollow sponsored">
@@ -1761,7 +2147,7 @@ export function IncomeSimulator() {
                   </Button>
                 </>
               )}
-              {incomeMan < socialInsuranceLimit / 10_000 && ctaLinks.recommended && (
+              {hasFamilyHealthInsuranceDependency && incomeMan < applicableSocialInsuranceLimit / 10_000 && ctaLinks.recommended && (
                 <Button className="h-11 w-full gap-2 font-semibold" asChild>
                   <a href={ctaLinks.recommended} target="_blank" rel="noopener noreferrer nofollow sponsored">
                     <TrendingUp className="h-4 w-4" />

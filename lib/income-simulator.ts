@@ -40,6 +40,8 @@ export interface DetailedSimulationParams extends SimulationParams {
   studentPensionSpecialStatus: StudentPensionSpecialStatus
   socialInsuranceRoute: SocialInsuranceRoute
   nationalHealthInsuranceAnnual?: number
+  includeParentTaxImpact?: boolean
+  hasFamilyHealthInsuranceDependency?: boolean
 }
 
 export interface DetailedSimulationResult {
@@ -570,10 +572,21 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
       ? 0
       : Math.floor(taxableIncomeForResidentTax * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE)
 
-  const parentIncomeTaxDeduction = getParentIncomeTaxDeduction(params.age, salaryIncome)
-  const parentResidentTaxDeduction = getParentResidentTaxDeduction(params.age, salaryIncome)
-  const parentIncomeTaxDeltaEstimate = Math.max(0, Math.floor((getFullParentIncomeTaxDeduction(params.age) - parentIncomeTaxDeduction) * params.parentTaxRate))
-  const parentResidentTaxDeltaEstimate = Math.max(0, Math.floor((getFullParentResidentTaxDeduction(params.age) - parentResidentTaxDeduction) * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE))
+  const includeParentTaxImpact = params.includeParentTaxImpact ?? true
+  const hasFamilyHealthInsuranceDependency =
+    params.hasFamilyHealthInsuranceDependency ?? true
+  const parentIncomeTaxDeduction = includeParentTaxImpact
+    ? getParentIncomeTaxDeduction(params.age, salaryIncome)
+    : 0
+  const parentResidentTaxDeduction = includeParentTaxImpact
+    ? getParentResidentTaxDeduction(params.age, salaryIncome)
+    : 0
+  const parentIncomeTaxDeltaEstimate = includeParentTaxImpact
+    ? Math.max(0, Math.floor((getFullParentIncomeTaxDeduction(params.age) - parentIncomeTaxDeduction) * params.parentTaxRate))
+    : 0
+  const parentResidentTaxDeltaEstimate = includeParentTaxImpact
+    ? Math.max(0, Math.floor((getFullParentResidentTaxDeduction(params.age) - parentResidentTaxDeduction) * INCOME_THRESHOLDS.STANDARD_RESIDENT_TAX_RATE))
+    : 0
   const parentTaxDeltaEstimate = parentIncomeTaxDeltaEstimate + parentResidentTaxDeltaEstimate
   const selfTaxBurdenEstimate = incomeTaxEstimate + residentTaxIncomeLevyEstimate
 
@@ -582,8 +595,12 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
     0,
     params.socialInsuranceAnnualIncomeEstimate ?? params.annualIncome,
   )
-  const canRemainSocialInsuranceDependent =
+  const isWithinSocialInsuranceDependentLimit =
     socialInsuranceAnnualIncomeEstimate < socialInsuranceDependentLimit
+  const canRemainSocialInsuranceDependent =
+    hasFamilyHealthInsuranceDependency && isWithinSocialInsuranceDependentLimit
+  const familyHealthInsuranceLimitExceeded =
+    hasFamilyHealthInsuranceDependency && !isWithinSocialInsuranceDependentLimit
   const shortHoursSocialInsuranceApplies =
     !isDayStudentExcludedFromShortHoursRule(params.studentType) &&
     params.weeklyHours >= 20 &&
@@ -593,26 +610,37 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
   let socialInsuranceStatusLabel = "追加確認が必要"
   let socialInsuranceStatusDescription = "社会保険は勤務条件と、扶養を外れた後の加入先によって変わります。"
 
-  if (!canRemainSocialInsuranceDependent && shortHoursSocialInsuranceApplies) {
+  if (familyHealthInsuranceLimitExceeded && shortHoursSocialInsuranceApplies) {
     socialInsuranceStatusLabel = "勤務先の社会保険に加入する可能性が高め"
     socialInsuranceStatusDescription = "扶養の年収目安を超えていて、短時間労働者の主な条件も満たしています。"
-  } else if (!canRemainSocialInsuranceDependent) {
+  } else if (familyHealthInsuranceLimitExceeded) {
     socialInsuranceStatusLabel = "扶養を外れる可能性が高め"
     socialInsuranceStatusDescription = "扶養の年収目安を超えています。勤務先の社会保険か、国民健康保険・国民年金かを確認してください。"
   } else if (shortHoursSocialInsuranceApplies) {
     socialInsuranceStatusLabel = "勤務先加入の可能性があります"
     socialInsuranceStatusDescription = "年収が扶養目安の範囲内でも、短時間労働者の勤務先加入ルールに該当する場合があります。"
-  } else {
+  } else if (hasFamilyHealthInsuranceDependency) {
     socialInsuranceStatusLabel = "扶養に残れる可能性があります"
     socialInsuranceStatusDescription = "年収だけで見ると扶養に残れる可能性があります。最終確認には勤務条件の確認も必要です。"
+  } else {
+    socialInsuranceStatusLabel = "家族の健康保険扶養は試算対象外"
+    socialInsuranceStatusDescription =
+      "日本で働く家族の健康保険扶養に入っていない前提です。勤務先の社会保険または国民健康保険を確認してください。"
   }
 
   const assumptions = [
     "給与収入のみとして計算しています。",
     "所得税は令和8年分以後の基礎控除・給与所得控除の改正を前提にしています。",
     "住民税の試算は、所得割のみを標準的な10%で計算し、自治体ごとの差がある均等割は含めていません。",
-    "親の住民税への影響は、標準的な10%で概算しています。",
-    "親の所得税への影響は、選択した限界税率で概算しています。",
+    ...(includeParentTaxImpact
+      ? [
+          "親の住民税への影響は、標準的な10%で概算しています。",
+          "親の所得税への影響は、選択した限界税率で概算しています。",
+        ]
+      : ["親が日本で納税していない前提のため、親の税負担への影響は試算していません。"]),
+    ...(hasFamilyHealthInsuranceDependency
+      ? []
+      : ["日本で働く家族の健康保険扶養に入っていない前提のため、130万円・150万円未満の被扶養者収入要件は適用していません。"]),
   ]
 
   let nationalPensionAnnualEstimate: number | undefined
@@ -659,7 +687,7 @@ export function simulateDetailedIncome(params: DetailedSimulationParams): Detail
       "勤務先の社会保険は、協会けんぽ東京支部の令和8年度料率を目安に、健康保険・子ども子育て支援金・厚生年金の本人負担分を概算しています。",
     )
     assumptions.push("実際の保険料は、標準報酬月額の等級、都道府県、健康保険組合、勤務先の扱いで変わります。")
-  } else if (!canRemainSocialInsuranceDependent || shortHoursSocialInsuranceApplies) {
+  } else if (familyHealthInsuranceLimitExceeded || shortHoursSocialInsuranceApplies) {
     const provisionalMonthlySalary = Math.round(params.annualIncome / 12)
     const employeeSocialInsurance = estimateEmployeeSocialInsurance(provisionalMonthlySalary)
     employeeHealthInsuranceAnnualEstimate = employeeSocialInsurance.employeeHealthInsuranceAnnualEstimate

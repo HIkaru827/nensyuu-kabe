@@ -11,6 +11,7 @@ const sections = [
       { href: "/", label: "年収の壁シミュレーター" },
       { href: "/paid-leave", label: "バイト有給シミュレーター" },
       { href: "/student-baito", label: "大学生の年収の壁・親の扶養ガイド" },
+      { href: "/international-student", label: "留学生アルバイトの週28時間・税金" },
       { href: "/baito-type-diagnosis", label: "学生バイトタイプ診断" },
       { href: "/blog", label: "ブログ一覧" },
       { href: "/calculation-method", label: "計算方法" },

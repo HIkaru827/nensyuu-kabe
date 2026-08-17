@@ -30,6 +30,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/international-student" className="text-muted-foreground transition-colors hover:text-primary">
+                留学生アルバイトの週28時間・税金
+              </Link>
+            </li>
+            <li>
               <Link href="/baito-type-diagnosis" className="text-muted-foreground transition-colors hover:text-primary">
                 学生バイトタイプ診断
               </Link>

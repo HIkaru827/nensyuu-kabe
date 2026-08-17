@@ -30,7 +30,27 @@ export const DEFAULT_KEYWORDS = [
   "今年 あといくら稼げる",
   "扶養 あといくら",
   "年収 見込み 計算",
+  "留学生 アルバイト 28時間",
+  "留学生 アルバイト 税金",
+  "留学生 年収の壁",
 ]
+
+export const INTERNATIONAL_STUDENT_PAGE = {
+  path: "/international-student",
+  title: "留学生アルバイトの週28時間・税金シミュレーター",
+  description:
+    "留学生アルバイトの資格外活動許可、掛け持ち合計の週28時間、税金、健康保険を確認。年収より先に見る在留資格の条件と、居住者前提の手取り概算を2026年の公的情報に基づいて整理します。",
+  keywords: [
+    "留学生 アルバイト 28時間",
+    "留学生 アルバイト 税金",
+    "留学生 年収の壁",
+    "留学生 バイト 時間制限",
+    "資格外活動許可 28時間",
+    "留学生 バイト 掛け持ち",
+    "外国人留学生 アルバイト",
+    "留学生 手取り シミュレーター",
+  ],
+} as const
 
 export const STUDENT_BAITO_PAGE = {
   path: "/student-baito",
@@ -269,6 +289,7 @@ export const STATIC_PAGES = [
   { path: STUDENT_BAITO_PAGE.path, priority: 0.98, changeFrequency: "weekly" as const, lastModified: "2026-07-30T00:00:00Z" },
   { path: PAID_LEAVE_PAGE.path, priority: 0.95, changeFrequency: "weekly" as const, lastModified: "2026-07-06T00:00:00Z" },
   { path: BAITO_TYPE_DIAGNOSIS_PAGE.path, priority: 0.94, changeFrequency: "weekly" as const, lastModified: "2026-07-12T00:00:00Z" },
+  { path: INTERNATIONAL_STUDENT_PAGE.path, priority: 0.96, changeFrequency: "weekly" as const, lastModified: "2026-08-17T00:00:00Z" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-25T00:00:00Z" },
   { path: "/calculation-method", priority: 0.7, changeFrequency: "monthly" as const, lastModified: "2026-07-30T00:00:00Z" },
   { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const, lastModified: "2026-07-29T00:00:00Z" },
