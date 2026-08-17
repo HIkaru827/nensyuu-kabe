@@ -136,10 +136,10 @@ export default function InternationalStudentPage() {
                 留学生アルバイトの条件を確認
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                留学生モードを有効にした状態で表示しています。週勤務時間は掛け持ち分を合計してください。
+                留学生専用の入力欄です。週勤務時間は掛け持ち分を合計してください。
               </p>
             </div>
-            <IncomeSimulator defaultInternationalStudent showHeading={false} />
+            <IncomeSimulator internationalStudentMode showHeading={false} />
           </section>
 
           <section className="grid gap-6 md:grid-cols-2" aria-labelledby="income-wall-answer">

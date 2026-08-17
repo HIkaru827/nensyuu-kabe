@@ -602,10 +602,10 @@ async function writeTextToClipboard(text: string): Promise<void> {
 }
 
 export function IncomeSimulator({
-  defaultInternationalStudent = false,
+  internationalStudentMode = false,
   showHeading = true,
 }: {
-  defaultInternationalStudent?: boolean
+  internationalStudentMode?: boolean
   showHeading?: boolean
 } = {}) {
   const showAffiliateUi = isAffiliateProgramActive()
@@ -619,7 +619,7 @@ export function IncomeSimulator({
   const [hasLoadedIncomePlan, setHasLoadedIncomePlan] = useState(false)
   const [age, setAge] = useState(20)
   const [attribute, setAttribute] = useState<Attribute>("daytime-student")
-  const [isInternationalStudent, setIsInternationalStudent] = useState(defaultInternationalStudent)
+  const isInternationalStudent = internationalStudentMode
   const [workPermissionStatus, setWorkPermissionStatus] =
     useState<ConfirmationStatus>("unknown")
   const [parentJapaneseTaxStatus, setParentJapaneseTaxStatus] =
@@ -1482,37 +1482,18 @@ export function IncomeSimulator({
 
             <Separator />
 
-            <div className="space-y-4 rounded-md border border-sky-200 bg-sky-50/70 p-4">
-              <div className="flex items-center justify-between gap-4">
+            {isInternationalStudent && (
+              <div className="space-y-4 rounded-md border border-sky-200 bg-sky-50/70 p-4">
                 <div className="flex items-start gap-3">
                   <Globe2 className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" />
                   <div className="space-y-1">
-                    <Label htmlFor="international-student-mode" className="font-bold text-sky-950">
-                      留学生モード
-                    </Label>
+                    <p className="font-bold text-sky-950">留学生の確認項目</p>
                     <p className="text-xs leading-relaxed text-sky-900/80">
                       在留資格が「留学」の人は、年収より先に資格外活動許可と勤務時間を確認します。
                     </p>
                   </div>
                 </div>
-                <Switch
-                  id="international-student-mode"
-                  checked={isInternationalStudent}
-                  onCheckedChange={(checked) => {
-                    setIsInternationalStudent(checked)
-                    if (checked && attribute === "freeter") {
-                      setAttribute("daytime-student")
-                    }
-                    setIncludeParentImpactInTakeHome(false)
-                    trackIncomeSimulatorInteraction("international_student_toggle", incomeMan, {
-                      isInternationalStudent: checked,
-                    })
-                  }}
-                  aria-label="留学生モードを切り替える"
-                />
-              </div>
 
-              {isInternationalStudent && (
                 <div className="grid gap-4 border-t border-sky-200 pt-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>資格外活動許可</Label>
@@ -1573,8 +1554,8 @@ export function IncomeSimulator({
                     </p>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             <div id="work-conditions" className="grid scroll-mt-24 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
@@ -1611,7 +1592,9 @@ export function IncomeSimulator({
                   <SelectContent>
                     <SelectItem value="daytime-student">昼間学生</SelectItem>
                     <SelectItem value="evening-student">夜間・通信・定時制など</SelectItem>
-                    <SelectItem value="freeter">学生ではない</SelectItem>
+                    {!isInternationalStudent && (
+                      <SelectItem value="freeter">学生ではない</SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
